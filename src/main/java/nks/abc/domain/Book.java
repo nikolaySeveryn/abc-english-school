@@ -1,5 +1,6 @@
 package nks.abc.domain;
 
+import javax.faces.bean.ManagedBean;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,12 +12,13 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="BOOK")
+@ManagedBean(name="book")
 public class Book {
 	
 	@Id
 	@Column(name="ID")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="bool_id_seqGen")
-	@SequenceGenerator(name="book_id_seqGen", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="book_id_gen")
+	@SequenceGenerator(name="book_id_gen", allocationSize=1, sequenceName="book_id_seq")
 	private Integer id;
 	
 	@Column(name="NAME")
@@ -45,5 +47,8 @@ public class Book {
 		this.author = author;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", name=" + name + ", author=" + author + "]";
+	}
 }
