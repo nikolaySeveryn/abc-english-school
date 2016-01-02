@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+
+* {
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	/* font-weight: 300; */
+}
+
+h1 {
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size: 25px;
+	font-weight: 400;
+	border-bottom: 1px solid #000;
+}
+
+.data-table {
+	margin-top: 10pt;
+}
+
+.ui-panelgrid td {
+	border: none !important;
+}
+
+.ui-panelgrid .ui-widget-content {
+	border: none !important;
+}

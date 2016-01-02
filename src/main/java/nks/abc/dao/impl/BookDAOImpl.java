@@ -1,7 +1,7 @@
 package nks.abc.dao.impl;
 
 import nks.abc.dao.BookDAO;
-import nks.abc.domain.Book;
+import nks.abc.domain.entity.Book;
 
 import org.springframework.stereotype.Service;
 
