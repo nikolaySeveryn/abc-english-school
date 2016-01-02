@@ -12,11 +12,19 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		</property>
 	</bean>
 
+	<!-- local -->
+	<!-- 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${app.jdbc.driverClassName}" />
 		<property name="url" value="${app.jdbc.url}" />
 		<property name="username" value="${app.jdbc.username}" />
 		<property name="password" value="${app.jdbc.password}" />
+	</bean>
+	 -->
+	 
+	<!-- jndi -->
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<property name="jndiName" value="java:jboss/datasources/PostgreSQLDS"/>
 	</bean>
 </beans>
