@@ -5,6 +5,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
+	<!-- local -->
+	<!--
 	<bean
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
@@ -12,8 +14,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		</property>
 	</bean>
 
-	<!-- local -->
-	<!-- 
+	 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="${app.jdbc.driverClassName}" />
@@ -25,6 +26,6 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	 
 	<!-- jndi -->
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    	<property name="jndiName" value="java:jboss/datasources/PostgreSQLDS"/>
+    	<property name="jndiName" value="java:jboss/datasources/PostgreSQLDS2"/>
 	</bean>
 </beans>

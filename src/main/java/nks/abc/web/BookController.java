@@ -61,7 +61,8 @@ public class BookController implements Serializable {
 			msg = "Оновлено";
 		}
 		else {
-			msg = "Wrong edit mode";
+			addMessage(FacesMessage.SEVERITY_ERROR,msg);
+			return ;
 		}
 		addMessage(FacesMessage.SEVERITY_INFO,msg);
 	}
@@ -82,6 +83,7 @@ public class BookController implements Serializable {
 	}
 	
 	public BookDTO getBook() {
+		System.out.println("get book: " + book);
 		return book;
 	}
 	

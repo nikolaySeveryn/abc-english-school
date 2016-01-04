@@ -10,66 +10,78 @@
 </h:head>
 <h:body>
 	<h1>Підручники</h1>
-	<h:form id="main_form">
-		<p:growl id="growl" life="2000" />
 
-		<p:commandButton actionListener="#{bookController.add()}"
-			update="book_edit_dialog" oncomplete="PF('book_edit_dialog').show();"
-			value="додати" icon="ui-icon-plusthick" />
-		<p:dataTable id="books_dt" 
-			var="item" value="#{bookController.list}"
-			emptyMessage="Пусто" styleClass="data-table"
-			resizableColumns="true">
-			<p:column headerText="автор">
-				<h:outputText value="#{item.author}" />
-			</p:column>
-			<p:column headerText="назва">
-				<h:outputText value="#{item.name}" />
-			</p:column>
-			<p:column width="100">
-				<p:commandButton actionListener="#{bookController.edit(item)}"
-					update=":main_form:book_edit_dialog"
-					oncomplete="PF('book_edit_dialog').show();" 
-					icon="ui-icon-pencil" />
-				<p:commandButton actionListener="#{bookController.delete(item)}"
-					update=":main_form:growl :main_form:books_dt" icon="ui-icon-trash">
-					<p:confirm header="Confirmation" message="ви дійсно хочете видалити підручник?"
-						icon="ui-icon-alert" />
-				</p:commandButton>
-			</p:column>
-		</p:dataTable>
+	<p:growl id="growl" life="2000" />
 
-		
-		<p:dialog id="book_edit_dialog" modal="true"
-			widgetVar="book_edit_dialog" 
-			showEffect="fade" hideEffect="fade"
-			header="#{(bookController.mode == 'ADD') ? 'Новий підручник' : ('Редагування')}">
-			
+	<p:commandButton actionListener="#{bookController.add()}"
+		update="bookEdit_form" oncomplete="PF('book_edit_dialog').show();"
+		value="додати" icon="ui-icon-plusthick" immediate="true">
+		<p:resetInput target="bookEdit_form" />
+		</p:commandButton>
+	<p:dataTable id="books_dt" var="item" value="#{bookController.list}"
+		emptyMessage="Пусто" styleClass="data-table" resizableColumns="true">
+		<p:column headerText="автор">
+			<h:outputText value="#{item.author}" />
+		</p:column>
+		<p:column headerText="назва">
+			<h:outputText value="#{item.name}" />
+		</p:column>
+		<p:column width="100">
+			<p:commandButton actionListener="#{bookController.edit(item)}"
+				update=":bookEdit_form"
+				oncomplete="PF('book_edit_dialog').show();" 
+				icon="ui-icon-pencil"
+				immediate="true"
+				>
+				<p:resetInput target=":bookEdit_form" />
+			</p:commandButton>
+			<p:commandButton actionListener="#{bookController.delete(item)}"
+				update=":growl books_dt" icon="ui-icon-trash" immediate="true">
+				<p:confirm header="Confirmation"
+					message="ви дійсно хочете видалити підручник?" icon="ui-icon-alert" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+
+
+	<p:dialog id="book_edit_dialog" modal="true"
+		widgetVar="book_edit_dialog" showEffect="fade" hideEffect="fade"
+		header="#{(bookController.mode == 'ADD') ? 'Новий підручник' : ('Редагування')}">
+		<h:form id="bookEdit_form">
 			<p:messages />
 			<p:panelGrid columns="3" layout="grid">
 				<p:outputLabel>Автор</p:outputLabel>
-				<p:inputText id="author" value="#{bookController.book.author}"></p:inputText>
+				<p:inputText id="author" value="#{bookController.book.author}"
+					label="Автор"></p:inputText>
 				<p:message for="author" />
 				<p:outputLabel>Назва</p:outputLabel>
-				<p:inputText id="name" value="#{bookController.book.name}"></p:inputText>
+				<p:inputText id="name" value="#{bookController.book.name}"
+					required="true" label="Назва"></p:inputText>
 				<p:message for="name" />
-				<p:commandButton value="зберегти"
+				<p:commandButton value="зберегти" icon="ui-icon-disk"
 					actionListener="#{bookController.save()}"
-					update=":main_form:growl :main_form:books_dt" icon="ui-icon-disk"
-					oncomplete="PF('book_edit_dialog').hide();" />
-				<p:commandButton value="відмінити"
+					update=":growl :books_dt bookEdit_form" 
+					oncomplete="if(args &amp;&amp; !args.validationFailed){
+						PF('book_edit_dialog').hide();
+					}"
+					 />
+				<p:commandButton value="відмінити" icon="ui-icon-cancel"
 					actionListener="#{bookController.cancel()}"
-					update=":main_form:growl" icon="ui-icon-cancel"
-					oncomplete="PF('book_edit_dialog').hide();" />
+					update=":growl bookEdit_form"
+					oncomplete="PF('book_edit_dialog').hide();" process="@this"
+					immediate="true">
+					<p:resetInput target="bookEdit_form" />
+				</p:commandButton>
 			</p:panelGrid>
-		</p:dialog>
+		</h:form>
+	</p:dialog>
 
-		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-			<p:commandButton value="Yes" type="button"
-				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			<p:commandButton value="No" type="button"
-				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-		</p:confirmDialog>
-	</h:form>
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<p:commandButton value="Yes" type="button"
+			styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
+
 </h:body>
 </html>
