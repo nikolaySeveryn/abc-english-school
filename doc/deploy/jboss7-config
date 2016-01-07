@@ -1,0 +1,19 @@
+security settings (standalone.xml):
+
+<security-domains>	
+	<security-domain name="form_authentification" cache-type="default">
+    	<authentication>
+        	<login-module code="Database" flag="required">
+            	<module-option name="dsJndiName" value="java:jboss/datasources/PostgreSQLDS2"/>
+            	<module-option name="principalsQuery" value="SELECT password FROM abc.user WHERE login=?"/>
+            	<module-option name="rolesQuery" value="SELECT role, 'Roles' FROM abc.user WHERE login=?"/>
+            	<module-option name="hashAlgorithm" value="MD5"/>
+	            <module-option name="hashEncoding" value="base64"/>
+        	</login-module>
+	    </authentication>
+	</security-domain>
+</security-domains>
+
+
+get password hash:
+echo -n "password" | openssl dgst -md5 -binary | openssl base64
