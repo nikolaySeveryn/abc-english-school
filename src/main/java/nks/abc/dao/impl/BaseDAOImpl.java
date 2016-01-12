@@ -39,7 +39,8 @@ public class BaseDAOImpl <T,P extends Serializable> implements BaseDAO<T, P>{
 
 	@Override
 	public void update(T entity) {
-		getSession().update(entity);
+		T merged = (T) getSession().merge(entity);
+		getSession().update(merged);
 	}
 	
 	@Override
