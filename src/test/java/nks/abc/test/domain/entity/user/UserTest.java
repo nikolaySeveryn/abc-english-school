@@ -15,6 +15,9 @@ public class UserTest {
 		assertEquals(user.getPasswordHash(), "iZtuqJwgMU1Fd2HsZBhsRg==");
 		user.updatePassword("otherLongVerryLongLongLongLongLongLongLongLongLongLongLongLongLongLongLongerPassword");
 		assertEquals(user.getPasswordHash(), "rEbqf+zg/8r+AFR3mJc2Sg==");
+		
+		user.updatePassword("goniagonia");
+		assertEquals(user.getPasswordHash(), "dxoYGaCOIVvIMPHMlf3aSw==");
 	}
 
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/include/layout.xhtml">
+		<ui:define name="content">
+			<h5>Welcome, <h:outputText value="#{request.remoteUser}" />, to abc english school</h5>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

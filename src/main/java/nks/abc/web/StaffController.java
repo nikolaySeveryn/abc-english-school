@@ -53,14 +53,14 @@ public class StaffController implements Serializable{
 	public String add() {
 		editMode = EditMode.ADD;
 		edited = new StaffDTO();
-		return "staffEdit.xhtml?faces-redirect=true";
+		return "staffEdit.xhtml";
 	}
 	
 	public String edit(Long id){
 		editMode = EditMode.EDIT;
 		this.edited = staffService.findById(id);
 		System.out.println("edited = " + edited);
-		return "staffEdit.xhtml?faces-redirect=true";
+		return "staffEdit.xhtml";
 	}
 	
 	public String save(){
@@ -75,11 +75,11 @@ public class StaffController implements Serializable{
 			msg = "Оновлено";
 		}
 		else {
-			addMessage(FacesMessage.SEVERITY_ERROR,msg);
-			return "staffList.xhtml?faces-redirect=true";
+			addMessage(FacesMessage.SEVERITY_INFO, "Помилка");
+			return "staffList.xhtml";
 		}
-		addMessage(FacesMessage.SEVERITY_INFO, "Помилка");
-		return "staffList.xhtml?faces-redirect=true";
+		addMessage(FacesMessage.SEVERITY_ERROR,msg);
+		return "staffList.xhtml";
 	}
 
 	private void addMessage(Severity severity, String msg) {
