@@ -46,6 +46,7 @@ public class StaffController implements Serializable{
 		System.out.println("delete");
 		for(Map.Entry<Long, Boolean> en : checked.entrySet()){
 			System.out.println("\t" + en.getKey() + " - " + en.getValue());
+			staffService.delete(en.getKey());
 		}
 	}
 	
