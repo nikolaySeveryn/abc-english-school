@@ -24,6 +24,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.codec.binary.Base64;
 import org.hibernate.validator.constraints.Email;
@@ -36,7 +37,7 @@ public abstract class User {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_id_gen")
 	@SequenceGenerator(name="user_id_gen", allocationSize=1, sequenceName="user_id_seq")
 	private Long userId;
-	@Column(nullable=false)
+	@Column(nullable=false, unique=true)
 	private String login;
 	@Column(name="password", nullable=false)
 	private String passwordHash;
