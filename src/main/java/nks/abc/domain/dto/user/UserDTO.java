@@ -17,18 +17,17 @@ import nks.abc.web.validator.Email;
 @ManagedBean
 public abstract class UserDTO {
 	private Long id;
-	@Pattern(regexp="^([a-z]|[A-Z]|[_-]){5,}")
+	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){5,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 5 symbol")
 	private String login;
-	@Pattern(regexp="^.{5,}$")
+	@Pattern(regexp="^.{7,}$", message="Minimum size 7 symbols")
 	private String password;
 	private String passwordHash;
 	private Set<Role> role = new HashSet<Role>();
 	private String firstName;
 	private String sirName;
-	@Past
+	@Past(message="I don't belive you")
 	private Date birthday;
-	@Size(min=5, max=12)
-	@Digits(fraction = 0, integer = 12)
+	@Pattern(regexp="^\\+?([0-9]|\\-){0,15}$", message="Avaliable symbols: '+'(at begining), 0-9,'-'. Maximum size 15 symbols")
 	private String phoneNum;
 	@Email
 	private String email;
