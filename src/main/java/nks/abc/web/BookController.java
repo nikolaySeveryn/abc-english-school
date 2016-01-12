@@ -61,7 +61,7 @@ public class BookController implements Serializable {
 			msg = "Оновлено";
 		}
 		else {
-			addMessage(FacesMessage.SEVERITY_ERROR,msg);
+			addMessage(FacesMessage.SEVERITY_ERROR,"Помилка");
 			return ;
 		}
 		addMessage(FacesMessage.SEVERITY_INFO,msg);

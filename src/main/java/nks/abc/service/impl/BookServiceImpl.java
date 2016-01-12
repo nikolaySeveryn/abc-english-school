@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(BookDTO book) {
-		bookDAO.save(BookDTOConvertor.toEntity(book));
+		bookDAO.insert(BookDTOConvertor.toEntity(book));
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class BaseDAOImpl <T,P extends Serializable> implements BaseDAO<T, P>{
 	}
 	
 	@Override
-	public void save(T entity) {
+	public void insert(T entity) {
 		getSession().save(entity);
 	}
 

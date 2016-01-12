@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/include/layout.xhtml">
+		<ui:define name="content">
+			<h1>Персонал</h1>
+
+			<p:growl id="growl" life="2000" />
+			<h:form>
+				<p:commandButton action="#{staffController.add()}"
+					icon="ui-icon-plusthick" />
+
+				<p:commandButton actionListener="#{staffController.delete()}"
+					update=":growl staff_dt" icon="ui-icon-trash">
+					<p:confirm header="Confirmation"
+						message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
+				</p:commandButton>
+
+				<p:dataTable id="staff_dt" var="employee"
+					value="#{staffController.list}" emptyMessage="Пусто"
+					styleClass="data-table" resizableColumns="true">
+					<p:column width="20">
+						<p:selectBooleanCheckbox
+							value="#{staffController.checked[employee.id]}" />
+					</p:column>
+					<p:column headerText="Cпівробітник">
+						<h:outputText
+							value="#{employee.sirName} #{employee.firstName} #{employee.patronomic}" />
+					</p:column>
+					<p:column width="40">
+						<p:commandButton action="#{staffController.edit(employee.id)}"
+							icon="ui-icon-pencil" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<ui:insert name="confirm">
+				<ui:include src="/include/confirmDialog.xhtml" />
+			</ui:insert>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

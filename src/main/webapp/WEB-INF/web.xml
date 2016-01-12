@@ -7,7 +7,9 @@
 	id="WebApp_ID" version="3.0" metadata-complete="true">
 
 
-	<display-name>HelloPrime</display-name>
+	<display-name>abc-english-school</display-name>
+	
+	<!-- JSF -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
@@ -20,14 +22,43 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
+	<!-- end JSF -->
+	
+	<!-- secure -->
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/auth/login.xhtml</form-login-page>
+			<form-error-page>/auth/error.xhtml</form-error-page>
+		</form-login-config>
+	</login-config>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>teacher-secured</web-resource-name>
+			<url-pattern>/teacher/*</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>TEACHER</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-role>
+		<role-name>TEACHER</role-name>
+	</security-role>
+	<security-role>
+		<role-name>STUDENT</role-name>
+	</security-role>
+	<!-- end secure -->
 
-	<!-- <context-param> <param-name>primefaces.THEME</param-name> <param-value>aristo</param-value> 
-		</context-param> -->
-
+	<!-- spring context -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
 	</listener>
+	<!-- end spring context -->
 </web-app>

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface BaseDAO<T, P extends Serializable> {
 
-	public void save(T entity);
+	public void insert(T entity);
 
 	public void update(T entity);
 
