@@ -10,12 +10,19 @@
 </h:head>
 <h:body>
 	<div id="main_wrapper">
-		<p:layout fullPage="true">
+		<p:layout>
 			<p:layoutUnit position="north" resizable="true" size="50"
 				minSize="20" maxSize="200">
-				<ui:insert name="header">
-					<ui:include src="/include/header.xhtml" />
-				</ui:insert>
+					<ui:insert name="header">
+						<ui:include src="/include/header.xhtml" />
+					</ui:insert>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="west" collapsible="true" minSize="150" resizable="true"
+				header="Меню">
+				<ui:insert name="menu">
+						<ui:include src="/include/menu.xhtml" />
+					</ui:insert>
 			</p:layoutUnit>
 
 			<p:layoutUnit position="center">
