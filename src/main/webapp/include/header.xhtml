@@ -11,7 +11,7 @@
 <h:body>
 	<ui:composition>
 		<h:form>
-			<h:outputText value="#{request.remoteUser}" />
+			<h:outputText value="#{userBean.currentUserName}" />
 			<h:outputText value="&#160;" />
 			<p:commandLink id="logout_btn" actionListener="#{userBean.logout()}" oncomplete="window.location.reload()">
 				<h:outputText value="Вийти" />

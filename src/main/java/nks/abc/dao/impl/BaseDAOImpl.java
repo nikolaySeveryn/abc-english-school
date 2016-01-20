@@ -6,30 +6,12 @@ import java.util.List;
 import nks.abc.dao.BaseDAO;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.criterion.Order;
 
-public class BaseDAOImpl <T,P extends Serializable> implements BaseDAO<T, P>{
-	
-	private final Class<T> domainClass;
-	private SessionFactory sessionFactory;
+public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseDAO<T, P>{
 	
 	public BaseDAOImpl(Class<T> domainClass) {
-		this.domainClass = domainClass;
-	}
-	
-	@Autowired
-	public void sessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-	
-	protected Session getSession() {
-		return sessionFactory.getCurrentSession();
-	}
-	
-	protected Criteria getCriteria() {
-		return getSession().createCriteria(domainClass);
+		super(domainClass);
 	}
 	
 	@Override

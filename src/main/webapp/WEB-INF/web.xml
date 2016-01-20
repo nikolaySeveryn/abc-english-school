@@ -8,7 +8,10 @@
 
 
 	<display-name>abc-english-school</display-name>
-	
+	<session-config>
+		<session-timeout>10</session-timeout>
+	</session-config>
+
 	<!-- JSF -->
 	<welcome-file-list>
 		<welcome-file>index.xhtml</welcome-file>
@@ -23,7 +26,7 @@
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
 	<!-- end JSF -->
-	
+
 	<!-- secure -->
 	<login-config>
 		<auth-method>FORM</auth-method>
@@ -32,7 +35,7 @@
 			<form-error-page>/auth/error.xhtml</form-error-page>
 		</form-login-config>
 	</login-config>
-	
+
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>teacher-secured</web-resource-name>
@@ -68,7 +71,7 @@
 			<role-name>STUDENT</role-name>
 		</auth-constraint>
 	</security-constraint>
-	
+
 	<security-role>
 		<role-name>TEACHER</role-name>
 	</security-role>

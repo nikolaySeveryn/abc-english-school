@@ -46,8 +46,12 @@ public class StaffController implements Serializable{
 		System.out.println("delete");
 		for(Map.Entry<Long, Boolean> en : checked.entrySet()){
 			System.out.println("\t" + en.getKey() + " - " + en.getValue());
-			staffService.delete(en.getKey());
+			staffService.delete(en.getKey(), getCurrentUsername());
 		}
+	}
+
+	private String getCurrentUsername() {
+		return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
 	}
 	
 	public String add() {
@@ -67,11 +71,11 @@ public class StaffController implements Serializable{
 		String msg = new String();
 		System.out.println("save staff: editMode:" + editMode + ";  edited:" + edited);
 		if(editMode.equals(EditMode.EDIT)){
-			staffService.update(edited);
+			staffService.update(edited, getCurrentUsername());
 			msg = "Додано";
 		}
 		else if(editMode.equals(EditMode.ADD)){
-			staffService.insert(edited);
+			staffService.add(edited);
 			msg = "Оновлено";
 		}
 		else {

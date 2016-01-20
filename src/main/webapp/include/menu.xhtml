@@ -12,13 +12,18 @@
 	<ui:composition>
 		<h:form>
 			<p:menu>
-				<p:submenu label="Викладач">
-					<p:menuitem value="Підручники"
-						action="/teacher/book/booksList.xhtml" />
-				</p:submenu>
+				<c:if test="#{userBean.currentUser.isTeacher}">
+					<p:submenu label="Викладач">
+						<p:menuitem value="Підручники"
+							action="/teacher/book/booksList.xhtml?faces-redirect=true" />
+					</p:submenu>
+				</c:if>
+				<c:if test="#{userBean.currentUser.isAdministrator}">
 				<p:submenu label="Адміністратор">
-					<p:menuitem value="Персонал" action="/administrator/staff/staffList.xhtml" />
+					<p:menuitem value="Персонал"
+						action="/administrator/staff/staffList.xhtml?faces-redirect=true" />
 				</p:submenu>
+				</c:if>
 			</p:menu>
 		</h:form>
 	</ui:composition>
