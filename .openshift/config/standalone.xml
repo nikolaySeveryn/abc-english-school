@@ -480,7 +480,7 @@
 		<security-domain name="form_authentification" cache-type="default">
 		    <authentication>
 		        <login-module code="Database" flag="required">
-		            <module-option name="dsJndiName" value="java:jboss/datasources/PostgreSQLDS2"/>
+		            <module-option name="dsJndiName" value="java:jboss/datasources/PostgreSQLDS"/>
 		            <module-option name="principalsQuery" value="SELECT password FROM abc.user WHERE login=?"/>
 		            <module-option name="rolesQuery" value="SELECT r.role, 'Roles' FROM abc.user_role r INNER JOIN abc.user u ON r.user_userid = u.userid WHERE u.login=?"/>
 		            <module-option name="hashAlgorithm" value="MD5"/>
