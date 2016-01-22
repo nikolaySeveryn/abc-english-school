@@ -1,5 +1,6 @@
 package nks.abc.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import nks.abc.domain.dto.BookDTO;
 import nks.abc.service.BookService;
+import nks.abc.service.exception.ServiceDisplayedErorr;
+import nks.abc.service.exception.ServiceException;
 
 import java.io.Serializable;
 
@@ -36,35 +39,37 @@ public class BookController implements Serializable {
 	private BookDTO book = new BookDTO.NullBookDTO();
 	
 	public void add () {
-		System.out.println("add");
 		mode = EditMode.ADD;
 		book = new BookDTO(null, new String(), new String());
 	}
 	
 	public void edit(BookDTO book) {
-		System.out.println("edit");
 		mode = EditMode.EDIT;
 		this.book = book;
 	}
 	
 	public void save() {
-		System.out.println("save");
-		String msg = new String();
-		if(mode.equals(EditMode.ADD)){
-			System.out.println("save adding");
-			bookService.save(book);
-			msg = "Додано";
+		try {
+			if(mode.equals(EditMode.ADD)){
+				System.out.println("save adding");
+				bookService.save(book);
+				addMessage(FacesMessage.SEVERITY_INFO, "Added");
+			}
+			else if(mode.equals(EditMode.EDIT)){
+				System.out.println("save editing");
+				bookService.update(book);
+				addMessage(FacesMessage.SEVERITY_INFO, "Updated");
+			}
+			else {
+				addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			}
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
 		}
-		else if(mode.equals(EditMode.EDIT)){
-			System.out.println("save editing");
-			bookService.update(book);
-			msg = "Оновлено";
-		}
-		else {
-			addMessage(FacesMessage.SEVERITY_ERROR,"Помилка");
-			return ;
-		}
-		addMessage(FacesMessage.SEVERITY_INFO,msg);
 	}
 
 	public void cancel(){
@@ -74,16 +79,35 @@ public class BookController implements Serializable {
 	}
 	
 	public void delete(BookDTO book) {
-		bookService.delete(book);
-		addMessage(FacesMessage.SEVERITY_WARN, "видалено");
+		try {
+			bookService.delete(book);
+			addMessage(FacesMessage.SEVERITY_WARN, "Deleted");
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+		}	
 	}
 	
 	public List<BookDTO> getList() {
-		return bookService.getAll();
+		try {
+			return bookService.getAll();
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+			return new ArrayList<BookDTO>();
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+			return new ArrayList<BookDTO>();
+		}
 	}
 	
+	
+	
 	public BookDTO getBook() {
-		System.out.println("get book: " + book);
 		return book;
 	}
 	

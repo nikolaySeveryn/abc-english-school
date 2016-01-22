@@ -3,10 +3,12 @@ package nks.abc.service.impl;
 import java.util.List;
 
 import nks.abc.dao.BookDAO;
+import nks.abc.dao.exception.DAOException;
 import nks.abc.domain.dto.BookDTO;
 import nks.abc.domain.dto.convertor.BookDTOConvertor;
 import nks.abc.domain.entity.Book;
 import nks.abc.service.BookService;
+import nks.abc.service.exception.ServiceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,34 +25,73 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(BookDTO book) {
-		bookDAO.insert(BookDTOConvertor.toEntity(book));
+		Book bookEntity = BookDTOConvertor.toEntity(book);
+		try{
+			bookDAO.insert(bookEntity);
+		}
+		catch (DAOException de){
+			throw new ServiceException("dao error", de);
+		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
 	public void update(BookDTO book) {
-		bookDAO.update(BookDTOConvertor.toEntity(book));
+		Book bookEntity = BookDTOConvertor.toEntity(book);
+		try{
+			bookDAO.update(bookEntity);
+		}
+		catch (DAOException de){
+			throw new ServiceException("dao error", de);
+		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(BookDTO book) {
-		bookDAO.delete(BookDTOConvertor.toEntity(book));
+		Book bookEntity = BookDTOConvertor.toEntity(book);
+		try{
+			bookDAO.delete(bookEntity);
+		}
+		catch (DAOException de){
+			throw new ServiceException("dao error", de);
+		}
 	}
 
 	@Override
 	public BookDTO findById(Integer id) {
-		return BookDTOConvertor.toDTO(bookDAO.findById(id));
+		Book bookEntity = null;
+		try{
+			bookEntity = bookDAO.findById(id);
+		}
+		catch (DAOException de){
+			throw new ServiceException("dao error", de);
+		}
+		return BookDTOConvertor.toDTO(bookEntity);
 	}
 
 	@Override
 	public List<BookDTO> getAll(Integer offset, Integer limit) {
-		return BookDTOConvertor.toDTO(bookDAO.getAll(offset, limit));
+		List<Book> allBooks = null;
+		try {
+			allBooks = bookDAO.getAll(offset, limit);
+		}
+		catch (DAOException de){
+			throw new ServiceException("dao error", de);
+		}
+		return BookDTOConvertor.toDTO(allBooks);
 	}
 
 	@Override
 	public List<BookDTO> getAll() {
-		return BookDTOConvertor.toDTO(bookDAO.getAll());
+		List<Book> all = null;
+		try{
+			all = bookDAO.getAll();
+		}
+		catch (DAOException de){
+			throw new ServiceException("dao error", de);
+		}
+		return BookDTOConvertor.toDTO(all);
 	}
 	
 	

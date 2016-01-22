@@ -1,6 +1,7 @@
 package nks.abc.web;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import javax.faces.context.FacesContext;
 
 import nks.abc.domain.dto.user.StaffDTO;
 import nks.abc.service.StaffService;
+import nks.abc.service.exception.ServiceDisplayedErorr;
+import nks.abc.service.exception.ServiceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ManagedBean("staffController")
 @SessionScoped
-public class StaffController implements Serializable{
+public class StaffController implements Serializable {
 	
 	private static final long serialVersionUID = -5855175113160274311L;
 
@@ -39,59 +42,117 @@ public class StaffController implements Serializable{
 	}
 	
 	public List<StaffDTO> getList() {
-		return staffService.getAll();
-	}
-	
-	public void delete(){
-		System.out.println("delete");
-		for(Map.Entry<Long, Boolean> en : checked.entrySet()){
-			System.out.println("\t" + en.getKey() + " - " + en.getValue());
-			staffService.delete(en.getKey(), getCurrentUsername());
+		try {
+			return staffService.getAll();
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,
+					"Error: " + e.getDisplayedText());
+			e.printStackTrace();
+			return new ArrayList<StaffDTO>();
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+			return new ArrayList<StaffDTO>();
 		}
 	}
 
-	private String getCurrentUsername() {
-		return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
+	public void delete() {
+		try {
+			System.out.println("delete");
+			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
+				System.out.println("\t" + en.getKey() + " - " + en.getValue());
+			}
+			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
+				if(en.getValue()){
+					staffService.delete(en.getKey(), getCurrentUsername());
+				}
+			}
+			addMessage(FacesMessage.SEVERITY_INFO, "Deleted");
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+		}
 	}
-	
+
 	public String add() {
-		editMode = EditMode.ADD;
-		edited = new StaffDTO();
+		try {
+			editMode = EditMode.ADD;
+			edited = new StaffDTO();
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+			return null;
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+			return null;
+		}
 		return "staffEdit.xhtml";
 	}
 	
-	public String edit(Long id){
-		editMode = EditMode.EDIT;
-		this.edited = staffService.findById(id);
-		System.out.println("edited = " + edited);
+	public String edit(Long id) {
+		try {
+			editMode = EditMode.EDIT;
+			this.edited = staffService.findById(id);
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+			return null;
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+			return null;
+		}
 		return "staffEdit.xhtml";
 	}
 	
-	public String save(){
+	public String save() {
 		String msg = new String();
-		System.out.println("save staff: editMode:" + editMode + ";  edited:" + edited);
-		if(editMode.equals(EditMode.EDIT)){
-			staffService.update(edited, getCurrentUsername());
-			msg = "Додано";
+		try {
+			System.out.println("save staff: editMode:" + editMode
+					+ ";  edited:" + edited);
+			if (editMode.equals(EditMode.EDIT)) {
+				staffService.update(edited, getCurrentUsername());
+				msg = "Added";
+			} else if (editMode.equals(EditMode.ADD)) {
+				staffService.add(edited);
+				msg = "Updated";
+			} else {
+				addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+				return null;
+			}
+		} catch (ServiceDisplayedErorr e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			e.printStackTrace();
+			return null;
+		} catch (ServiceException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			e.printStackTrace();
+			return null;
 		}
-		else if(editMode.equals(EditMode.ADD)){
-			staffService.add(edited);
-			msg = "Оновлено";
-		}
-		else {
-			addMessage(FacesMessage.SEVERITY_INFO, "Помилка");
-			return "staffList.xhtml";
-		}
-		addMessage(FacesMessage.SEVERITY_ERROR,msg);
+		
+		addMessage(FacesMessage.SEVERITY_INFO, msg);
 		return "staffList.xhtml";
 	}
-
+	
+	/* 
+	 *  privates
+	 */
 	private void addMessage(Severity severity, String msg) {
 		FacesMessage message = new FacesMessage(severity, msg,  null);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 	
+	private String getCurrentUsername() {
+		return FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
+	}
 	
+	/*
+	 * getters & setters
+	 */
 	
 	public Map<Long, Boolean> getChecked() {
 		return checked;
@@ -99,6 +160,10 @@ public class StaffController implements Serializable{
 
 	public void setChecked(Map<Long, Boolean> checked) {
 		this.checked = checked;
+		System.out.println("Set checked:");
+		for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
+			System.out.println("\t" + en.getKey() + " - " + en.getValue());
+		}
 	}
 
 	public StaffDTO getEdited() {
@@ -118,8 +183,8 @@ public class StaffController implements Serializable{
 		this.editMode = editMode;
 	}
 	
-	public Boolean getIsNew(){
-		if(getEditMode().equals(EditMode.ADD)){
+	public Boolean getIsNew() {
+		if(getEditMode().equals(EditMode.ADD)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
