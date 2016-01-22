@@ -17,6 +17,7 @@ import nks.abc.service.StaffService;
 import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.exception.ServiceException;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component;
 public class StaffController implements Serializable {
 	
 	private static final long serialVersionUID = -5855175113160274311L;
+	private static final Logger log = Logger.getLogger(StaffController.class);
 
 	@Autowired
 	private StaffService staffService;
@@ -47,21 +49,17 @@ public class StaffController implements Serializable {
 		} catch (ServiceDisplayedErorr e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,
 					"Error: " + e.getDisplayedText());
-			e.printStackTrace();
+			log.error("error on getting staff lisst", e);
 			return new ArrayList<StaffDTO>();
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
-			e.printStackTrace();
+			log.error("error on getting staff lisst", e);
 			return new ArrayList<StaffDTO>();
 		}
 	}
 
 	public void delete() {
 		try {
-			System.out.println("delete");
-			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
-				System.out.println("\t" + en.getKey() + " - " + en.getValue());
-			}
 			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
 				if(en.getValue()){
 					staffService.delete(en.getKey(), getCurrentUsername());
@@ -70,10 +68,10 @@ public class StaffController implements Serializable {
 			addMessage(FacesMessage.SEVERITY_INFO, "Deleted");
 		} catch (ServiceDisplayedErorr e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
+			log.error("error on deleting staff", e);
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
-			e.printStackTrace();
+			log.error("error on deleting staff", e);
 		}
 	}
 
@@ -83,11 +81,11 @@ public class StaffController implements Serializable {
 			edited = new StaffDTO();
 		} catch (ServiceDisplayedErorr e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
+			log.error("error on adding staff", e);
 			return null;
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
-			e.printStackTrace();
+			log.error("error on adding staff", e);
 			return null;
 		}
 		return "staffEdit.xhtml";
@@ -99,11 +97,11 @@ public class StaffController implements Serializable {
 			this.edited = staffService.findById(id);
 		} catch (ServiceDisplayedErorr e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
+			log.error("error on editing staff", e);
 			return null;
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
-			e.printStackTrace();
+			log.error("error on editing staff", e);
 			return null;
 		}
 		return "staffEdit.xhtml";
@@ -112,25 +110,23 @@ public class StaffController implements Serializable {
 	public String save() {
 		String msg = new String();
 		try {
-			System.out.println("save staff: editMode:" + editMode
-					+ ";  edited:" + edited);
 			if (editMode.equals(EditMode.EDIT)) {
 				staffService.update(edited, getCurrentUsername());
-				msg = "Added";
+				msg = "Updated";
 			} else if (editMode.equals(EditMode.ADD)) {
 				staffService.add(edited);
-				msg = "Updated";
+				msg = "Added";
 			} else {
 				addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 				return null;
 			}
 		} catch (ServiceDisplayedErorr e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
+			log.error("error on saving staff", e);
 			return null;
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
-			e.printStackTrace();
+			log.error("error on saving staff", e);
 			return null;
 		}
 		
@@ -160,14 +156,9 @@ public class StaffController implements Serializable {
 
 	public void setChecked(Map<Long, Boolean> checked) {
 		this.checked = checked;
-		System.out.println("Set checked:");
-		for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
-			System.out.println("\t" + en.getKey() + " - " + en.getValue());
-		}
 	}
 
 	public StaffDTO getEdited() {
-		System.out.println("getEdited: " + edited);
 		return edited;
 	}
 

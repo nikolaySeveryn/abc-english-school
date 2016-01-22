@@ -5,12 +5,16 @@ import java.util.List;
 
 import nks.abc.dao.BaseDAO;
 import nks.abc.dao.exception.DAOException;
+import nks.abc.dao.impl.User.StaffDAOImpl;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 
 public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseDAO<T, P>{
+	
+	private final static Logger log = Logger.getLogger(BaseDAOImpl.class);
 	
 	public BaseDAOImpl(Class<T> domainClass) {
 		super(domainClass);
@@ -22,6 +26,7 @@ public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseD
 			getSession().save(entity);
 		}
 		catch (HibernateException he){
+			log.error("hibernate exception" , he);
 			throw new DAOException("Error on insert", he);
 		}
 	}
@@ -33,6 +38,7 @@ public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseD
 			getSession().update(merged);
 		}
 		catch (HibernateException he) {
+			log.error("hibernate exception" , he);
 			throw new DAOException("Error on update", he);
 		}
 	}
@@ -48,6 +54,7 @@ public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseD
 			delete(findById(id));
 		}
 		catch (HibernateException he){
+			log.error("hibernate exception" , he);
 			throw new DAOException("Error on delete", he);
 		}
 		
@@ -60,6 +67,7 @@ public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseD
 			return (T) getSession().get(domainClass, id);
 		}
 		catch (HibernateException he){
+			log.error("hibernate exception" , he);
 			throw new DAOException("Error on serching data by id", he);
 		}
 	}
@@ -80,6 +88,7 @@ public class BaseDAOImpl <T,P extends Serializable> extends DAO implements BaseD
 			return crit.list();
 		}
 		catch (HibernateException he){
+			log.error("hibernate exception" , he);
 			throw new DAOException("Error on getting all data", he);
 		}
 	}

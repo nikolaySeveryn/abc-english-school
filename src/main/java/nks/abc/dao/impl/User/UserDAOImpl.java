@@ -2,6 +2,7 @@ package nks.abc.dao.impl.User;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,8 @@ import nks.abc.domain.entity.user.User;
 
 @Repository
 public class UserDAOImpl extends DAO implements UserDAO {
+	
+	private final static Logger log = Logger.getLogger(UserDAOImpl.class);
 
 	public UserDAOImpl() {
 		super(User.class);
@@ -30,6 +33,7 @@ public class UserDAOImpl extends DAO implements UserDAO {
 			return list.get(0);
 		}
 		catch (HibernateException he){
+			log.error("hibernate exception on finding user by login" , he);
 			throw new DAOException("Error of the user finding", he);
 		}
 	}

@@ -3,6 +3,7 @@ package nks.abc.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,8 @@ import nks.abc.service.exception.ServiceException;
 @Transactional(readOnly=true)
 public class StaffServiceImpl implements StaffService {
 	
+	private static final Logger log = Logger.getLogger(StaffServiceImpl.class);
+	
 	@Autowired
 	private StaffDAO staffDAO;
 	@Autowired
@@ -41,9 +44,11 @@ public class StaffServiceImpl implements StaffService {
 		}
 		employee.updatePassword(employeeDTO.getPassword());
 		try{
+			log.info("add staff: " + employee);
 			staffDAO.insert(employee);
 		}
 		catch (DAOException de){
+			log.error("add staff: DAO error", de);
 			throw new ServiceException("dao error", de);
 		}
 	}
@@ -57,11 +62,12 @@ public class StaffServiceImpl implements StaffService {
 		if(updatingUser.getUserId().equals(currentUser.getUserId()) && !updatingUser.isAdministrator()){
 			throw new RightsDeprivingException("You can't deprive administrator rights yourself");
 		}
-		System.out.println("update :" + updatingUser);
+		log.info("update staff : " + updatingUser);
 		try{
 			staffDAO.update(updatingUser);
 		}
-		catch (DAOException de){
+		catch (DAOException de) {
+			log.error("DAO exception on update staff", de);
 			throw new ServiceException("dao error", de);
 		}
 	}
@@ -69,7 +75,7 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(Long id, String currentUserLogin) {
-		User currentUser = staffDAO.findUserByLogin(currentUserLogin);
+		User currentUser = staffDAO.findStaffByLogin(currentUserLogin);
 		if(currentUser == null) {
 			throw new ServiceException("No current user");
 		}
@@ -77,9 +83,11 @@ public class StaffServiceImpl implements StaffService {
 			throw new RightsDeprivingException("You're trying to remove yourself. Nice try :)");
 		}
 		try{
+			log.info("delete user: " + staffDAO.findById(id));
 			staffDAO.deleteById(id);
 		}
 		catch (DAOException de){
+			log.error("DAO exception on staff deleting", de);
 			throw new ServiceException("dao error", de);
 		}
 	}
@@ -91,6 +99,7 @@ public class StaffServiceImpl implements StaffService {
 			staff = staffDAO.findById(id);
 		} 
 		catch (DAOException de) {
+			log.error("DAO exception on staff finding by id", de);
 			throw new ServiceException("dao error", de);
 		}
 		return convertToDTO(staff);
@@ -104,6 +113,7 @@ public class StaffServiceImpl implements StaffService {
 			staffEntities = staffDAO.getAll();
 		}
 		catch (DAOException de){
+			log.error("DAO exception on staff finding all", de);
 			throw new ServiceException("dao error", de);
 		}
 		StaffDTOConvertor.toDTO(staffEntities, staffDTOs);
@@ -114,7 +124,7 @@ public class StaffServiceImpl implements StaffService {
 	public StaffDTO getStaffByLogin(String login) {
 		Staff entity = null;
 		try{
-			entity = staffDAO.findUserByLogin(login);
+			entity = staffDAO.findStaffByLogin(login);
 		}
 		catch (DAOException de){
 			throw new ServiceException("dao error", de);
