@@ -26,6 +26,6 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	 
 	<!-- jndi -->
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-    	<property name="jndiName" value="java:jboss/datasources/PostgreSQLDS2"/>
+    	<property name="jndiName" value="java:jboss/datasources/PostgreSQLDS"/>
 	</bean>
 </beans>
