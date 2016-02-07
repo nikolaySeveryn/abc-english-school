@@ -5,17 +5,9 @@ import javax.annotation.ManagedBean;
 @ManagedBean
 public class StaffDTO extends UserDTO{
 	
-	private String patronomic;
 	private Boolean isTeacher;
 	private Boolean isAdministrator;
 
-	public String getPatronomic() {
-		return patronomic;
-	}
-	public void setPatronomic(String patronomic) {
-		this.patronomic = patronomic;
-	}
-	
 	public Boolean getIsTeacher() {
 		return isTeacher;
 	}
@@ -30,8 +22,10 @@ public class StaffDTO extends UserDTO{
 	}
 	@Override
 	public String toString() {
-		return "StaffDTO [patronomic=" + patronomic + ", UserDTO="
-				+ super.toString() + "]";
+		return "StaffDTO [isTeacher="
+				+ isTeacher + ", isAdministrator=" + isAdministrator
+				+ ", super.toString()=" + super.toString() + "]";
 	}
+
 	
 }

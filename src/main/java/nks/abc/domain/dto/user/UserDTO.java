@@ -22,15 +22,16 @@ public abstract class UserDTO {
 	@Pattern(regexp="^.{7,}$", message="Minimum size 7 symbols")
 	private String password;
 	private String passwordHash;
-	private Set<Role> role = new HashSet<Role>();
 	private String firstName;
 	private String sirName;
+	private String patronomic;
 	@Past(message="I don't belive you")
 	private Date birthday;
 	@Pattern(regexp="^\\+?([0-9]|\\-){0,15}$", message="Avaliable symbols: '+'(at begining), 0-9,'-'. Maximum size 15 symbols")
 	private String phoneNum;
 	@Email
 	private String email;
+	private Boolean isDeleted;
 	
 	
 	
@@ -62,12 +63,6 @@ public abstract class UserDTO {
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
 	}
-	public Set<Role> getRole() {
-		return role;
-	}
-	public void setRole(Set<Role>role) {
-		this.role = role;
-	}
 	public String getFirstName() {
 		return firstName;
 	}
@@ -98,15 +93,27 @@ public abstract class UserDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public String getPatronomic() {
+		return patronomic;
+	}
+	public void setPatronomic(String patronomic) {
+		this.patronomic = patronomic;
+	}
+	
+	public Boolean getIsDeleted() {
+		return isDeleted;
+	}
+	public void setIsDeleted(Boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 	@Override
 	public String toString() {
 		return "UserDTO [id=" + id + ", login=" + login + ", password="
-				+ password + ", passwordHash=" + passwordHash + ", role="
-				+ role + ", firstName=" + firstName + ", sirName=" + sirName
-				+ ", birthday=" + birthday + ", phoneNum=" + phoneNum
-				+ ", email=" + email + ", parrent=" + super.toString() + "]";
+				+ password + ", passwordHash=" + passwordHash + ", firstName="
+				+ firstName + ", sirName=" + sirName + ", patronomic="
+				+ patronomic + ", birthday=" + birthday + ", phoneNum="
+				+ phoneNum + ", email=" + email + ", isDeleted=" + isDeleted
+				+ "]";
 	}
-
-	
-	
 }

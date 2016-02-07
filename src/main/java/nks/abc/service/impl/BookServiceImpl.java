@@ -2,8 +2,8 @@ package nks.abc.service.impl;
 
 import java.util.List;
 
-import nks.abc.dao.BookDAO;
 import nks.abc.dao.exception.DAOException;
+import nks.abc.dao.repository.BookDAO;
 import nks.abc.domain.dto.BookDTO;
 import nks.abc.domain.dto.convertor.BookDTOConvertor;
 import nks.abc.domain.entity.Book;
@@ -58,29 +58,29 @@ public class BookServiceImpl implements BookService {
 		}
 	}
 
-	@Override
-	public BookDTO findById(Integer id) {
-		Book bookEntity = null;
-		try{
-			bookEntity = bookDAO.findById(id);
-		}
-		catch (DAOException de){
-			throw new ServiceException("dao error", de);
-		}
-		return BookDTOConvertor.toDTO(bookEntity);
-	}
+//	@Override
+//	public BookDTO findById(Integer id) {
+//		Book bookEntity = null;
+//		try{
+//			bookEntity = bookDAO.findById(id);
+//		}
+//		catch (DAOException de){
+//			throw new ServiceException("dao error", de);
+//		}
+//		return BookDTOConvertor.toDTO(bookEntity);
+//	}
 
-	@Override
-	public List<BookDTO> getAll(Integer offset, Integer limit) {
-		List<Book> allBooks = null;
-		try {
-			allBooks = bookDAO.getAll(offset, limit);
-		}
-		catch (DAOException de){
-			throw new ServiceException("dao error", de);
-		}
-		return BookDTOConvertor.toDTO(allBooks);
-	}
+//	@Override
+//	public List<BookDTO> getAll(Integer offset, Integer limit) {
+//		List<Book> allBooks = null;
+//		try {
+//			allBooks = bookDAO.getAll(offset, limit);
+//		}
+//		catch (DAOException de){
+//			throw new ServiceException("dao error", de);
+//		}
+//		return BookDTOConvertor.toDTO(allBooks);
+//	}
 
 	@Override
 	public List<BookDTO> getAll() {

@@ -1,25 +1,26 @@
 package nks.abc.domain.dto.convertor.user;
 
 import nks.abc.domain.dto.user.UserDTO;
-import nks.abc.domain.entity.user.User;
+import nks.abc.domain.entity.user.AccountInfo;
 
 public class UserDTOConvertor {
 	
-	public static void toDTO(User entity, UserDTO dto) {
-		dto.setId(entity.getUserId());
+	public static void toDTO(AccountInfo entity, UserDTO dto) {
+		dto.setId(entity.getAccountId());
 		dto.setLogin(entity.getLogin());
 		dto.setBirthday(entity.getBirthday());
 		dto.setEmail(entity.getEmail());
 		dto.setFirstName(entity.getFirstName());
-		dto.setId(entity.getUserId());
+		dto.setId(entity.getAccountId());
 		dto.setPhoneNum(entity.getPhoneNum());
-		dto.setRole(entity.getRole());
 		dto.setSirName(entity.getSirName());
+		dto.setPatronomic(entity.getPatronomic());
 		dto.setPasswordHash(entity.getPasswordHash());
+		dto.setIsDeleted(entity.getIsDeleted());
 	}
 	
-	public static void toEntity(UserDTO dto, User entity) {
-		entity.setUserId(dto.getId());
+	public static void toEntity(UserDTO dto, AccountInfo entity) {
+		entity.setAccountId(dto.getId());
 		entity.setLogin(dto.getLogin());
 		java.sql.Date sqlDate = null;
 		if(dto.getBirthday() != null){
@@ -28,10 +29,11 @@ public class UserDTOConvertor {
 		entity.setBirthday(sqlDate);
 		entity.setEmail(dto.getEmail());
 		entity.setFirstName(dto.getFirstName());
-		entity.setUserId(dto.getId());
+		entity.setAccountId(dto.getId());
 		entity.setPhoneNum(dto.getPhoneNum());
-		entity.setRole(dto.getRole());
 		entity.setSirName(dto.getSirName());
+		entity.setPatronomic(dto.getPatronomic());
 		entity.setPasswordHash(dto.getPasswordHash());
+		entity.setIsDeleted(dto.getIsDeleted());
 	}
 }

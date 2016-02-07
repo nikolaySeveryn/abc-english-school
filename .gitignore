@@ -9,3 +9,4 @@
 *.war
 *.ear
 hs_err_pid*
+/log4j.log

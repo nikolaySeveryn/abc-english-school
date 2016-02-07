@@ -1,18 +1,16 @@
-package nks.abc.dao.impl;
+package nks.abc.dao.base;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import nks.abc.dao.BaseDAO;
-
-public abstract class DAO {
+public abstract class HibernateRepository {
 
 	protected final Class<?> domainClass;
 	private SessionFactory sessionFactory;
 
-	public DAO(Class<?>domainClass) {
+	public HibernateRepository(Class<?>domainClass) {
 		this.domainClass = domainClass;
 	}
 

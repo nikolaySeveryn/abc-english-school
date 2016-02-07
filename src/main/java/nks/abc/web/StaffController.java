@@ -33,6 +33,9 @@ public class StaffController implements Serializable {
 	@Autowired
 	private StaffService staffService;
 	
+	@Autowired
+	private UserBean userBean;
+	
 	private Map<Long,Boolean> checked = new HashMap<Long, Boolean>();
 	private StaffDTO edited = null;
 	private EditMode editMode = EditMode.NONE;
@@ -55,6 +58,10 @@ public class StaffController implements Serializable {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("error on getting staff lisst", e);
 			return new ArrayList<StaffDTO>();
+		} catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			log.error("undifined error", e);
+			return new ArrayList<StaffDTO>();
 		}
 	}
 
@@ -62,7 +69,7 @@ public class StaffController implements Serializable {
 		try {
 			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
 				if(en.getValue()){
-					staffService.delete(en.getKey(), getCurrentUsername());
+					staffService.delete(en.getKey(), userBean.getCurrentUserName());
 				}
 			}
 			addMessage(FacesMessage.SEVERITY_INFO, "Deleted");
@@ -72,6 +79,9 @@ public class StaffController implements Serializable {
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("error on deleting staff", e);
+		} catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			log.error("undifined error", e);
 		}
 	}
 
@@ -87,14 +97,18 @@ public class StaffController implements Serializable {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("error on adding staff", e);
 			return null;
+		} catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			log.error("undifined error", e);
+			return null;
 		}
 		return "staffEdit.xhtml";
 	}
 	
-	public String edit(Long id) {
+	public String edit(StaffDTO edited) {
 		try {
 			editMode = EditMode.EDIT;
-			this.edited = staffService.findById(id);
+			this.edited = edited;
 		} catch (ServiceDisplayedErorr e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on editing staff", e);
@@ -102,6 +116,10 @@ public class StaffController implements Serializable {
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("error on editing staff", e);
+			return null;
+		} catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			log.error("undifined error", e);
 			return null;
 		}
 		return "staffEdit.xhtml";
@@ -111,7 +129,7 @@ public class StaffController implements Serializable {
 		String msg = new String();
 		try {
 			if (editMode.equals(EditMode.EDIT)) {
-				staffService.update(edited, getCurrentUsername());
+				staffService.update(edited, userBean.getCurrentUserName());
 				msg = "Updated";
 			} else if (editMode.equals(EditMode.ADD)) {
 				staffService.add(edited);
@@ -127,6 +145,10 @@ public class StaffController implements Serializable {
 		} catch (ServiceException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("error on saving staff", e);
+			return null;
+		} catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			log.error("undifined error", e);
 			return null;
 		}
 		
