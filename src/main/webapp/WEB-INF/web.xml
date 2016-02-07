@@ -28,7 +28,6 @@
 	<!-- end JSF -->
 
 	<!-- secure -->
-	<!-- 
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>
@@ -81,7 +80,7 @@
 	</security-role>
 	<security-role>
 		<role-name>ADMINISTRATOR</role-name>
-	</security-role>  -->
+	</security-role>  
 	<!-- end secure -->
 
 	<!-- spring context -->

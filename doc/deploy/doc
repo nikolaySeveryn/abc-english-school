@@ -1,0 +1,2 @@
+get password hash:
+echo -n "password" | openssl dgst -md5 -binary | openssl base64
