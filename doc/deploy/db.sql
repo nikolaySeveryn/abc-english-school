@@ -3,7 +3,7 @@ INSERT INTO abc.personalInfo(id, email, firstname, sirname)
 
 INSERT INTO abc.accountinfo(
             accountId, isdeleted, login, password, personal_info)
-    SELECT nextval('abc.account_id_seq'), false, 'root', 'jXiDhUMSc9Eei0O7ePOqQQ==', id FROM abc.personalInfo WHERE email = 'root@email.em';
+    SELECT nextval('abc.account_id_seq'), false, 'root', 'Y6nw6nu5gFB5a2SehUgYRQ==', id FROM abc.personalInfo WHERE email = 'root@email.em';
 
 
 INSERT INTO abc.user_role(accountinfo_accountid, role)
