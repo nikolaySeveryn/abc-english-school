@@ -36,8 +36,8 @@ public class UserBean implements Serializable {
 	}
 	
 	public String getCurrentUserName() {
-//		return getExternalContext().getUserPrincipal().getName();
-		return "root";
+		return getExternalContext().getUserPrincipal().getName();
+//		return "root";
 	}
 
 	
