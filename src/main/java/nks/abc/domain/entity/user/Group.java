@@ -1,16 +1,25 @@
 package nks.abc.domain.entity.user;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
 public class Group {
+	
+	private final static Integer MULTIPLIER = 100; 
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="group_id_gen")
 	@SequenceGenerator(name="group_id_gen", allocationSize=1, sequenceName="group_id_seq")
@@ -22,11 +31,19 @@ public class Group {
 	private Level level;
 	@Column(nullable=false)
 	private Integer tarif;
-//	private Teacher teacher;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="teacher")
+	private Teacher teacher;
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="groups")
+	private Set<Student> students = null;
 	//TODO: plan
 	
-	
-	
+	public Double getFloatTarif(){
+		return (double)tarif / MULTIPLIER;
+	}
+	public void setFloatTarif(Double tarif){
+		this.tarif = (int) (tarif * MULTIPLIER);
+	}
 	public Long getId() {
 		return id;
 	}
@@ -51,7 +68,24 @@ public class Group {
 	public void setTarif(Integer tarif) {
 		this.tarif = tarif;
 	}
-	
+	public Teacher getTeacher() {
+		return teacher;
+	}
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
+	}
+	public Set<Student> getStudents() {
+		return students;
+	}
+	public void setStudents(Set<Student> students) {
+		this.students = students;
+	}
+	@Override
+	public String toString() {
+		return "Group [id=" + id + ", name=" + name + ", level=" + level
+				+ ", tarif=" + tarif + ", teacher=" + teacher + ", students="
+				+ students + "]";
+	}
 	
 	
 }

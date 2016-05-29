@@ -5,13 +5,14 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
-import nks.abc.dao.base.HibernateSpecification;
+import nks.abc.dao.base.CriterionSpecification;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
 import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
 import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
+import nks.abc.domain.dto.convertor.user.AccountDTOConverter;
 import nks.abc.domain.dto.user.StaffDTO;
 import nks.abc.domain.entity.user.AccountInfo;
 import nks.abc.domain.entity.user.Administrator;
@@ -29,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,6 +42,8 @@ public class StaffServiceTest {
 	private TeacherRepository teacherDAO;
 	@Mock
 	private AccountRepository accountDAO;
+	@Spy
+	private AccountDTOConverter dtoConvertor = new AccountDTOConverter();
 	
 	@InjectMocks
 	private StaffServiceImpl service = new StaffServiceImpl();
@@ -175,7 +179,7 @@ public class StaffServiceTest {
 	@Test(expected=RightsDeprivingException.class)
 	public void updateDeprivingRights(){
 		String currentUserLogin = "user";
-		employee.setId(4L);
+		employee.setAccountId(4L);
 		employee.setIsAdministrator(false);
 		AccountInfo account = new AccountInfo();
 		account.setAccountId(4L);
@@ -191,7 +195,7 @@ public class StaffServiceTest {
 	// TODO: need more update tests
 	@Test
 	public void UpdateSuccess(){
-		employee.setId(4L);
+		employee.setAccountId(4L);
 		String currentUserLogin = "user";
 		AccountInfo currentUser = new AccountInfo();
 		currentUser.setLogin(currentUserLogin);
@@ -236,17 +240,16 @@ public class StaffServiceTest {
 	
 	
 	private void compareAccountInfoWithoutPassword(StaffDTO dto, AccountInfo account){
-		assertEquals(dto.getBirthday(), account.getBirthday());
-		assertEquals(dto.getEmail(), account.getEmail());
-		assertEquals(dto.getFirstName(), account.getFirstName());
+		assertEquals(dto.getBirthday(), account.getPeronalInfo().getBirthday());
+		assertEquals(dto.getEmail(), account.getPeronalInfo().getEmail());
+		assertEquals(dto.getFirstName(), account.getPeronalInfo().getFirstName());
 		assertEquals(dto.getIsAdministrator(), account.isAdministrator());
 		assertEquals(dto.getIsTeacher(), account.isTeacher());
 		assertFalse(account.isStudent());
 		assertEquals(dto.getLogin(), account.getLogin());
-		assertEquals(dto.getPhoneNum(), account.getPhoneNum());
-		assertEquals(dto.getSirName(), account.getSirName());
-		assertEquals(dto.getPatronomic(), account.getPatronomic());
-		
+		assertEquals(dto.getPhoneNum(), account.getPeronalInfo().getPhoneNum());
+		assertEquals(dto.getSirName(), account.getPeronalInfo().getSirName());
+		assertEquals(dto.getPatronomic(), account.getPeronalInfo().getPatronomic());
 	}
 	
 	private void compareAccountInfo(StaffDTO dto, AccountInfo account){

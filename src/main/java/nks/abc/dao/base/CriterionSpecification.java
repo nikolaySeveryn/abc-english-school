@@ -2,6 +2,6 @@ package nks.abc.dao.base;
 
 import org.hibernate.criterion.Criterion;
 
-public interface HibernateSpecification {
+public interface CriterionSpecification {
 	Criterion toCriteria();
 }

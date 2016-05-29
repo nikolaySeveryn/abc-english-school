@@ -2,21 +2,27 @@ package nks.abc.domain.entity.user;
 
 public enum Level {
 	
-	BEGINER("A1"),
-	ELEMENTARY("A2"),
-	PRE_INTERMEDIATE("B1"),
-	INTERMEDIATE("B1"),
-	UPPER_INTERMEDIATE("B2"),
-	ADVANCED("C1"),
-	PROFICIENCY("C2");
+	BEGINER("A1", "Beginer"),
+	ELEMENTARY("A2", "Elementary"),
+	PRE_INTERMEDIATE("B1", "Pre Intermediate"),
+	INTERMEDIATE("B1", "Intermediate"),
+	UPPER_INTERMEDIATE("B2", "Upper Intermediate"),
+	ADVANCED("C1", "Advanced"),
+	PROFICIENCY("C2", "Proficiency");
 	
 	private String ef;
+	private String label;
 	
-	Level(String europeanFramework){
+	Level(String europeanFramework, String label){
 		ef = europeanFramework;
+		this.label = label;
 	}
 	
 	public String getEF(){
 		return ef;
+	}
+	
+	public String getLabel(){
+		return label + " (" + ef + ")";
 	}
 }

@@ -1,4 +1,4 @@
-package nks.abc.web.validator;
+package nks.abc.web.common.validator;
 
 import java.util.HashMap;
 import java.util.Map;

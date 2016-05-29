@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<h2>Групи</h2>
+			<h:form>
+				<p:toolbar>
+					<f:facet name="left">
+						<p:commandButton action="#{groupBean.addGroup()}"
+							icon="ui-icon-plusthick" />
+						<p:commandButton actionListener="#{groupBean.deleteGroup()}"
+							update=":growl group_table" icon="ui-icon-trash">
+							<p:confirm header="Confirmation"
+								message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
+						</p:commandButton>
+					</f:facet>
+				</p:toolbar>
+				
+				<p:dataTable id="group_table" var="group"
+					value="#{groupBean.groupList}" emptyMessage="Пусто"
+					styleClass="data-table" resizableColumns="true">
+					<p:column width="20">
+						<p:selectBooleanCheckbox
+							value="#{groupBean.checkedGroups[group.id]}" />
+					</p:column>
+					<p:column headerText="Група">
+						<h:outputText
+							value="#{group.name}" />
+					</p:column>
+					<p:column width="68">
+						<p:commandButton action="#{groupBean.editGroup(group)}" icon="ui-icon-pencil" />
+						<p:commandButton action="#{groupBean.viewGroup(group)}" icon="ui-icon-person" update=":student_list_form" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<ui:insert name="confirm">
+				<ui:include src="/include/confirmDialog.xhtml" />
+			</ui:insert>
+</h:body>
+</html>

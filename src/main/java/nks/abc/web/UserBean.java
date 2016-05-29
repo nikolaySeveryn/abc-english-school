@@ -14,7 +14,7 @@ import nks.abc.service.StaffService;
 import java.io.Serializable;
 
 @Component
-@ManagedBean(name="userBean")
+@ManagedBean
 @SessionScoped
 public class UserBean implements Serializable {
 	
@@ -36,8 +36,8 @@ public class UserBean implements Serializable {
 	}
 	
 	public String getCurrentUserName() {
-		return getExternalContext().getUserPrincipal().getName();
-//		return "root";
+//		return getExternalContext().getUserPrincipal().getName();
+		return "root";
 	}
 
 	

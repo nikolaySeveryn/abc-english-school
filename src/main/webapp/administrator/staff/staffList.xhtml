@@ -14,28 +14,31 @@
 
 			<p:growl id="growl" life="4000" />
 			<h:form>
-				<p:commandButton action="#{staffController.add()}"
-					icon="ui-icon-plusthick" />
+				<p:toolbar>
+					<f:facet name="left">
+						<p:commandButton action="#{staffBean.add()}"
+							icon="ui-icon-plusthick" />
 
-				<p:commandButton actionListener="#{staffController.delete()}"
-					update=":growl staff_dt" icon="ui-icon-trash">
-					<p:confirm header="Confirmation"
-						message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
-				</p:commandButton>
-
+						<p:commandButton actionListener="#{staffBean.delete()}"
+							update=":growl staff_dt" icon="ui-icon-trash">
+							<p:confirm header="Confirmation"
+								message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
+						</p:commandButton>
+					</f:facet>
+				</p:toolbar>
 				<p:dataTable id="staff_dt" var="employee"
-					value="#{staffController.list}" emptyMessage="Пусто"
+					value="#{staffBean.list}" emptyMessage="Пусто"
 					styleClass="data-table" resizableColumns="true">
 					<p:column width="20">
 						<p:selectBooleanCheckbox
-							value="#{staffController.checked[employee.id]}" />
+							value="#{staffBean.checked[employee.accountId]}" />
 					</p:column>
 					<p:column headerText="Cпівробітник">
 						<h:outputText
 							value="#{employee.sirName} #{employee.firstName} #{employee.patronomic}" />
 					</p:column>
 					<p:column width="40">
-						<p:commandButton action="#{staffController.edit(employee)}"
+						<p:commandButton action="#{staffBean.edit(employee)}"
 							icon="ui-icon-pencil" />
 					</p:column>
 				</p:dataTable>

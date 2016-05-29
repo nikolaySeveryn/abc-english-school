@@ -1,11 +1,11 @@
 package nks.abc.dao.specification.user.administrator;
 
-import nks.abc.dao.base.HibernateSpecification;
+import nks.abc.dao.base.CriterionSpecification;
 import nks.abc.domain.entity.user.AccountInfo;
 
 public class AdministratorSpecificationFactory {
 	
-	public HibernateSpecification byAccount(AccountInfo account) {
+	public CriterionSpecification byAccount(AccountInfo account) {
 		return new ByAccountSpesification(account);
 	}
 	

@@ -3,9 +3,9 @@ package nks.abc.dao.specification.user.account;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import nks.abc.dao.base.HibernateSpecification;
+import nks.abc.dao.base.CriterionSpecification;
 
-class IsDeletedSpecification implements HibernateSpecification {
+class IsDeletedSpecification implements CriterionSpecification {
 
 	private Boolean isDelete;
 	

@@ -7,22 +7,22 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-public class ConjunctionSpecification implements HibernateSpecification {
+public class ConjunctionSpecification implements CriterionSpecification {
 
-	private List<HibernateSpecification> specifications;
+	private List<CriterionSpecification> specifications;
 	
-	public ConjunctionSpecification(HibernateSpecification... specifications) {
+	public ConjunctionSpecification(CriterionSpecification... specifications) {
 		this.specifications = Arrays.asList(specifications);
 	}
 	
-	public void addSpecification(HibernateSpecification specification){
+	public void addSpecification(CriterionSpecification specification){
 		specifications.add(specification);
 	}
 
 	@Override
 	public Criterion toCriteria() {
 		Conjunction criteria = Restrictions.conjunction();
-		for(HibernateSpecification specification : specifications){
+		for(CriterionSpecification specification : specifications){
 			criteria.add(specification.toCriteria());
 		}
 		return criteria;

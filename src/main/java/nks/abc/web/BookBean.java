@@ -16,77 +16,76 @@ import nks.abc.domain.dto.BookDTO;
 import nks.abc.service.BookService;
 import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.exception.ServiceException;
+import nks.abc.web.common.enumeration.EditingMode;
+import nks.abc.web.common.util.FacesUtilit;
 
 import java.io.Serializable;
 
 @Component
-@ManagedBean(name="bookController")
+@ManagedBean
 @SessionScoped
-public class BookController implements Serializable {
+public class BookBean implements Serializable {
 	
 	private static final long serialVersionUID = -1472298095198746868L;
 
-	public enum EditMode{
-		NONE,
-		EDIT,
-		ADD
-	}
-	
 	@Autowired
 	private BookService bookService;
 	
-	private EditMode mode = EditMode.NONE;
+	@Autowired
+	private FacesUtilit utilit;
+	
+	private EditingMode mode = EditingMode.NONE;
 	private BookDTO book = new BookDTO.NullBookDTO();
 	
 	public void add () {
-		mode = EditMode.ADD;
+		mode = EditingMode.ADD;
 		book = new BookDTO(null, new String(), new String());
 	}
 	
 	public void edit(BookDTO book) {
-		mode = EditMode.EDIT;
+		mode = EditingMode.EDIT;
 		this.book = book;
 	}
 	
 	public void save() {
 		try {
-			if(mode.equals(EditMode.ADD)){
+			if(mode.equals(EditingMode.ADD)){
 				System.out.println("save adding");
-				bookService.save(book);
-				addMessage(FacesMessage.SEVERITY_INFO, "Added");
+				bookService.add(book);
+				utilit.addMessage(FacesMessage.SEVERITY_INFO, "Added");
 			}
-			else if(mode.equals(EditMode.EDIT)){
+			else if(mode.equals(EditingMode.EDIT)){
 				System.out.println("save editing");
 				bookService.update(book);
-				addMessage(FacesMessage.SEVERITY_INFO, "Updated");
+				utilit.addMessage(FacesMessage.SEVERITY_INFO, "Updated");
 			}
 			else {
-				addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+				utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			}
 		} catch (ServiceDisplayedErorr e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			e.printStackTrace();
 		}
 	}
 
 	public void cancel(){
-		this.mode = EditMode.NONE;
+		this.mode = EditingMode.NONE;
 		this.book = new BookDTO.NullBookDTO();
-		addMessage(FacesMessage.SEVERITY_INFO, "скасовано");
+		utilit.addMessage(FacesMessage.SEVERITY_INFO, "скасовано");
 	}
 	
 	public void delete(BookDTO book) {
 		try {
 			bookService.delete(book);
-			addMessage(FacesMessage.SEVERITY_WARN, "Deleted");
+			utilit.addMessage(FacesMessage.SEVERITY_WARN, "Deleted");
 		} catch (ServiceDisplayedErorr e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			e.printStackTrace();
 		}	
 	}
@@ -95,17 +94,15 @@ public class BookController implements Serializable {
 		try {
 			return bookService.getAll();
 		} catch (ServiceDisplayedErorr e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 			return new ArrayList<BookDTO>();
 		} catch (ServiceException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			e.printStackTrace();
 			return new ArrayList<BookDTO>();
 		}
 	}
-	
-	
 	
 	public BookDTO getBook() {
 		return book;
@@ -115,17 +112,12 @@ public class BookController implements Serializable {
 		this.book = book;
 	}
 
-	public EditMode getMode() {
+	public EditingMode getMode() {
 		return mode;
 	}
 
-	public void setMode(EditMode mode) {
+	public void setMode(EditingMode mode) {
 		this.mode = mode;
-	}
-	
-	private void addMessage(Severity severity, String msg) {
-		FacesMessage message = new FacesMessage(severity, msg,  null);
-		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 	
 }

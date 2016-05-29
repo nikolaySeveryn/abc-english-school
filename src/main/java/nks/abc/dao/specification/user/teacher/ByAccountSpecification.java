@@ -3,10 +3,10 @@ package nks.abc.dao.specification.user.teacher;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import nks.abc.dao.base.HibernateSpecification;
+import nks.abc.dao.base.CriterionSpecification;
 import nks.abc.domain.entity.user.AccountInfo;
 
-class ByAccountSpecification implements HibernateSpecification{
+class ByAccountSpecification implements CriterionSpecification{
 	
 	private AccountInfo account;
 	

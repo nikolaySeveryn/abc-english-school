@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.dao.base.HibernateSpecification;
+import nks.abc.dao.base.CriterionSpecification;
 import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
-import nks.abc.domain.dto.convertor.user.StaffDTOConvertor;
+import nks.abc.domain.dto.convertor.user.AccountDTOConverter;
 import nks.abc.domain.dto.user.StaffDTO;
 import nks.abc.domain.entity.user.Administrator;
 import nks.abc.domain.entity.user.AccountInfo;
@@ -40,6 +40,8 @@ public class StaffServiceImpl implements StaffService {
 	private TeacherRepository teacherDAO;
 	@Autowired
 	private AccountRepository accountDAO;
+	@Autowired
+	private AccountDTOConverter dtoConvertor;
 	
 	@Override
 	@Transactional(readOnly=false)
@@ -56,9 +58,9 @@ public class StaffServiceImpl implements StaffService {
 		if(!employeeDTO.getIsAdministrator() && !employeeDTO.getIsTeacher()){
 			throw new ServiceDisplayedErorr("Employee should be a teacher or an administrator or both of them");
 		}
-		
-		AccountInfo account = convertAccountFromDTO(employeeDTO);
-		account.setIsDeleted(false);
+		AccountInfo account = dtoConvertor.toDomain(employeeDTO);
+//		should work without this
+//		account.setIsDeleted(false);
 		account.updatePassword(employeeDTO.getPassword());
 		
 		try {
@@ -66,14 +68,14 @@ public class StaffServiceImpl implements StaffService {
 				Administrator admin = UserFactory.createAdministrator();
 				admin.setAccountInfo(account);
 				
-				log.info("add admin: " + account);
+				log.info("adding admin: " + admin);
 				adminDAO.insert(admin);
 			}
 			if(employeeDTO.getIsTeacher()) {
 				Teacher teacher = UserFactory.createTeacher();
 				teacher.setAccountInfo(account);
 				
-				log.info("add teacher");
+				log.info("adding teacher: " + teacher);
 				teacherDAO.insert(teacher);
 			}
 		} catch (DAOException de) {
@@ -88,7 +90,7 @@ public class StaffServiceImpl implements StaffService {
 	public void update(StaffDTO employeeDTO, String currentUserLogin) {
 		updateGuardClause(employeeDTO, currentUserLogin);
 		
-		AccountInfo updatingUser = convertAccountFromDTO(employeeDTO);
+		AccountInfo updatingUser = dtoConvertor.toDomain(employeeDTO);
 		
 		Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.getSpecificaitonFactory().byAccount(updatingUser));
 		Administrator admin = adminDAO.uniqueQuery(adminDAO.getSpecificationFactory().byAccount(updatingUser));
@@ -98,7 +100,7 @@ public class StaffServiceImpl implements StaffService {
 			}
 			if (teacher != null){
 				teacher.setAccountInfo(updatingUser);
-				log.info("update teacher: " + updatingUser);
+				log.info("updating teacher: " + updatingUser);
 				teacherDAO.update(teacher);
 			}
 			
@@ -107,7 +109,7 @@ public class StaffServiceImpl implements StaffService {
 			}
 			if(admin != null){
 				admin.setAccountInfo(updatingUser);
-				log.info("update administrator: " + admin);
+				log.info("updating administrator: " + admin);
 				adminDAO.update(admin);
 			}
 		}
@@ -122,9 +124,9 @@ public class StaffServiceImpl implements StaffService {
 		if(currentUserLogin == null || currentUserLogin.length() < 1) {
 			throw new NoCurrentUserException("Current user login is empty");
 		}
-		HibernateSpecification specification = accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false);
+		CriterionSpecification specification = accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false);
 		AccountInfo currentUser = accountDAO.uniqueQuery(specification);
-		if(employeeDTO.getId() == null){
+		if(employeeDTO.getAccountId() == null){
 			throw new NoIdException("Trying to update account without id");
 		}
 		
@@ -133,7 +135,7 @@ public class StaffServiceImpl implements StaffService {
 		}
 //		// restrict removing admin rights for yourself
 		// expects that change user can only administrator!!!
-		if(employeeDTO.getId().equals(currentUser.getAccountId()) && !employeeDTO.getIsAdministrator()){
+		if(employeeDTO.getAccountId().equals(currentUser.getAccountId()) && !employeeDTO.getIsAdministrator()){
 			throw new RightsDeprivingException("You can't deprive administrator rights yourself");
 		}
 	}
@@ -144,7 +146,7 @@ public class StaffServiceImpl implements StaffService {
 		deleteGuardClause(id, currentUserLogin);
 		try{
 			log.info("delete user: ");
-			AccountInfo removed = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byId(id));
+			AccountInfo removed = getAccountInfoById(id);
 			removed.setIsDeleted(true);
 			accountDAO.update(removed);
 		}
@@ -152,6 +154,24 @@ public class StaffServiceImpl implements StaffService {
 			log.error("DAO exception on staff deleting", de);
 			throw new ServiceException("dao error", de);
 		}
+	}
+	
+	
+
+	@Override
+	public StaffDTO getById(Long id) {
+		try {
+			AccountInfo account = getAccountInfoById(id);
+			return dtoConvertor.toDTO(account);
+		}
+		catch(DAOException de){
+			log.error("DAO exception on geting by id", de);
+			throw new ServiceException("dao error", de);
+		}
+	}
+
+	private AccountInfo getAccountInfoById(Long id) {
+		return accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byId(id));
 	}
 
 	private void deleteGuardClause(Long id, String currentUserLogin) {
@@ -168,7 +188,6 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	public List<StaffDTO> getAll() {
 		List<AccountInfo> accounts= null;
-		List<StaffDTO> dtos = new ArrayList<StaffDTO>();
 		try{
 			accounts = accountDAO.query(accountDAO.getSpecificationFactory().byIsDeleted(false));
 		}
@@ -176,8 +195,29 @@ public class StaffServiceImpl implements StaffService {
 			log.error("DAO exception on staff finding all", de);
 			throw new ServiceException("dao error", de);
 		}
-		StaffDTOConvertor.toDTO(accounts, dtos);
-		return  dtos;
+		
+		return new ArrayList<StaffDTO>(dtoConvertor.toDTO(accounts));
+	}
+	
+	@Override
+	public List<StaffDTO> getAllTeachers() {
+		List<Teacher> teachers = null;
+		try{
+			teachers = teacherDAO.query(teacherDAO.getSpecificaitonFactory().byIsDeleted(false));
+		}
+		catch(DAOException de){
+			log.error("DAO exception on teacher finding", de);
+			throw new ServiceException("dao error", de);
+		}
+		List<StaffDTO> dtos = new ArrayList<StaffDTO>();
+		System.out.println("teachers " + teachers);
+		System.out.println("teachers size " + teachers.size());
+		System.out.println("teachers type" + teachers.getClass());
+		System.out.println("teachers.get(0).getClass() = " + teachers.get(0).getClass());
+		for(Teacher teacher: teachers){
+			dtos.add(dtoConvertor.toDTO(teacher.getAccountInfo()));
+		}
+		return dtos;
 	}
 
 	@Override
@@ -190,20 +230,6 @@ public class StaffServiceImpl implements StaffService {
 		catch (DAOException de){
 			throw new ServiceException("dao error", de);
 		}
-		return convertAccountToDTO(entity);
+		return dtoConvertor.toDTO(entity);
 	}
-
-	private AccountInfo convertAccountFromDTO(StaffDTO employeeDTO){
-		AccountInfo employee = new AccountInfo();
-		StaffDTOConvertor.toEntity(employeeDTO, employee);
-		return employee;
-	}
-	
-	private StaffDTO convertAccountToDTO(AccountInfo entity){
-		StaffDTO employee = new StaffDTO();
-		StaffDTOConvertor.toDTO(entity, employee);
-		return employee;
-	}
-
-
 }

@@ -6,7 +6,7 @@ import nks.abc.domain.dto.BookDTO;
 
 public interface BookService {
 	
-	public void save(BookDTO book);
+	public void add(BookDTO book);
 	public void update(BookDTO book);
 	public void delete(BookDTO book);
 //	public BookDTO findById(Integer id);

@@ -1,27 +1,27 @@
 package nks.abc.dao.specification.user.account;
 
 import nks.abc.dao.base.ConjunctionSpecification;
-import nks.abc.dao.base.HibernateSpecification;
+import nks.abc.dao.base.CriterionSpecification;
 
 public class AccountInfoSpecificationFactory {
 	
-	public HibernateSpecification byLoginAndDeleted(String login, Boolean deleted) {
+	public CriterionSpecification byLoginAndDeleted(String login, Boolean deleted) {
 		return new ConjunctionSpecification(new LoginSpecification(login), new IsDeletedSpecification(deleted));
 	}
 	
-	public HibernateSpecification byIdAndDeleted(Long id, Boolean deleted){
+	public CriterionSpecification byIdAndDeleted(Long id, Boolean deleted){
 		return new ConjunctionSpecification(new IdSpecification(id), new IsDeletedSpecification(deleted));
 	}
 	
-	public HibernateSpecification byId(Long id){
+	public CriterionSpecification byId(Long id){
 		return new IdSpecification(id);
 	}
 	
-	public HibernateSpecification byLogin(String login){
+	public CriterionSpecification byLogin(String login){
 		return new LoginSpecification(login);
 	}
 	
-	public HibernateSpecification byIsDeleted(Boolean isDeleted){
+	public CriterionSpecification byIsDeleted(Boolean isDeleted){
 		return new IsDeletedSpecification(isDeleted);
 	}
 	

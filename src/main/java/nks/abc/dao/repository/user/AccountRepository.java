@@ -18,7 +18,6 @@ public class AccountRepository extends BaseHibernrateRepositoryImpl<AccountInfo>
 	}
 
 	public AccountInfoSpecificationFactory getSpecificationFactory(){
-		System.out.println("Account get specification factory");
 		return new AccountInfoSpecificationFactory();
 	}
 }

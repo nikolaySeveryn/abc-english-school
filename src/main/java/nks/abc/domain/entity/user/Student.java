@@ -1,50 +1,47 @@
 package nks.abc.domain.entity.user;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SequenceGenerator;
-
-import org.hibernate.validator.constraints.Email;
 
 
 @Entity
-public class Student implements User{
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="student_id_gen")
-	@SequenceGenerator(name="student_id_gen", allocationSize=1, sequenceName="student_id_seq")
-	private Long id;
-	@OneToOne(fetch=FetchType.LAZY)
-	private ParentInfo parent;
-	@ManyToOne
-	@JoinColumn(name="groupId", nullable=false)
-	private Group group;
-	private Integer discount;
-	private Integer moneyBalance;
-	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	@JoinColumn(name="account_info", nullable=false)
-	private AccountInfo accountInfo;
+@PrimaryKeyJoinColumn(name="id")
+public class Student extends User {
 	
 	
+//	@OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private PersonalInfo parent;
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="student_group", 
+		joinColumns={@JoinColumn(name="student_id")},
+		inverseJoinColumns={@JoinColumn(name="group_id")})
+	private Set<Group> groups;
+	@Column(nullable=false)
+	private Integer discount = 0;
+	@Column(nullable=false)
+	private Integer moneyBalance = 0;
 	
-	public ParentInfo getParent() {
+	public PersonalInfo getParent() {
 		return parent;
 	}
-	public void setParent(ParentInfo parent) {
+	public void setParent(PersonalInfo parent) {
 		this.parent = parent;
 	}
-	public Group getGroup() {
-		return group;
+	public Set<Group> getGroups() {
+		return groups;
 	}
-	public void setGroup(Group group) {
-		this.group = group;
+	public void setGroups(Set<Group> group) {
+		this.groups = group;
 	}
 	public Integer getDiscount() {
 		return discount;
@@ -57,13 +54,6 @@ public class Student implements User{
 	}
 	public void setMoneyBalance(Integer moneyBalance) {
 		this.moneyBalance = moneyBalance;
-	}
-	@Override
-	public AccountInfo getAccountInfo() {
-		return accountInfo;
-	}
-	public void setAccountInfo(AccountInfo accountInfo) {
-		this.accountInfo = accountInfo;
 	}
 	@Override
 	public Long getAccountId() {

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:head>
+	
+</h:head>
+<h:body>
+	<ui:composition template="/include/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="group_edit_form">
+				<p:messages />
+				<p:panelGrid columns="3">
+ 					<p:outputLabel value="Назва" for="name" />
+					<p:inputText id="name" value="#{groupBean.editedGroup.name}" />
+					<p:message for="name" />
+					
+					<p:outputLabel value="Рівень" for="level" />
+					<p:selectOneMenu id="level" value="#{groupBean.editedGroup.level}">
+						<f:selectItems value="#{groupBean.levels}" var="level" itemValue="#{level}"  itemLabel="#{level.label}"/>
+					</p:selectOneMenu>
+					<p:message for="level" />
+					
+					<p:outputLabel value="Вартість заняття" for="tarif" />
+					<pe:inputNumber id="tarif" value="#{groupBean.editedGroup.tarif}" symbol=" UAH" symbolPosition="s" 
+                               decimalSeparator="," thousandSeparator=" " />
+                    <p:message for="tarif" />
+                    
+                    <p:outputLabel value="Викладач" for="teacher" />
+					<p:autoComplete id="teacher" value="#{groupBean.editedGroup.teacher}"
+						dropdown="true" completeMethod="#{groupBean.complateTeacher}"
+						var="teacher" itemLabel="#{teacher.sirName} #{teacher.firstName} #{teacher.patronomic}"
+						itemValue="#{teacher}"
+						converter="#{staffConverter}" />
+					<p:message for="teacher" />
+
+				</p:panelGrid>
+				<p:commandButton action="#{groupBean.saveGroup()}"
+					validateClient="true" 
+					update="group_edit_form"
+					value="Зберегти" icon="ui-icon-disk" />
+				<p:commandButton action="#{groupBean.cancel()}"
+					value="Відмінити" icon="ui-icon-cancel" immediate="true" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

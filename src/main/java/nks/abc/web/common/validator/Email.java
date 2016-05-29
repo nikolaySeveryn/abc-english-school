@@ -1,4 +1,4 @@
-package nks.abc.web.validator;
+package nks.abc.web.common.validator;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -19,8 +19,8 @@ import org.primefaces.validate.bean.ClientConstraint;
 @Documented
 public @interface Email {
 	String message() default "must be an Email";
+	boolean notEmpty() default true;
     
-    Class<?>[] groups() default {};
- 
+	Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};           
 }

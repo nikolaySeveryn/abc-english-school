@@ -1,4 +1,4 @@
-package nks.abc.domain.dto.convertor;
+package nks.abc.domain.dto.converter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import nks.abc.domain.dto.BookDTO;
 import nks.abc.domain.dto.BookDTO.NullBookDTO;
 import nks.abc.domain.entity.Book;
 
-public class BookDTOConvertor {
+public class BookDTOConverter {
 	
 	public static BookDTO toDTO(Book entity){
 		BookDTO dto = new BookDTO.NullBookDTO();

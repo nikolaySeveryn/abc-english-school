@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -23,40 +24,42 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.varia.FallbackErrorHandler;
 import org.hibernate.validator.constraints.Email;
 
 @Entity
 public class AccountInfo {
+	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_id_gen")
-	@SequenceGenerator(name="user_id_gen", allocationSize=1, sequenceName="user_id_seq")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="account_id_seq")
+	@SequenceGenerator(name="account_id_seq", allocationSize=1, sequenceName="account_id_seq")
 	private Long accountId;
+	
 	@Column(nullable=false, unique=true)
 	private String login;
+	
 	@Column(name="password", nullable=false)
 	private String passwordHash;
+	
+//	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToOne(cascade={CascadeType.ALL})
+	@JoinColumn(name="personal_info")
+	private PersonalInfo peronalInfo;
 	
 	@ElementCollection(targetClass=Role.class, fetch=FetchType.LAZY)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name="user_role")
 	@Column(name="ROLE",nullable=false)
 	private Set<Role> role = new HashSet<Role>();
-	
 	@Column(nullable=false)
-	private String firstName;
-	@Column(nullable=false)
-	private String sirName;
-	private String patronomic;
-	private Date birthday;
-	private String phoneNum;
-	@Email
-	private String email;
-	private Boolean isDeleted;
+	private Boolean isDeleted=false;
 	
 	public void updatePassword(String password) {
 		
@@ -134,68 +137,33 @@ public class AccountInfo {
 	private void setRole(Set<Role> role) {
 		this.role = role;
 	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getSirName() {
-		return sirName;
-	}
-	public void setSirName(String sirName) {
-		this.sirName = sirName;
-	}
 	public String getPasswordHash() {
 		return passwordHash;
 	}
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
 	}
-	public Date getBirthday() {
-		return birthday;
-	}
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
-	public String getPhoneNum() {
-		return phoneNum;
-	}
-	public void setPhoneNum(String phoneNum) {
-		this.phoneNum = phoneNum;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public Boolean getIsDeleted() {
 		return isDeleted;
 	}
-
 	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-
-	public String getPatronomic() {
-		return patronomic;
+	public PersonalInfo getPeronalInfo() {
+		return peronalInfo;
 	}
-
-	public void setPatronomic(String patronomic) {
-		this.patronomic = patronomic;
+	public void setPeronalInfo(PersonalInfo peronalInfo) {
+		this.peronalInfo = peronalInfo;
 	}
 
 	@Override
 	public String toString() {
 		return "AccountInfo [accountId=" + accountId + ", login=" + login
-				+ ", passwordHash=" + passwordHash + ", role=" + role
-				+ ", firstName=" + firstName + ", sirName=" + sirName
-				+ ", patronomic=" + patronomic + ", birthday=" + birthday
-				+ ", phoneNum=" + phoneNum + ", email=" + email
-				+ ", isDeleted=" + isDeleted + "]";
+				+ ", passwordHash=" + passwordHash + ", peronalInfo="
+				+ peronalInfo + ", role=" + role + ", isDeleted=" + isDeleted
+				+ ", super=" + super.toString() + "]";
 	}
+	
 	
 }
 

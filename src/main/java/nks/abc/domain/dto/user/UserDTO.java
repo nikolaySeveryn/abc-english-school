@@ -1,5 +1,6 @@
 package nks.abc.domain.dto.user;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,13 +11,13 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-
 import nks.abc.domain.entity.user.Role;
-import nks.abc.web.validator.Email;
+import nks.abc.web.common.validator.Email;
 
 @ManagedBean
 public abstract class UserDTO {
-	private Long id;
+	private Long accountId;
+	private Long personalInfoId;
 	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){5,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 5 symbol")
 	private String login;
 	@Pattern(regexp="^.{7,}$", message="Minimum size 7 symbols")
@@ -25,7 +26,7 @@ public abstract class UserDTO {
 	private String firstName;
 	private String sirName;
 	private String patronomic;
-	@Past(message="I don't belive you")
+	@Past(message="He didn't born yet!")
 	private Date birthday;
 	@Pattern(regexp="^\\+?([0-9]|\\-){0,15}$", message="Avaliable symbols: '+'(at begining), 0-9,'-'. Maximum size 15 symbols")
 	private String phoneNum;
@@ -33,17 +34,24 @@ public abstract class UserDTO {
 	private String email;
 	private Boolean isDeleted;
 	
-	
+	public static StudentDTO newStudent(){
+		StudentDTO instance = new StudentDTO();
+		instance.setGroups(new ArrayList<GroupDTO>());
+		instance.setParent(new ParentInfoDTO());
+		instance.setIsDeleted(false);
+		instance.setMoneyBalance(0);
+		return instance;
+	}
 	
 	
 	/**
 	 * getters & setters
 	 * */
-	public Long getId() {
-		return id;
+	public Long getAccountId() {
+		return accountId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setAccountId(Long id) {
+		this.accountId = id;
 	}
 	public String getLogin() {
 		return login;
@@ -107,9 +115,16 @@ public abstract class UserDTO {
 	public void setIsDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+	public Long getPersonalInfoId() {
+		return personalInfoId;
+	}
+	public void setPersonalInfoId(Long personalInfoId) {
+		this.personalInfoId = personalInfoId;
+	}
+
 	@Override
 	public String toString() {
-		return "UserDTO [id=" + id + ", login=" + login + ", password="
+		return "UserDTO [id=" + accountId + ", personalInfoId=" + personalInfoId + ", login=" + login + ", password="
 				+ password + ", passwordHash=" + passwordHash + ", firstName="
 				+ firstName + ", sirName=" + sirName + ", patronomic="
 				+ patronomic + ", birthday=" + birthday + ", phoneNum="

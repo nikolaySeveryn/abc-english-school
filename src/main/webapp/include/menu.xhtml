@@ -20,8 +20,11 @@
 				</c:if>
 				<c:if test="#{userBean.currentUser.isAdministrator}">
 				<p:submenu label="Адміністратор">
+					<p:menuitem value="Групи"
+						action="/administrator/group/main.xhtml?faces-redirect=true" />
 					<p:menuitem value="Персонал"
 						action="/administrator/staff/staffList.xhtml?faces-redirect=true" />
+						
 				</p:submenu>
 				</c:if>
 			</p:menu>

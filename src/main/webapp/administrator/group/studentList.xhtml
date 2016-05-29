@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<h2>Учні</h2>
+			<h:form id="student_list_form">
+				<p:toolbar>
+					<f:facet name="left">
+						<p:commandButton action="#{groupBean.addStudent()}"
+							icon="ui-icon-plusthick" />
+						<p:commandButton actionListener="#{groupBean.deleteStudent()}"
+							update=":growl student_table" icon="ui-icon-trash">
+							<p:confirm header="Confirmation"
+								message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
+						</p:commandButton>
+					</f:facet>
+				</p:toolbar>
+				
+				<p:dataTable id="student_table" var="student" rendered="#{groupBean.viewed ne null}"
+					value="#{groupBean.viewed.students}" emptyMessage="Пусто" 
+					styleClass="data-table" resizableColumns="true">
+					<p:column width="20">
+						<p:selectBooleanCheckbox
+							value="#{groupBean.checkedStudents[student.id]}" />
+					</p:column>
+					<p:column headerText="Група">
+						<h:outputText
+							value="#{student.sirName} #{student.firstName} #{student.patronomic}" />
+					</p:column>
+					<p:column width="40">
+						<p:commandButton action="#{groupBean.editStudent(student)}"
+							icon="ui-icon-pencil" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<ui:insert name="confirm">
+				<ui:include src="/include/confirmDialog.xhtml" />
+			</ui:insert>
+</h:body>
+</html>
