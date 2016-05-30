@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.user.GroupRepository;
-import nks.abc.domain.dto.converter.Converter;
-import nks.abc.domain.dto.converter.ConvertersHolder;
-import nks.abc.domain.dto.convertor.user.AccountDTOConverter;
-import nks.abc.domain.dto.convertor.user.StudentDTOConverter;
-import nks.abc.domain.dto.user.GroupDTO;
 import nks.abc.domain.entity.user.Group;
+import nks.abc.domain.view.converter.Converter;
+import nks.abc.domain.view.converter.ConvertersHolder;
+import nks.abc.domain.view.convertor.user.AccountViewConverter;
+import nks.abc.domain.view.convertor.user.StudentViewConverter;
+import nks.abc.domain.view.user.GroupView;
 import nks.abc.service.GroupService;
 import nks.abc.service.exception.ServiceException;
 
@@ -28,14 +28,14 @@ public class GroupServiceImpl implements GroupService {
 	private GroupRepository groupDAO;
 
 	@Autowired
-	private Converter<Group,GroupDTO> converter;
+	private Converter<Group,GroupView> converter;
 
 	@Override
-	public List<GroupDTO> getGroups() {
+	public List<GroupView> getGroups() {
 		try {
 			List<Group> groups = groupDAO.getAll();
-			converter.setRelativeConvertersPattern(new StudentDTOConverter(), new AccountDTOConverter());
-			List<GroupDTO> groupsDto = converter.toDTO(groups);
+			converter.setRelativeConvertersPattern(new StudentViewConverter(), new AccountViewConverter());
+			List<GroupView> groupsDto = converter.toView(groups);
 			return groupsDto;
 		}
 		catch (DAOException de) {
@@ -46,8 +46,8 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void saveGroup(GroupDTO dto) {
-		converter.setRelativeConvertersPattern(new AccountDTOConverter());
+	public void saveGroup(GroupView dto) {
+		converter.setRelativeConvertersPattern(new AccountViewConverter());
 		Group group = converter.toDomain(dto);
 		try {
 			if (group.getId() != null && group.getId() > 0L) {
@@ -66,10 +66,10 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public GroupDTO getById(Long id) {
+	public GroupView getById(Long id) {
 		try {
 			Group bo = getDomainGroupById(id);
-			return converter.toDTO(bo);
+			return converter.toView(bo);
 		}
 		catch (DAOException de) {
 			log.error("DAO Error during getting group by id", de);

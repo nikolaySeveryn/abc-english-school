@@ -1,16 +1,16 @@
-package nks.abc.domain.dto.user;
+package nks.abc.domain.view.user;
 
 import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-public class StudentDTO extends UserDTO {
+public class StudentView extends UserView {
 
 	private Long id;
 	private Long accountId;
-	private ParentInfoDTO parent;
-	private List<GroupDTO> groups;
+	private ParentInfoView parent;
+	private List<GroupView> groups;
 	@Min(0)
 	@Max(100)
 	private Integer discount;
@@ -28,16 +28,16 @@ public class StudentDTO extends UserDTO {
 	public void setAccountId(Long id) {
 		this.accountId = id;
 	}
-	public ParentInfoDTO getParent() {
+	public ParentInfoView getParent() {
 		return parent;
 	}
-	public void setParent(ParentInfoDTO parent) {
+	public void setParent(ParentInfoView parent) {
 		this.parent = parent;
 	}
-	public List<GroupDTO> getGroups() {
+	public List<GroupView> getGroups() {
 		return groups;
 	}
-	public void setGroups(List<GroupDTO> groups) {
+	public void setGroups(List<GroupView> groups) {
 		this.groups = groups;
 	}
 	public Integer getDiscount() {

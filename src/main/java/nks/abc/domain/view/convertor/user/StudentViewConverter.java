@@ -1,50 +1,50 @@
-package nks.abc.domain.dto.convertor.user;
+package nks.abc.domain.view.convertor.user;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import nks.abc.domain.dto.converter.Converter;
-import nks.abc.domain.dto.user.ParentInfoDTO;
-import nks.abc.domain.dto.user.StudentDTO;
 import nks.abc.domain.entity.user.Group;
 import nks.abc.domain.entity.user.PersonalInfo;
 import nks.abc.domain.entity.user.Student;
 import nks.abc.domain.entity.user.User;
+import nks.abc.domain.view.converter.Converter;
+import nks.abc.domain.view.user.ParentInfoView;
+import nks.abc.domain.view.user.StudentView;
 
 @Component
-public class StudentDTOConverter extends Converter<Student, StudentDTO> {
+public class StudentViewConverter extends Converter<Student, StudentView> {
 
 	
 	@Override
-	public StudentDTO toDTO(Student bo) {
-		StudentDTO dto = new StudentDTO();
-		UserDTOConvertor.toDTO(bo.getAccountInfo(), dto);
+	public StudentView toView(Student bo) {
+		StudentView dto = new StudentView();
+		UserViewConvertor.toDTO(bo.getAccountInfo(), dto);
 		dto.setId(bo.getId());
 		dto.setParent(parentToDTO(bo.getParent()));
 		
-		dto.setGroups(getRelativeConverters().pullConverter(GroupDTOConverter.class).toDTO(bo.getGroups()));
+		dto.setGroups(getRelativeConverters().pullConverter(GroupViewConverter.class).toView(bo.getGroups()));
 		dto.setDiscount(bo.getDiscount());
 		dto.setMoneyBalance(bo.getMoneyBalance());
 		return dto;
 	}
 	
 	@Override
-	public Student toDomain(StudentDTO dto) {
+	public Student toDomain(StudentView dto) {
 		Student bo = User.newStudent();
-		UserDTOConvertor.toEntity(dto, bo.getAccountInfo());
+		UserViewConvertor.toEntity(dto, bo.getAccountInfo());
 		bo.setId(dto.getId());
 		bo.setParent(parentToDomain(dto.getParent()));
-		Set<Group>groups = new HashSet<Group>(getRelativeConverters().pullConverter(GroupDTOConverter.class).toDomain(dto.getGroups()));
+		Set<Group>groups = new HashSet<Group>(getRelativeConverters().pullConverter(GroupViewConverter.class).toDomain(dto.getGroups()));
 		bo.setGroups(groups);
 		bo.setDiscount(dto.getDiscount());
 		bo.setMoneyBalance(dto.getMoneyBalance());
 		return bo;
 	}
 
-	private ParentInfoDTO parentToDTO(PersonalInfo bo) {
-		ParentInfoDTO dto = new ParentInfoDTO();
+	private ParentInfoView parentToDTO(PersonalInfo bo) {
+		ParentInfoView dto = new ParentInfoView();
 		dto.setBirthday(bo.getBirthday());
 		dto.setEmail(bo.getEmail());
 		dto.setFirstName(bo.getFirstName());
@@ -55,7 +55,7 @@ public class StudentDTOConverter extends Converter<Student, StudentDTO> {
 		return dto;
 	}
 	
-	private PersonalInfo parentToDomain(ParentInfoDTO dto){
+	private PersonalInfo parentToDomain(ParentInfoView dto){
 		PersonalInfo bo = new PersonalInfo();
 		bo.setBirthday(dto.getBirthday());
 		bo.setEmail(dto.getEmail());

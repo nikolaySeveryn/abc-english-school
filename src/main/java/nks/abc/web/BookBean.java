@@ -12,7 +12,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import nks.abc.domain.dto.BookDTO;
+import nks.abc.domain.view.BookView;
 import nks.abc.service.BookService;
 import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.exception.ServiceException;
@@ -35,14 +35,14 @@ public class BookBean implements Serializable {
 	private FacesUtilit utilit;
 	
 	private EditingMode mode = EditingMode.NONE;
-	private BookDTO book = new BookDTO.NullBookDTO();
+	private BookView book = new BookView.NullBookDTO();
 	
 	public void add () {
 		mode = EditingMode.ADD;
-		book = new BookDTO(null, new String(), new String());
+		book = new BookView(null, new String(), new String());
 	}
 	
-	public void edit(BookDTO book) {
+	public void edit(BookView book) {
 		mode = EditingMode.EDIT;
 		this.book = book;
 	}
@@ -73,11 +73,11 @@ public class BookBean implements Serializable {
 
 	public void cancel(){
 		this.mode = EditingMode.NONE;
-		this.book = new BookDTO.NullBookDTO();
+		this.book = new BookView.NullBookDTO();
 		utilit.addMessage(FacesMessage.SEVERITY_INFO, "скасовано");
 	}
 	
-	public void delete(BookDTO book) {
+	public void delete(BookView book) {
 		try {
 			bookService.delete(book);
 			utilit.addMessage(FacesMessage.SEVERITY_WARN, "Deleted");
@@ -90,25 +90,25 @@ public class BookBean implements Serializable {
 		}	
 	}
 	
-	public List<BookDTO> getList() {
+	public List<BookView> getList() {
 		try {
 			return bookService.getAll();
 		} catch (ServiceDisplayedErorr e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
-			return new ArrayList<BookDTO>();
+			return new ArrayList<BookView>();
 		} catch (ServiceException e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			e.printStackTrace();
-			return new ArrayList<BookDTO>();
+			return new ArrayList<BookView>();
 		}
 	}
 	
-	public BookDTO getBook() {
+	public BookView getBook() {
 		return book;
 	}
 	
-	public void setBook(BookDTO book) {
+	public void setBook(BookView book) {
 		this.book = book;
 	}
 

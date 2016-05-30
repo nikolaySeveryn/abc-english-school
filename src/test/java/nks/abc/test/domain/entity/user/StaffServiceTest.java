@@ -12,11 +12,11 @@ import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
 import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
 import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
-import nks.abc.domain.dto.convertor.user.AccountDTOConverter;
-import nks.abc.domain.dto.user.StaffDTO;
 import nks.abc.domain.entity.user.AccountInfo;
 import nks.abc.domain.entity.user.Administrator;
 import nks.abc.domain.entity.user.Teacher;
+import nks.abc.domain.view.convertor.user.AccountViewConverter;
+import nks.abc.domain.view.user.StaffView;
 import nks.abc.service.exception.NoCurrentUserException;
 import nks.abc.service.exception.NoUserLoginException;
 import nks.abc.service.exception.NoIdException;
@@ -43,13 +43,13 @@ public class StaffServiceTest {
 	@Mock
 	private AccountRepository accountDAO;
 	@Spy
-	private AccountDTOConverter dtoConvertor = new AccountDTOConverter();
+	private AccountViewConverter dtoConvertor = new AccountViewConverter();
 	
 	@InjectMocks
 	private StaffServiceImpl service = new StaffServiceImpl();
 	
-	private StaffDTO emptyEmployee;
-	private StaffDTO employee;
+	private StaffView emptyEmployee;
+	private StaffView employee;
 	private String passHash;
 	
 	@Before
@@ -61,10 +61,10 @@ public class StaffServiceTest {
 	
 	@Before
 	public void init(){
-		emptyEmployee = new StaffDTO();
+		emptyEmployee = new StaffView();
 		emptyEmployee.setIsAdministrator(false);
 		emptyEmployee.setIsTeacher(false);
-		employee = new StaffDTO();
+		employee = new StaffView();
 		
 		employee.setBirthday(new Date());
 		employee.setEmail("email@mail.ma");
@@ -239,7 +239,7 @@ public class StaffServiceTest {
 	}
 	
 	
-	private void compareAccountInfoWithoutPassword(StaffDTO dto, AccountInfo account){
+	private void compareAccountInfoWithoutPassword(StaffView dto, AccountInfo account){
 		assertEquals(dto.getBirthday(), account.getPeronalInfo().getBirthday());
 		assertEquals(dto.getEmail(), account.getPeronalInfo().getEmail());
 		assertEquals(dto.getFirstName(), account.getPeronalInfo().getFirstName());
@@ -252,7 +252,7 @@ public class StaffServiceTest {
 		assertEquals(dto.getPatronomic(), account.getPeronalInfo().getPatronomic());
 	}
 	
-	private void compareAccountInfo(StaffDTO dto, AccountInfo account){
+	private void compareAccountInfo(StaffView dto, AccountInfo account){
 		compareAccountInfoWithoutPassword(dto, account);
 		assertEquals(passHash, account.getPasswordHash());
 	}

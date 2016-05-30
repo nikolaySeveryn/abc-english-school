@@ -1,4 +1,4 @@
-package nks.abc.domain.dto.user;
+package nks.abc.domain.view.user;
 
 import java.sql.Date;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import nks.abc.web.common.validator.Email;
 
 
-public class ParentInfoDTO {
+public class ParentInfoView {
 	
 	private Long id;
 	private String firstName;

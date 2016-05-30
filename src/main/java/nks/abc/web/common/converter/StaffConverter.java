@@ -7,7 +7,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import nks.abc.domain.dto.user.StaffDTO;
+import nks.abc.domain.view.user.StaffView;
 import nks.abc.service.StaffService;
 import nks.abc.service.exception.ServiceException;
 
@@ -53,10 +53,10 @@ public class StaffConverter implements Converter {
 		if(object == null) {
 			return null;
 		}
-		if(!(object instanceof StaffDTO)) {
+		if(!(object instanceof StaffView)) {
 			throw new ConverterException("Conversion error: is not instance of staffDTO");
 		}
-		return ((StaffDTO)object).getAccountId().toString();
+		return ((StaffView)object).getAccountId().toString();
 	}
 
 }

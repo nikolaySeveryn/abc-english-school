@@ -4,9 +4,9 @@ import java.util.List;
 
 import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.BookDAO;
-import nks.abc.domain.dto.BookDTO;
-import nks.abc.domain.dto.converter.BookDTOConverter;
 import nks.abc.domain.entity.Book;
+import nks.abc.domain.view.BookView;
+import nks.abc.domain.view.converter.BookViewConverter;
 import nks.abc.service.BookService;
 import nks.abc.service.exception.ServiceException;
 
@@ -24,8 +24,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void add(BookDTO book) {
-		Book bookEntity = BookDTOConverter.toEntity(book);
+	public void add(BookView book) {
+		Book bookEntity = BookViewConverter.toEntity(book);
 		try{
 			bookDAO.insert(bookEntity);
 		}
@@ -36,8 +36,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(BookDTO book) {
-		Book bookEntity = BookDTOConverter.toEntity(book);
+	public void update(BookView book) {
+		Book bookEntity = BookViewConverter.toEntity(book);
 		try{
 			bookDAO.update(bookEntity);
 		}
@@ -48,8 +48,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(BookDTO book) {
-		Book bookEntity = BookDTOConverter.toEntity(book);
+	public void delete(BookView book) {
+		Book bookEntity = BookViewConverter.toEntity(book);
 		try{
 			bookDAO.delete(bookEntity);
 		}
@@ -83,7 +83,7 @@ public class BookServiceImpl implements BookService {
 //	}
 
 	@Override
-	public List<BookDTO> getAll() {
+	public List<BookView> getAll() {
 		List<Book> all = null;
 		try{
 			all = bookDAO.getAll();
@@ -91,7 +91,7 @@ public class BookServiceImpl implements BookService {
 		catch (DAOException de){
 			throw new ServiceException("dao error", de);
 		}
-		return BookDTOConverter.toDTO(all);
+		return BookViewConverter.toView(all);
 	}
 	
 	

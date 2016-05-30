@@ -8,11 +8,11 @@ import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
-import nks.abc.domain.dto.user.GroupDTO;
-import nks.abc.domain.dto.user.StaffDTO;
-import nks.abc.domain.dto.user.StudentDTO;
-import nks.abc.domain.dto.user.UserDTO;
 import nks.abc.domain.entity.user.Level;
+import nks.abc.domain.view.user.GroupView;
+import nks.abc.domain.view.user.StaffView;
+import nks.abc.domain.view.user.StudentView;
+import nks.abc.domain.view.user.UserView;
 import nks.abc.service.GroupService;
 import nks.abc.service.StaffService;
 import nks.abc.service.StudentService;
@@ -47,9 +47,9 @@ public class GroupBean implements Serializable {
 
 	private Map<Long,Boolean> checkedGroups = new HashMap<Long,Boolean>();
 	private Map<Long,Boolean> checkedStudents = new HashMap<Long,Boolean>();
-	private GroupDTO editedGroup;
-	private GroupDTO viewedGroup;
-	private StudentDTO editedStudent;
+	private GroupView editedGroup;
+	private GroupView viewedGroup;
+	private StudentView editedStudent;
 	private EditingMode groupMode = EditingMode.NONE;
 	private EditingMode studentMode = EditingMode.NONE;
 
@@ -59,26 +59,26 @@ public class GroupBean implements Serializable {
 		this.errorHandler.loggerFor(this.getClass());
 	}
 
-	public List<GroupDTO> getGroupList() {
+	public List<GroupView> getGroupList() {
 		try {
 			return groupService.getGroups();
 		}
 		catch (Exception e) {
 			errorHandler.handle(e);
-			return new ArrayList<GroupDTO>();
+			return new ArrayList<GroupView>();
 		}
 	}
 
 	public String addGroup() {
-		editedGroup = new GroupDTO();
+		editedGroup = new GroupView();
 		groupMode = EditingMode.ADD;
 		return GROUP_EDIT_PAGE;
 	}
 
 	public String addStudent() {
-		editedStudent = UserDTO.newStudent();
+		editedStudent = UserView.newStudent();
 		if (viewedGroup != null) {
-			List<GroupDTO> groups = editedStudent.getGroups();
+			List<GroupView> groups = editedStudent.getGroups();
 			groups.add(viewedGroup);
 			editedStudent.setGroups(groups);
 		}
@@ -86,19 +86,19 @@ public class GroupBean implements Serializable {
 		return STUDENT_EDIT_PAGE;
 	}
 
-	public void viewGroup(GroupDTO group) {
+	public void viewGroup(GroupView group) {
 		this.viewedGroup = group;
 		checkedStudents.clear();
 	}
 
-	public String editGroup(GroupDTO group) {
+	public String editGroup(GroupView group) {
 		System.out.println("edit group");
 		editedGroup = group;
 		groupMode = EditingMode.EDIT;
 		return GROUP_EDIT_PAGE;
 	}
 
-	public String editStudent(StudentDTO student) {
+	public String editStudent(StudentView student) {
 		System.out.println("edit student");
 		editedStudent = studentService.getById(student.getId()); // reload student to get groups
 		studentMode = EditingMode.EDIT;
@@ -173,10 +173,10 @@ public class GroupBean implements Serializable {
 		return Level.values();
 	}
 
-	public List<StaffDTO> complateTeacher(String query) {
+	public List<StaffView> complateTeacher(String query) {
 		query = query.trim();
-		List<StaffDTO> complate = new ArrayList<StaffDTO>();
-		for (StaffDTO teacher : staffService.getAllTeachers()) {
+		List<StaffView> complate = new ArrayList<StaffView>();
+		for (StaffView teacher : staffService.getAllTeachers()) {
 			String name = teacher.getFirstName() + " " + teacher.getSirName() + " " + teacher.getPatronomic();
 			if (name.contains(query)) {
 				complate.add(teacher);
@@ -185,10 +185,10 @@ public class GroupBean implements Serializable {
 		return complate;
 	}
 
-	public List<GroupDTO> complateGroup(String query) {
+	public List<GroupView> complateGroup(String query) {
 		query = query.trim();
-		List<GroupDTO> complate = new ArrayList<GroupDTO>();
-		for (GroupDTO group : groupService.getGroups()) {
+		List<GroupView> complate = new ArrayList<GroupView>();
+		for (GroupView group : groupService.getGroups()) {
 			if (group.getName().contains(query)) {
 				complate.add(group);
 			}
@@ -208,19 +208,19 @@ public class GroupBean implements Serializable {
 	public void setCheckedStudents(Map<Long,Boolean> checkedStudents) {
 		this.checkedStudents = checkedStudents;
 	}
-	public GroupDTO getEditedGroup() {
+	public GroupView getEditedGroup() {
 		return editedGroup;
 	}
-	public void setEditedGroup(GroupDTO edited) {
+	public void setEditedGroup(GroupView edited) {
 		this.editedGroup = edited;
 	}
-	public GroupDTO getViewed() {
+	public GroupView getViewed() {
 		return viewedGroup;
 	}
-	public StudentDTO getEditedStudent() {
+	public StudentView getEditedStudent() {
 		return editedStudent;
 	}
-	public void setEditedStudent(StudentDTO editedStudent) {
+	public void setEditedStudent(StudentView editedStudent) {
 		this.editedStudent = editedStudent;
 	}
 

@@ -14,12 +14,12 @@ import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
-import nks.abc.domain.dto.convertor.user.AccountDTOConverter;
-import nks.abc.domain.dto.user.StaffDTO;
 import nks.abc.domain.entity.user.Administrator;
 import nks.abc.domain.entity.user.AccountInfo;
 import nks.abc.domain.entity.user.Teacher;
 import nks.abc.domain.entity.user.UserFactory;
+import nks.abc.domain.view.convertor.user.AccountViewConverter;
+import nks.abc.domain.view.user.StaffView;
 import nks.abc.service.StaffService;
 import nks.abc.service.exception.NoCurrentUserException;
 import nks.abc.service.exception.NoUserLoginException;
@@ -41,11 +41,11 @@ public class StaffServiceImpl implements StaffService {
 	@Autowired
 	private AccountRepository accountDAO;
 	@Autowired
-	private AccountDTOConverter dtoConvertor;
+	private AccountViewConverter dtoConvertor;
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void add(StaffDTO employeeDTO) {
+	public void add(StaffView employeeDTO) {
 		
 		String login = employeeDTO.getLogin();
 		if(login == null || login.length() < 1) {
@@ -87,7 +87,7 @@ public class StaffServiceImpl implements StaffService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(StaffDTO employeeDTO, String currentUserLogin) {
+	public void update(StaffView employeeDTO, String currentUserLogin) {
 		updateGuardClause(employeeDTO, currentUserLogin);
 		
 		AccountInfo updatingUser = dtoConvertor.toDomain(employeeDTO);
@@ -119,7 +119,7 @@ public class StaffServiceImpl implements StaffService {
 		}
 	}
 
-	private void updateGuardClause(StaffDTO employeeDTO,
+	private void updateGuardClause(StaffView employeeDTO,
 			String currentUserLogin) {
 		if(currentUserLogin == null || currentUserLogin.length() < 1) {
 			throw new NoCurrentUserException("Current user login is empty");
@@ -159,10 +159,10 @@ public class StaffServiceImpl implements StaffService {
 	
 
 	@Override
-	public StaffDTO getById(Long id) {
+	public StaffView getById(Long id) {
 		try {
 			AccountInfo account = getAccountInfoById(id);
-			return dtoConvertor.toDTO(account);
+			return dtoConvertor.toView(account);
 		}
 		catch(DAOException de){
 			log.error("DAO exception on geting by id", de);
@@ -186,7 +186,7 @@ public class StaffServiceImpl implements StaffService {
 	
 
 	@Override
-	public List<StaffDTO> getAll() {
+	public List<StaffView> getAll() {
 		List<AccountInfo> accounts= null;
 		try{
 			accounts = accountDAO.query(accountDAO.getSpecificationFactory().byIsDeleted(false));
@@ -196,11 +196,11 @@ public class StaffServiceImpl implements StaffService {
 			throw new ServiceException("dao error", de);
 		}
 		
-		return new ArrayList<StaffDTO>(dtoConvertor.toDTO(accounts));
+		return new ArrayList<StaffView>(dtoConvertor.toView(accounts));
 	}
 	
 	@Override
-	public List<StaffDTO> getAllTeachers() {
+	public List<StaffView> getAllTeachers() {
 		List<Teacher> teachers = null;
 		try{
 			teachers = teacherDAO.query(teacherDAO.getSpecificaitonFactory().byIsDeleted(false));
@@ -209,19 +209,19 @@ public class StaffServiceImpl implements StaffService {
 			log.error("DAO exception on teacher finding", de);
 			throw new ServiceException("dao error", de);
 		}
-		List<StaffDTO> dtos = new ArrayList<StaffDTO>();
+		List<StaffView> dtos = new ArrayList<StaffView>();
 		System.out.println("teachers " + teachers);
 		System.out.println("teachers size " + teachers.size());
 		System.out.println("teachers type" + teachers.getClass());
 		System.out.println("teachers.get(0).getClass() = " + teachers.get(0).getClass());
 		for(Teacher teacher: teachers){
-			dtos.add(dtoConvertor.toDTO(teacher.getAccountInfo()));
+			dtos.add(dtoConvertor.toView(teacher.getAccountInfo()));
 		}
 		return dtos;
 	}
 
 	@Override
-	public StaffDTO getStaffByLogin(String login) {
+	public StaffView getStaffByLogin(String login) {
 		AccountInfo entity = null;
 		try{
 			entity = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(login, false));
@@ -230,6 +230,6 @@ public class StaffServiceImpl implements StaffService {
 		catch (DAOException de){
 			throw new ServiceException("dao error", de);
 		}
-		return dtoConvertor.toDTO(entity);
+		return dtoConvertor.toView(entity);
 	}
 }

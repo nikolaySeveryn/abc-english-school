@@ -1,4 +1,4 @@
-package nks.abc.domain.dto.user;
+package nks.abc.domain.view.user;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +15,7 @@ import nks.abc.domain.entity.user.Role;
 import nks.abc.web.common.validator.Email;
 
 @ManagedBean
-public abstract class UserDTO {
+public abstract class UserView {
 	private Long accountId;
 	private Long personalInfoId;
 	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){5,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 5 symbol")
@@ -34,10 +34,10 @@ public abstract class UserDTO {
 	private String email;
 	private Boolean isDeleted;
 	
-	public static StudentDTO newStudent(){
-		StudentDTO instance = new StudentDTO();
-		instance.setGroups(new ArrayList<GroupDTO>());
-		instance.setParent(new ParentInfoDTO());
+	public static StudentView newStudent(){
+		StudentView instance = new StudentView();
+		instance.setGroups(new ArrayList<GroupView>());
+		instance.setParent(new ParentInfoView());
 		instance.setIsDeleted(false);
 		instance.setMoneyBalance(0);
 		return instance;

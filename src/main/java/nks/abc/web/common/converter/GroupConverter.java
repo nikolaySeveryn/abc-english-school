@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
-import nks.abc.domain.dto.user.GroupDTO;
+import nks.abc.domain.view.user.GroupView;
 import nks.abc.service.GroupService;
 import nks.abc.service.exception.ServiceException;
 
@@ -51,10 +51,10 @@ public class GroupConverter implements Converter{
 		if(object == null){
 			return null;
 		}
-		if(!(object instanceof GroupDTO)){
+		if(!(object instanceof GroupView)){
 			throw new ConverterException("Conversion error: is not instance of groupDTO");
 		}
-		return ((GroupDTO) object).getId().toString();
+		return ((GroupView) object).getId().toString();
 	}
 
 

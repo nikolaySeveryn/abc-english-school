@@ -1,12 +1,12 @@
-package nks.abc.domain.dto;
+package nks.abc.domain.view;
 
 import javax.faces.bean.ManagedBean;
 import javax.validation.constraints.NotNull;
 
-@ManagedBean(name="bookDTO")
-public class BookDTO {
+@ManagedBean()
+public class BookView {
 	
-	public static class NullBookDTO extends BookDTO {
+	public static class NullBookDTO extends BookView {
 		
 		public NullBookDTO(){
 			super(0,new String(),new String());
@@ -18,7 +18,7 @@ public class BookDTO {
 	private String author;
 	
 	
-	public BookDTO(Integer id, String name, String author) {
+	public BookView(Integer id, String name, String author) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -60,7 +60,7 @@ public class BookDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BookDTO other = (BookDTO) obj;
+		BookView other = (BookView) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

@@ -1,4 +1,4 @@
-package nks.abc.domain.dto.user;
+package nks.abc.domain.view.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import nks.abc.domain.entity.user.Level;
 
 @ManagedBean
-public class GroupDTO {
+public class GroupView {
 	private Long id;
 	@NotNull
 	@Size(min=1)
@@ -18,8 +18,8 @@ public class GroupDTO {
 	@NotNull
 	private Level level;
 	private Double tarif;
-	private StaffDTO teacher;
-	private List<StudentDTO> students = new ArrayList<StudentDTO>();
+	private StaffView teacher;
+	private List<StudentView> students = new ArrayList<StudentView>();
 	
 	public Long getId() {
 		return id;
@@ -45,17 +45,17 @@ public class GroupDTO {
 	public void setTarif(Double tarif) {
 		this.tarif = tarif;
 	}
-	public StaffDTO getTeacher() {
+	public StaffView getTeacher() {
 		return teacher;
 	}
-	public void setTeacher(StaffDTO teacher) {
+	public void setTeacher(StaffView teacher) {
 		this.teacher = teacher;
 	}
 	
-	public List<StudentDTO> getStudents() {
+	public List<StudentView> getStudents() {
 		return students;
 	}
-	public void setStudents(List<StudentDTO> students) {
+	public void setStudents(List<StudentView> students) {
 		this.students = students;
 	}
 	@Override

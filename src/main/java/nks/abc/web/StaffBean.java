@@ -10,7 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
-import nks.abc.domain.dto.user.StaffDTO;
+import nks.abc.domain.view.user.StaffView;
 import nks.abc.service.StaffService;
 import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.exception.ServiceException;
@@ -40,25 +40,25 @@ public class StaffBean implements Serializable {
 	private FacesUtilit utilit;
 	
 	private Map<Long,Boolean> checked = new HashMap<Long, Boolean>();
-	private StaffDTO edited = null;
+	private StaffView edited = null;
 	private EditingMode editMode = EditingMode.NONE;
 	
-	public List<StaffDTO> getList() {
+	public List<StaffView> getList() {
 		try {
 			return staffService.getAll();
 		} catch (ServiceDisplayedErorr e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR,
 					"Error: " + e.getDisplayedText());
 			log.error("error on getting staff lisst", e);
-			return new ArrayList<StaffDTO>();
+			return new ArrayList<StaffView>();
 		} catch (ServiceException e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("error on getting staff lisst", e);
-			return new ArrayList<StaffDTO>();
+			return new ArrayList<StaffView>();
 		} catch (Exception e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
 			log.error("undifined error", e);
-			return new ArrayList<StaffDTO>();
+			return new ArrayList<StaffView>();
 		}
 	}
 
@@ -85,7 +85,7 @@ public class StaffBean implements Serializable {
 	public String add() {
 		try {
 			editMode = EditingMode.ADD;
-			edited = new StaffDTO();
+			edited = new StaffView();
 		} catch (ServiceDisplayedErorr e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on adding staff", e);
@@ -102,7 +102,7 @@ public class StaffBean implements Serializable {
 		return "staffEdit.xhtml";
 	}
 	
-	public String edit(StaffDTO edited) {
+	public String edit(StaffView edited) {
 		try {
 			editMode = EditingMode.EDIT;
 			this.edited = edited;
@@ -166,11 +166,11 @@ public class StaffBean implements Serializable {
 		this.checked = checked;
 	}
 
-	public StaffDTO getEdited() {
+	public StaffView getEdited() {
 		return edited;
 	}
 
-	public void setEdited(StaffDTO edited) {
+	public void setEdited(StaffView edited) {
 		this.edited = edited;
 	}
 

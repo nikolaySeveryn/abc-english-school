@@ -1,9 +1,9 @@
-package nks.abc.domain.dto.user;
+package nks.abc.domain.view.user;
 
 import javax.annotation.ManagedBean;
 
 @ManagedBean
-public class StaffDTO extends UserDTO{
+public class StaffView extends UserView{
 	
 	private Boolean isTeacher;
 	private Boolean isAdministrator;

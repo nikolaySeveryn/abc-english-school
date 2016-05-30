@@ -1,9 +1,9 @@
 package nks.abc.service;
 
-import nks.abc.domain.dto.user.StudentDTO;
+import nks.abc.domain.view.user.StudentView;
 
 public interface StudentService {
-	StudentDTO getById(Long id);
-	void save(StudentDTO student);
+	StudentView getById(Long id);
+	void save(StudentView student);
 	void delete(Long... ids);
 }

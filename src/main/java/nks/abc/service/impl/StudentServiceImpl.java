@@ -9,11 +9,11 @@ import com.sun.faces.facelets.Facelet;
 
 import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.user.StudentRepository;
-import nks.abc.domain.dto.convertor.user.GroupDTOConverter;
-import nks.abc.domain.dto.convertor.user.StudentDTOConverter;
-import nks.abc.domain.dto.user.StudentDTO;
 import nks.abc.domain.entity.user.Student;
 import nks.abc.domain.exception.ConversionException;
+import nks.abc.domain.view.convertor.user.GroupViewConverter;
+import nks.abc.domain.view.convertor.user.StudentViewConverter;
+import nks.abc.domain.view.user.StudentView;
 import nks.abc.service.StudentService;
 import nks.abc.service.exception.ServiceException;
 import nks.abc.web.common.converter.GroupConverter;
@@ -28,13 +28,13 @@ public class StudentServiceImpl implements StudentService {
 	private StudentRepository studentRepository;
 	
 	@Autowired
-	private StudentDTOConverter studentConverter;
+	private StudentViewConverter studentConverter;
 
 	@Override
 	@Transactional(readOnly=false)
-	public void save(StudentDTO studentDTO) {
+	public void save(StudentView studentDTO) {
 		//TODO: unique login
-		studentConverter.setRelativeConvertersPattern(new GroupDTOConverter());
+		studentConverter.setRelativeConvertersPattern(new GroupViewConverter());
 		Student student = studentConverter.toDomain(studentDTO);
 		try{
 			if(student.isNew()){
@@ -54,11 +54,11 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public StudentDTO getById(Long id) {
+	public StudentView getById(Long id) {
 		try{
 			Student student = getStudentDomainById(id);
-			studentConverter.setRelativeConvertersPattern(new GroupDTOConverter());
-			return studentConverter.toDTO(student);
+			studentConverter.setRelativeConvertersPattern(new GroupViewConverter());
+			return studentConverter.toView(student);
 		}
 		//TODO: exception refactoring
 		catch(DAOException de) {
