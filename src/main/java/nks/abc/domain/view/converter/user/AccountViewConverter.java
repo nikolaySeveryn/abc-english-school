@@ -1,11 +1,11 @@
-package nks.abc.domain.view.convertor.user;
+package nks.abc.domain.view.converter.user;
 
 
 import org.springframework.stereotype.Component;
 
 import nks.abc.domain.entity.user.AccountInfo;
 import nks.abc.domain.view.converter.Converter;
-import nks.abc.domain.view.user.StaffView;
+import nks.abc.domain.view.object.objects.user.StaffView;
 
 @Component
 public class AccountViewConverter extends Converter<AccountInfo, StaffView>{

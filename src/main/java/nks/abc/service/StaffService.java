@@ -3,7 +3,7 @@ package nks.abc.service;
 import java.util.List;
 
 import nks.abc.domain.entity.user.AccountInfo;
-import nks.abc.domain.view.user.StaffView;
+import nks.abc.domain.view.object.objects.user.StaffView;
 
 
 public interface StaffService {

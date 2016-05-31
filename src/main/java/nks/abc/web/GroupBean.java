@@ -9,10 +9,10 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
 import nks.abc.domain.entity.user.Level;
-import nks.abc.domain.view.user.GroupView;
-import nks.abc.domain.view.user.StaffView;
-import nks.abc.domain.view.user.StudentView;
-import nks.abc.domain.view.user.UserView;
+import nks.abc.domain.view.object.objects.user.GroupView;
+import nks.abc.domain.view.object.objects.user.StaffView;
+import nks.abc.domain.view.object.objects.user.StudentView;
+import nks.abc.domain.view.object.objects.user.UserView;
 import nks.abc.service.GroupService;
 import nks.abc.service.StaffService;
 import nks.abc.service.StudentService;

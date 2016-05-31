@@ -5,8 +5,8 @@ import java.util.List;
 import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.BookDAO;
 import nks.abc.domain.entity.Book;
-import nks.abc.domain.view.BookView;
 import nks.abc.domain.view.converter.BookViewConverter;
+import nks.abc.domain.view.object.BookView;
 import nks.abc.service.BookService;
 import nks.abc.service.exception.ServiceException;
 

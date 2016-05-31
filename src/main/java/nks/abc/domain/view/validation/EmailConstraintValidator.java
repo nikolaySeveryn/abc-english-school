@@ -1,4 +1,4 @@
-package nks.abc.web.common.validator;
+package nks.abc.domain.view.validation;
 
 import java.util.regex.Pattern;
 

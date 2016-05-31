@@ -12,9 +12,9 @@ import nks.abc.dao.repository.user.GroupRepository;
 import nks.abc.domain.entity.user.Group;
 import nks.abc.domain.view.converter.Converter;
 import nks.abc.domain.view.converter.ConvertersHolder;
-import nks.abc.domain.view.convertor.user.AccountViewConverter;
-import nks.abc.domain.view.convertor.user.StudentViewConverter;
-import nks.abc.domain.view.user.GroupView;
+import nks.abc.domain.view.converter.user.AccountViewConverter;
+import nks.abc.domain.view.converter.user.StudentViewConverter;
+import nks.abc.domain.view.object.objects.user.GroupView;
 import nks.abc.service.GroupService;
 import nks.abc.service.exception.ServiceException;
 

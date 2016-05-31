@@ -1,8 +1,8 @@
-package nks.abc.domain.view.convertor.user;
+package nks.abc.domain.view.converter.user;
 
 import nks.abc.domain.entity.user.AccountInfo;
 import nks.abc.domain.entity.user.PersonalInfo;
-import nks.abc.domain.view.user.UserView;
+import nks.abc.domain.view.object.objects.user.UserView;
 
 public class UserViewConvertor {
 	

@@ -1,4 +1,4 @@
-package nks.abc.web.common.validator;
+package nks.abc.domain.view.validation;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -22,5 +22,5 @@ public @interface Email {
 	boolean notEmpty() default true;
     
 	Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};           
+    Class<? extends Payload>[] payload() default {};
 }

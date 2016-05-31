@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.faces.application.FacesMessage;
 
-import nks.abc.domain.view.user.StaffView;
+import nks.abc.domain.view.object.objects.user.StaffView;
 import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.exception.ServiceException;
 

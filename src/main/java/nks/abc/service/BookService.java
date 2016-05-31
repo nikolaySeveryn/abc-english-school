@@ -2,7 +2,7 @@ package nks.abc.service;
 
 import java.util.List;
 
-import nks.abc.domain.view.BookView;
+import nks.abc.domain.view.object.BookView;
 
 public interface BookService {
 	

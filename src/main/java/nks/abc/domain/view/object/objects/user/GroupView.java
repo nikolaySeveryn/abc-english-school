@@ -1,4 +1,4 @@
-package nks.abc.domain.view.user;
+package nks.abc.domain.view.object.objects.user;
 
 import java.util.ArrayList;
 import java.util.List;

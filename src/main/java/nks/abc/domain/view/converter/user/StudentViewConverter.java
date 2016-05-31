@@ -1,4 +1,4 @@
-package nks.abc.domain.view.convertor.user;
+package nks.abc.domain.view.converter.user;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,8 +10,8 @@ import nks.abc.domain.entity.user.PersonalInfo;
 import nks.abc.domain.entity.user.Student;
 import nks.abc.domain.entity.user.User;
 import nks.abc.domain.view.converter.Converter;
-import nks.abc.domain.view.user.ParentInfoView;
-import nks.abc.domain.view.user.StudentView;
+import nks.abc.domain.view.object.objects.user.ParentInfoView;
+import nks.abc.domain.view.object.objects.user.StudentView;
 
 @Component
 public class StudentViewConverter extends Converter<Student, StudentView> {

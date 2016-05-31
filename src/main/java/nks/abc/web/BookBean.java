@@ -12,7 +12,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import nks.abc.domain.view.BookView;
+import nks.abc.domain.view.object.BookView;
 import nks.abc.service.BookService;
 import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.exception.ServiceException;

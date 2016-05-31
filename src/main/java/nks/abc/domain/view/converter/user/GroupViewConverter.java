@@ -1,4 +1,4 @@
-package nks.abc.domain.view.convertor.user;
+package nks.abc.domain.view.converter.user;
 
 import java.util.HashSet;
 import java.util.List;
@@ -14,8 +14,8 @@ import nks.abc.domain.entity.user.Student;
 import nks.abc.domain.entity.user.Teacher;
 import nks.abc.domain.view.converter.Converter;
 import nks.abc.domain.view.converter.ConvertersHolder;
-import nks.abc.domain.view.user.GroupView;
-import nks.abc.domain.view.user.StaffView;
+import nks.abc.domain.view.object.objects.user.GroupView;
+import nks.abc.domain.view.object.objects.user.StaffView;
 
 @Component
 public class GroupViewConverter extends Converter<Group,GroupView> {

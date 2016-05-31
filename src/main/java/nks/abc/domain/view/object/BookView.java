@@ -1,4 +1,4 @@
-package nks.abc.domain.view;
+package nks.abc.domain.view.object;
 
 import javax.faces.bean.ManagedBean;
 import javax.validation.constraints.NotNull;

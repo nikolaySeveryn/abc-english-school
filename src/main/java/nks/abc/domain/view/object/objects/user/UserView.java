@@ -1,4 +1,4 @@
-package nks.abc.domain.view.user;
+package nks.abc.domain.view.object.objects.user;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import nks.abc.domain.entity.user.Role;
-import nks.abc.web.common.validator.Email;
+import nks.abc.domain.view.validation.Email;
 
 @ManagedBean
 public abstract class UserView {

@@ -1,11 +1,11 @@
-package nks.abc.domain.view.user;
+package nks.abc.domain.view.object.objects.user;
 
 import java.sql.Date;
 
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
-import nks.abc.web.common.validator.Email;
+import nks.abc.domain.view.validation.Email;
 
 
 public class ParentInfoView {

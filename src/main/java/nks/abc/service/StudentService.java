@@ -1,6 +1,6 @@
 package nks.abc.service;
 
-import nks.abc.domain.view.user.StudentView;
+import nks.abc.domain.view.object.objects.user.StudentView;
 
 public interface StudentService {
 	StudentView getById(Long id);
