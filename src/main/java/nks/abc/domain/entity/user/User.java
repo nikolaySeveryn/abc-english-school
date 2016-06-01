@@ -28,6 +28,7 @@ public abstract class User {
 	@JoinColumn(name="account_info", nullable=false)
 	private AccountInfo accountInfo;
 	
+	//TODO: move to factory
 	public static Student newStudent() {
 		Student instance = new Student();
 		instance.setGroups(new HashSet<Group>());

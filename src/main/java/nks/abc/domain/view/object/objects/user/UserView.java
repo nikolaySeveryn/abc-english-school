@@ -1,17 +1,11 @@
 package nks.abc.domain.view.object.objects.user;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.annotation.ManagedBean;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
-import nks.abc.domain.entity.user.Role;
 import nks.abc.domain.view.validation.Email;
 
 @ManagedBean
@@ -33,15 +27,6 @@ public abstract class UserView {
 	@Email
 	private String email;
 	private Boolean isDeleted;
-	
-	public static StudentView newStudent(){
-		StudentView instance = new StudentView();
-		instance.setGroups(new ArrayList<GroupView>());
-		instance.setParent(new ParentInfoView());
-		instance.setIsDeleted(false);
-		instance.setMoneyBalance(0);
-		return instance;
-	}
 	
 	
 	/**

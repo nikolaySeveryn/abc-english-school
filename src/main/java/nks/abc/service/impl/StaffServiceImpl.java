@@ -91,6 +91,7 @@ public class StaffServiceImpl implements StaffService {
 		updateGuardClause(employeeDTO, currentUserLogin);
 		
 		AccountInfo updatingUser = dtoConvertor.toDomain(employeeDTO);
+		accountDAO.update(updatingUser);
 		
 		Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.getSpecificaitonFactory().byAccount(updatingUser));
 		Administrator admin = adminDAO.uniqueQuery(adminDAO.getSpecificationFactory().byAccount(updatingUser));

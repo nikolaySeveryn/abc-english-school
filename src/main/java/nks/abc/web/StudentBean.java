@@ -9,10 +9,10 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
 import nks.abc.domain.entity.user.Level;
+import nks.abc.domain.view.factory.UserViewFactory;
 import nks.abc.domain.view.object.objects.user.GroupView;
 import nks.abc.domain.view.object.objects.user.StaffView;
 import nks.abc.domain.view.object.objects.user.StudentView;
-import nks.abc.domain.view.object.objects.user.UserView;
 import nks.abc.service.GroupService;
 import nks.abc.service.StaffService;
 import nks.abc.service.StudentService;
@@ -28,13 +28,13 @@ import java.io.Serializable;
 @Component
 @ManagedBean
 @SessionScoped
-public class GroupBean implements Serializable {
+public class StudentBean implements Serializable {
 
 	private static final String GROUP_EDIT_PAGE = "groupEdit.xhtml";
 	private static final String MAIN_PAGE = "main.xhtml?faces-redirect=true";
 	private static final String STUDENT_EDIT_PAGE = "studentEdit.xhtml";
 
-	private static final Logger log = Logger.getLogger(GroupBean.class);
+	private static final Logger log = Logger.getLogger(StudentBean.class);
 
 	@Autowired
 	private GroupService groupService;
@@ -76,7 +76,7 @@ public class GroupBean implements Serializable {
 	}
 
 	public String addStudent() {
-		editedStudent = UserView.newStudent();
+		editedStudent = UserViewFactory.newStudent();
 		if (viewedGroup != null) {
 			List<GroupView> groups = editedStudent.getGroups();
 			groups.add(viewedGroup);

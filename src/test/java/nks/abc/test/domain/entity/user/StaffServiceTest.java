@@ -37,11 +37,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class StaffServiceTest {
 	
 	@Mock
-	private AdministratorRepository adminDAO;
+	private AdministratorRepository adminRepository;
 	@Mock
-	private TeacherRepository teacherDAO;
+	private TeacherRepository teacherRepository;
 	@Mock
-	private AccountRepository accountDAO;
+	private AccountRepository accountRepository;
 	@Spy
 	private AccountViewConverter dtoConvertor = new AccountViewConverter();
 	
@@ -54,9 +54,9 @@ public class StaffServiceTest {
 	
 	@Before
 	public void initMocks(){
-		when(adminDAO.getSpecificationFactory()).thenReturn(new AdministratorSpecificationFactory());
-		when(teacherDAO.getSpecificaitonFactory()).thenReturn(new TeacherSpecificationFactory());
-		when(accountDAO.getSpecificationFactory()).thenReturn(new AccountInfoSpecificationFactory());
+		when(adminRepository.getSpecificationFactory()).thenReturn(new AdministratorSpecificationFactory());
+		when(teacherRepository.getSpecificaitonFactory()).thenReturn(new TeacherSpecificationFactory());
+		when(accountRepository.getSpecificationFactory()).thenReturn(new AccountInfoSpecificationFactory());
 	}
 	
 	@Before
@@ -92,7 +92,7 @@ public class StaffServiceTest {
 	public void existingUser(){
 		String userName = "username";
 		emptyEmployee.setLogin(userName);
-		when(accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLogin(userName)))
+		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLogin(userName)))
 				.thenReturn(new AccountInfo());
 		service.add(emptyEmployee);
 	}
@@ -101,7 +101,7 @@ public class StaffServiceTest {
 	public void noTeahcerOrAdmin(){
 		String userName = "login";
 		emptyEmployee.setLogin(userName);
-		when(accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLogin(userName)))
+		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLogin(userName)))
 			.thenReturn(null);
 		emptyEmployee.setIsAdministrator(false);
 		emptyEmployee.setIsTeacher(false);
@@ -114,11 +114,11 @@ public class StaffServiceTest {
 		employee.setIsTeacher(true);
 		employee.setIsAdministrator(false);
 		service.add(employee);
-		verify(teacherDAO).insert(teacherCaptor.capture());
+		verify(teacherRepository).insert(teacherCaptor.capture());
 		compareAccountInfo(employee, teacherCaptor.getValue().getAccountInfo());
 		assertFalse(teacherCaptor.getValue().getAccountInfo().isAdministrator());
 		assertTrue(teacherCaptor.getValue().getAccountInfo().isTeacher());
-		verify(adminDAO, never()).insert(any(Administrator.class));
+		verify(adminRepository, never()).insert(any(Administrator.class));
 	}
 	
 	@Test
@@ -127,12 +127,12 @@ public class StaffServiceTest {
 		employee.setIsTeacher(false);
 		employee.setIsAdministrator(true);
 		service.add(employee);
-		verify(adminDAO).insert(adminCaptor.capture());
+		verify(adminRepository).insert(adminCaptor.capture());
 		compareAccountInfo(employee, adminCaptor.getValue().getAccountInfo());
 		assertTrue(adminCaptor.getValue().getAccountInfo().isAdministrator());
 		assertFalse(adminCaptor.getValue().getAccountInfo().isTeacher());
 		
-		verify(teacherDAO, never()).insert(any(Teacher.class));
+		verify(teacherRepository, never()).insert(any(Teacher.class));
 	}
 	
 	@Test
@@ -142,15 +142,14 @@ public class StaffServiceTest {
 		employee.setIsTeacher(true);
 		employee.setIsAdministrator(true);
 		service.add(employee);
-		verify(teacherDAO).insert(teacherCaptor.capture());
-		verify(adminDAO).insert(adminCaptor.capture());
+		verify(teacherRepository).insert(teacherCaptor.capture());
+		verify(adminRepository).insert(adminCaptor.capture());
 		assertEquals(teacherCaptor.getValue().getAccountInfo(), adminCaptor.getValue().getAccountInfo());
 		assertSame(teacherCaptor.getValue().getAccountInfo(), adminCaptor.getValue().getAccountInfo());
 		
 		compareAccountInfo(employee, teacherCaptor.getValue().getAccountInfo());
 		assertTrue(teacherCaptor.getValue().getAccountInfo().isAdministrator());
 		assertTrue(teacherCaptor.getValue().getAccountInfo().isTeacher());
-		
 	}
 	
 	/*
@@ -184,7 +183,7 @@ public class StaffServiceTest {
 		AccountInfo account = new AccountInfo();
 		account.setAccountId(4L);
 		when(
-				accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
+				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
 			).thenReturn(account);
 		
 		service.update(employee, currentUserLogin);
@@ -192,7 +191,6 @@ public class StaffServiceTest {
 		verifyThatUpdateDoesNotCalled();
 	}
 	
-	// TODO: need more update tests
 	@Test
 	public void UpdateSuccess(){
 		employee.setAccountId(4L);
@@ -201,20 +199,42 @@ public class StaffServiceTest {
 		currentUser.setLogin(currentUserLogin);
 		currentUser.setAccountId(3L);
 		when(
-				accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
+				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
 				).thenReturn(currentUser);
 		employee.setIsAdministrator(true);
 		employee.setIsTeacher(true);
 		service.update(employee, currentUserLogin);
 		ArgumentCaptor<Teacher> teacherCaptor = ArgumentCaptor.forClass(Teacher.class);
 		ArgumentCaptor<Administrator>adminCaptor = ArgumentCaptor.forClass(Administrator.class);
+		ArgumentCaptor<AccountInfo> accountCaptor = ArgumentCaptor.forClass(AccountInfo.class);
 		
-		verify(teacherDAO).update(teacherCaptor.capture());
-		verify(adminDAO).update(adminCaptor.capture());
+		verify(accountRepository).update(accountCaptor.capture());
+		verify(teacherRepository).update(teacherCaptor.capture());
+		verify(adminRepository).update(adminCaptor.capture());
 		
+		assertSame(teacherCaptor.getValue().getAccountInfo(), accountCaptor.getValue());
 		assertSame(teacherCaptor.getValue().getAccountInfo(), adminCaptor.getValue().getAccountInfo());
 		compareAccountInfoWithoutPassword(employee, teacherCaptor.getValue().getAccountInfo());
 		compareAccountInfoWithoutPassword(employee, adminCaptor.getValue().getAccountInfo());
+	}
+	
+	@Test
+	public void UpdateNoTeacherAndNoAdminStaff(){
+		employee.setAccountId(4L);
+		String currentUserLogin = "user";
+		AccountInfo currentUser = new AccountInfo();
+		currentUser.setLogin(currentUserLogin);
+		currentUser.setAccountId(3L);
+		when(
+				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
+				).thenReturn(currentUser);
+		employee.setIsAdministrator(false);
+		employee.setIsTeacher(false);
+		service.update(employee, currentUserLogin);
+		
+		ArgumentCaptor<AccountInfo> accountCaptor = ArgumentCaptor.forClass(AccountInfo.class);
+		verify(accountRepository).update(accountCaptor.capture());
+		compareAccountInfoWithoutPassword(employee, accountCaptor.getValue());
 	}
 	
 	
@@ -234,7 +254,7 @@ public class StaffServiceTest {
 		AccountInfo currentUser = new AccountInfo();
 		currentUser.setAccountId(5L);
 		currentUser.setLogin(currentUserLogin);
-		when(accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))).thenReturn(currentUser);
+		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))).thenReturn(currentUser);
 		service.delete(5L, currentUserLogin);
 	}
 	
@@ -258,7 +278,7 @@ public class StaffServiceTest {
 	}
 	
 	private void verifyThatUpdateDoesNotCalled() {
-		verify(teacherDAO, never()).update(any(Teacher.class));
-		verify(adminDAO, never()).update(any(Administrator.class));
+		verify(teacherRepository, never()).update(any(Teacher.class));
+		verify(adminRepository, never()).update(any(Administrator.class));
 	}
 }

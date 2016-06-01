@@ -10,6 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
+import nks.abc.domain.view.factory.UserViewFactory;
 import nks.abc.domain.view.object.objects.user.StaffView;
 import nks.abc.service.StaffService;
 import nks.abc.service.exception.ServiceDisplayedErorr;
@@ -85,7 +86,7 @@ public class StaffBean implements Serializable {
 	public String add() {
 		try {
 			editMode = EditingMode.ADD;
-			edited = new StaffView();
+			edited = UserViewFactory.newStaff();
 		} catch (ServiceDisplayedErorr e) {
 			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on adding staff", e);
