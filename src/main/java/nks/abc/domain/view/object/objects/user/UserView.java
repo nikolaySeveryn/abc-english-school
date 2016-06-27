@@ -6,13 +6,17 @@ import javax.annotation.ManagedBean;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
-import nks.abc.domain.view.validation.Email;
+import nks.abc.domain.entity.user.Account;
+import nks.abc.domain.entity.user.PersonalInfo;
+import nks.abc.domain.view.validation.annotation.Email;
+import nks.abc.domain.view.validation.annotation.Unique;
 
 @ManagedBean
 public abstract class UserView {
 	private Long accountId;
 	private Long personalInfoId;
 	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){5,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 5 symbol")
+	@Unique(entity=Account.class, field = "login")
 	private String login;
 	@Pattern(regexp="^.{7,}$", message="Minimum size 7 symbols")
 	private String password;
@@ -25,6 +29,7 @@ public abstract class UserView {
 	@Pattern(regexp="^\\+?([0-9]|\\-){0,15}$", message="Avaliable symbols: '+'(at begining), 0-9,'-'. Maximum size 15 symbols")
 	private String phoneNum;
 	@Email
+	@Unique(entity=PersonalInfo.class, field="email")
 	private String email;
 	private Boolean isDeleted;
 	

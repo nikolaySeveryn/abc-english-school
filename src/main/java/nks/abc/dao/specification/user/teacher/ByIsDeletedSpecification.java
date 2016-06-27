@@ -7,8 +7,8 @@ import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import nks.abc.dao.base.CriterionSpecification;
-import nks.abc.dao.base.HQLSpecification;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
+import nks.abc.dao.base.interfaces.HQLSpecification;
 
 public class ByIsDeletedSpecification implements HQLSpecification {
 

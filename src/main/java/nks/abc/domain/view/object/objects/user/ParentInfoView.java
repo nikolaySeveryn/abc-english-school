@@ -5,7 +5,7 @@ import java.sql.Date;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
-import nks.abc.domain.view.validation.Email;
+import nks.abc.domain.view.validation.annotation.Email;
 
 
 public class ParentInfoView {

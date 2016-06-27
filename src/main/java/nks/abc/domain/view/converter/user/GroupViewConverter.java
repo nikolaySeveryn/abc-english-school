@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 import nks.abc.dao.repository.user.TeacherRepository;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.domain.entity.user.Account;
 import nks.abc.domain.entity.user.Group;
 import nks.abc.domain.entity.user.Student;
 import nks.abc.domain.entity.user.Teacher;
@@ -46,7 +46,7 @@ public class GroupViewConverter extends Converter<Group,GroupView> {
 		bo.setFloatTarif(dto.getTarif());
 
 		ConvertersHolder relativeConverters = getRelativeConverters();
-		AccountInfo account = (AccountInfo) relativeConverters.pullConverter(AccountViewConverter.class).toDomain(dto.getTeacher());
+		Account account = (Account) relativeConverters.pullConverter(AccountViewConverter.class).toDomain(dto.getTeacher());
 		if(account != null){
 			Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.getSpecificaitonFactory().byAccount(account));
 			bo.setTeacher(teacher);

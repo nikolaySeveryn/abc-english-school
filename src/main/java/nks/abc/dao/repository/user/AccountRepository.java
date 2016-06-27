@@ -5,15 +5,15 @@ import org.springframework.stereotype.Repository;
 
 import nks.abc.dao.base.BaseHibernrateRepositoryImpl;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.domain.entity.user.Account;
 
 @Repository
-public class AccountRepository extends BaseHibernrateRepositoryImpl<AccountInfo> {
+public class AccountRepository extends BaseHibernrateRepositoryImpl<Account> {
 	
 	private final static Logger log = Logger.getLogger(AccountRepository.class);
 
 	public AccountRepository() {
-		super(AccountInfo.class);
+		super(Account.class);
 		System.out.println("Accout construct");
 	}
 

@@ -28,6 +28,8 @@ public class UserBean implements Serializable {
 	}
 
 	public StaffView getCurrentUser() {
+		System.out.println("get current user");
+		System.out.println("Username= " + getCurrentUserName());
 		return userService.getStaffByLogin(getCurrentUserName());
 	}
 
@@ -39,7 +41,5 @@ public class UserBean implements Serializable {
 		return getExternalContext().getUserPrincipal().getName();
 //		return "root";
 	}
-
-	
 
 }

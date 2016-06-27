@@ -35,7 +35,8 @@ import org.apache.log4j.varia.FallbackErrorHandler;
 import org.hibernate.validator.constraints.Email;
 
 @Entity
-public class AccountInfo {
+@Table(name="accountinfo")
+public class Account {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="account_id_seq")
@@ -55,7 +56,7 @@ public class AccountInfo {
 	
 	@ElementCollection(targetClass=Role.class, fetch=FetchType.LAZY)
 	@Enumerated(EnumType.STRING)
-	@CollectionTable(name="user_role")
+	@CollectionTable(name="user_role", joinColumns=@JoinColumn(name="accountinfo_accountid"))
 	@Column(name="ROLE",nullable=false)
 	private Set<Role> role = new HashSet<Role>();
 	@Column(nullable=false)

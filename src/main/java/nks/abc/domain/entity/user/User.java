@@ -26,13 +26,13 @@ public abstract class User {
 	
 	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="account_info", nullable=false)
-	private AccountInfo accountInfo;
+	private Account accountInfo;
 	
 	//TODO: move to factory
 	public static Student newStudent() {
 		Student instance = new Student();
 		instance.setGroups(new HashSet<Group>());
-		instance.setAccountInfo(new AccountInfo());
+		instance.setAccountInfo(new Account());
 		return instance;
 	}
 	
@@ -51,10 +51,10 @@ public abstract class User {
 		this.id = id;
 	}
 	
-	public AccountInfo getAccountInfo() {
+	public Account getAccountInfo() {
 		return accountInfo;
 	}
-	public void setAccountInfo(AccountInfo accountInfo) {
+	public void setAccountInfo(Account accountInfo) {
 		this.accountInfo = accountInfo;
 	}
 	public Long getAccountId() {

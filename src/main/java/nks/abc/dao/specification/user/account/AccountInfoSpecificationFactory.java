@@ -1,7 +1,7 @@
 package nks.abc.dao.specification.user.account;
 
 import nks.abc.dao.base.ConjunctionSpecification;
-import nks.abc.dao.base.CriterionSpecification;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
 
 public class AccountInfoSpecificationFactory {
 	

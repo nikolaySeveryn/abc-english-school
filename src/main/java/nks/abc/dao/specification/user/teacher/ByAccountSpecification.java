@@ -3,14 +3,14 @@ package nks.abc.dao.specification.user.teacher;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import nks.abc.dao.base.CriterionSpecification;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
+import nks.abc.domain.entity.user.Account;
 
 class ByAccountSpecification implements CriterionSpecification{
 	
-	private AccountInfo account;
+	private Account account;
 	
-	public ByAccountSpecification(AccountInfo account) {
+	public ByAccountSpecification(Account account) {
 		this.account = account;
 	}
 	

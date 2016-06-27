@@ -1,7 +1,7 @@
 package nks.abc.test.domain.entity.user;
 
 import static org.junit.Assert.*;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.domain.entity.user.Account;
 
 import org.junit.Test;
 
@@ -9,7 +9,7 @@ public class UserTest {
 
 	@Test
 	public void testPasswordEncript() {
-		AccountInfo user = new AccountInfo();
+		Account user = new Account();
 		user.updatePassword("passwordTest");
 		assertEquals(user.getPasswordHash(), "iZtuqJwgMU1Fd2HsZBhsRg==");
 		user.updatePassword("otherLongVerryLongLongLongLongLongLongLongLongLongLongLongLongLongLongLongerPassword");

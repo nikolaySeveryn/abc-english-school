@@ -1,4 +1,4 @@
-package nks.abc.dao.base;
+package nks.abc.dao.base.interfaces;
 
 import org.hibernate.criterion.Criterion;
 

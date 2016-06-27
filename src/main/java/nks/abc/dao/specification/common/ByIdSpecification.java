@@ -3,7 +3,7 @@ package nks.abc.dao.specification.common;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
-import nks.abc.dao.base.CriterionSpecification;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
 
 public class ByIdSpecification<T extends Number> implements CriterionSpecification {
 	

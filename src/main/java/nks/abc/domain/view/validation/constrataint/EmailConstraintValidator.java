@@ -1,9 +1,11 @@
-package nks.abc.domain.view.validation;
+package nks.abc.domain.view.validation.constrataint;
 
 import java.util.regex.Pattern;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import nks.abc.domain.view.validation.annotation.Email;
 
 public class EmailConstraintValidator implements ConstraintValidator<Email,String> {
 
@@ -24,6 +26,7 @@ public class EmailConstraintValidator implements ConstraintValidator<Email,Strin
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext cvc) {
 		
+		//TODO: looks like a bug!
 		if(value == null) {
             return true;
 		}

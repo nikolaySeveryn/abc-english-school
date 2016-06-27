@@ -1,12 +1,12 @@
 package nks.abc.dao.specification.user.teacher;
 
-import nks.abc.dao.base.CriterionSpecification;
-import nks.abc.dao.base.HQLSpecification;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
+import nks.abc.dao.base.interfaces.HQLSpecification;
+import nks.abc.domain.entity.user.Account;
 
 public class TeacherSpecificationFactory {
 
-	public CriterionSpecification byAccount(AccountInfo account){
+	public CriterionSpecification byAccount(Account account){
 		return new ByAccountSpecification(account);
 	}
 	

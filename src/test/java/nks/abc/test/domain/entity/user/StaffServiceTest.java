@@ -5,14 +5,14 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
-import nks.abc.dao.base.CriterionSpecification;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
 import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
 import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.domain.entity.user.Account;
 import nks.abc.domain.entity.user.Administrator;
 import nks.abc.domain.entity.user.Teacher;
 import nks.abc.domain.view.converter.user.AccountViewConverter;
@@ -93,7 +93,7 @@ public class StaffServiceTest {
 		String userName = "username";
 		emptyEmployee.setLogin(userName);
 		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLogin(userName)))
-				.thenReturn(new AccountInfo());
+				.thenReturn(new Account());
 		service.add(emptyEmployee);
 	}
 	
@@ -180,7 +180,7 @@ public class StaffServiceTest {
 		String currentUserLogin = "user";
 		employee.setAccountId(4L);
 		employee.setIsAdministrator(false);
-		AccountInfo account = new AccountInfo();
+		Account account = new Account();
 		account.setAccountId(4L);
 		when(
 				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
@@ -195,7 +195,7 @@ public class StaffServiceTest {
 	public void UpdateSuccess(){
 		employee.setAccountId(4L);
 		String currentUserLogin = "user";
-		AccountInfo currentUser = new AccountInfo();
+		Account currentUser = new Account();
 		currentUser.setLogin(currentUserLogin);
 		currentUser.setAccountId(3L);
 		when(
@@ -206,7 +206,7 @@ public class StaffServiceTest {
 		service.update(employee, currentUserLogin);
 		ArgumentCaptor<Teacher> teacherCaptor = ArgumentCaptor.forClass(Teacher.class);
 		ArgumentCaptor<Administrator>adminCaptor = ArgumentCaptor.forClass(Administrator.class);
-		ArgumentCaptor<AccountInfo> accountCaptor = ArgumentCaptor.forClass(AccountInfo.class);
+		ArgumentCaptor<Account> accountCaptor = ArgumentCaptor.forClass(Account.class);
 		
 		verify(accountRepository).update(accountCaptor.capture());
 		verify(teacherRepository).update(teacherCaptor.capture());
@@ -222,7 +222,7 @@ public class StaffServiceTest {
 	public void UpdateNoTeacherAndNoAdminStaff(){
 		employee.setAccountId(4L);
 		String currentUserLogin = "user";
-		AccountInfo currentUser = new AccountInfo();
+		Account currentUser = new Account();
 		currentUser.setLogin(currentUserLogin);
 		currentUser.setAccountId(3L);
 		when(
@@ -232,7 +232,7 @@ public class StaffServiceTest {
 		employee.setIsTeacher(false);
 		service.update(employee, currentUserLogin);
 		
-		ArgumentCaptor<AccountInfo> accountCaptor = ArgumentCaptor.forClass(AccountInfo.class);
+		ArgumentCaptor<Account> accountCaptor = ArgumentCaptor.forClass(Account.class);
 		verify(accountRepository).update(accountCaptor.capture());
 		compareAccountInfoWithoutPassword(employee, accountCaptor.getValue());
 	}
@@ -251,7 +251,7 @@ public class StaffServiceTest {
 	@Test(expected=RightsDeprivingException.class)
 	public void deleteHimself(){
 		String currentUserLogin = "user";
-		AccountInfo currentUser = new AccountInfo();
+		Account currentUser = new Account();
 		currentUser.setAccountId(5L);
 		currentUser.setLogin(currentUserLogin);
 		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))).thenReturn(currentUser);
@@ -259,7 +259,7 @@ public class StaffServiceTest {
 	}
 	
 	
-	private void compareAccountInfoWithoutPassword(StaffView dto, AccountInfo account){
+	private void compareAccountInfoWithoutPassword(StaffView dto, Account account){
 		assertEquals(dto.getBirthday(), account.getPeronalInfo().getBirthday());
 		assertEquals(dto.getEmail(), account.getPeronalInfo().getEmail());
 		assertEquals(dto.getFirstName(), account.getPeronalInfo().getFirstName());
@@ -272,7 +272,7 @@ public class StaffServiceTest {
 		assertEquals(dto.getPatronomic(), account.getPeronalInfo().getPatronomic());
 	}
 	
-	private void compareAccountInfo(StaffView dto, AccountInfo account){
+	private void compareAccountInfo(StaffView dto, Account account){
 		compareAccountInfoWithoutPassword(dto, account);
 		assertEquals(passHash, account.getPasswordHash());
 	}

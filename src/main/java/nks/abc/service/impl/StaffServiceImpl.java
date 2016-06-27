@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.dao.base.CriterionSpecification;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
 import nks.abc.domain.entity.user.Administrator;
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.domain.entity.user.Account;
 import nks.abc.domain.entity.user.Teacher;
 import nks.abc.domain.entity.user.UserFactory;
 import nks.abc.domain.view.converter.user.AccountViewConverter;
@@ -58,7 +58,7 @@ public class StaffServiceImpl implements StaffService {
 		if(!employeeDTO.getIsAdministrator() && !employeeDTO.getIsTeacher()){
 			throw new ServiceDisplayedErorr("Employee should be a teacher or an administrator or both of them");
 		}
-		AccountInfo account = dtoConvertor.toDomain(employeeDTO);
+		Account account = dtoConvertor.toDomain(employeeDTO);
 //		should work without this
 //		account.setIsDeleted(false);
 		account.updatePassword(employeeDTO.getPassword());
@@ -90,7 +90,7 @@ public class StaffServiceImpl implements StaffService {
 	public void update(StaffView employeeDTO, String currentUserLogin) {
 		updateGuardClause(employeeDTO, currentUserLogin);
 		
-		AccountInfo updatingUser = dtoConvertor.toDomain(employeeDTO);
+		Account updatingUser = dtoConvertor.toDomain(employeeDTO);
 		accountDAO.update(updatingUser);
 		
 		Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.getSpecificaitonFactory().byAccount(updatingUser));
@@ -126,7 +126,7 @@ public class StaffServiceImpl implements StaffService {
 			throw new NoCurrentUserException("Current user login is empty");
 		}
 		CriterionSpecification specification = accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false);
-		AccountInfo currentUser = accountDAO.uniqueQuery(specification);
+		Account currentUser = accountDAO.uniqueQuery(specification);
 		if(employeeDTO.getAccountId() == null){
 			throw new NoIdException("Trying to update account without id");
 		}
@@ -147,7 +147,7 @@ public class StaffServiceImpl implements StaffService {
 		deleteGuardClause(id, currentUserLogin);
 		try{
 			log.info("delete user: ");
-			AccountInfo removed = getAccountInfoById(id);
+			Account removed = getAccountInfoById(id);
 			removed.setIsDeleted(true);
 			accountDAO.update(removed);
 		}
@@ -162,7 +162,7 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	public StaffView getById(Long id) {
 		try {
-			AccountInfo account = getAccountInfoById(id);
+			Account account = getAccountInfoById(id);
 			return dtoConvertor.toView(account);
 		}
 		catch(DAOException de){
@@ -171,12 +171,12 @@ public class StaffServiceImpl implements StaffService {
 		}
 	}
 
-	private AccountInfo getAccountInfoById(Long id) {
+	private Account getAccountInfoById(Long id) {
 		return accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byId(id));
 	}
 
 	private void deleteGuardClause(Long id, String currentUserLogin) {
-		AccountInfo currentUser = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin, false));
+		Account currentUser = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin, false));
 		if(currentUser == null) {
 			throw new NoCurrentUserException("No current user. Username: " + currentUserLogin);
 		}
@@ -188,7 +188,7 @@ public class StaffServiceImpl implements StaffService {
 
 	@Override
 	public List<StaffView> getAll() {
-		List<AccountInfo> accounts= null;
+		List<Account> accounts= null;
 		try{
 			accounts = accountDAO.query(accountDAO.getSpecificationFactory().byIsDeleted(false));
 		}
@@ -223,7 +223,7 @@ public class StaffServiceImpl implements StaffService {
 
 	@Override
 	public StaffView getStaffByLogin(String login) {
-		AccountInfo entity = null;
+		Account entity = null;
 		try{
 			entity = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(login, false));
 			

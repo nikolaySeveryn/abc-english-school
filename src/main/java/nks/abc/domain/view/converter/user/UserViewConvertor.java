@@ -1,12 +1,12 @@
 package nks.abc.domain.view.converter.user;
 
-import nks.abc.domain.entity.user.AccountInfo;
+import nks.abc.domain.entity.user.Account;
 import nks.abc.domain.entity.user.PersonalInfo;
 import nks.abc.domain.view.object.objects.user.UserView;
 
 public class UserViewConvertor {
 	
-	public static void toDTO(AccountInfo entity, UserView dto) {
+	public static void toDTO(Account entity, UserView dto) {
 		dto.setAccountId(entity.getAccountId());
 		dto.setLogin(entity.getLogin());
 		dto.setPersonalInfoId(entity.getPeronalInfo().getId());
@@ -20,7 +20,7 @@ public class UserViewConvertor {
 		dto.setIsDeleted(entity.getIsDeleted());
 	}
 	
-	public static void toEntity(UserView dto, AccountInfo entity) {
+	public static void toEntity(UserView dto, Account entity) {
 		entity.setAccountId(dto.getAccountId());
 		entity.setLogin(dto.getLogin());
 		java.sql.Date sqlDate = null;

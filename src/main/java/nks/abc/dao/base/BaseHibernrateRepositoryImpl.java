@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import nks.abc.dao.base.interfaces.BaseHibernateRepository;
+import nks.abc.dao.base.interfaces.CriterionSpecification;
+import nks.abc.dao.base.interfaces.HQLSpecification;
 import nks.abc.dao.exception.DAOException;
 
 import org.apache.log4j.Logger;
@@ -23,6 +26,7 @@ public class BaseHibernrateRepositoryImpl <T> extends HibernateRepository implem
 	@Override
 	public void insert(T entity) {
 		try{
+			//TODO: loging
 			getSession().save(entity);
 		}
 		catch (HibernateException he){

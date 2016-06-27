@@ -1,4 +1,4 @@
-package nks.abc.domain.view.validation;
+package nks.abc.domain.view.validation.annotation;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
@@ -12,11 +12,13 @@ import javax.validation.Payload;
 
 import org.primefaces.validate.bean.ClientConstraint;
 
+import nks.abc.domain.view.validation.client.EmailClientValidator;
+import nks.abc.domain.view.validation.constrataint.EmailConstraintValidator;
+
 @Target({ METHOD,FIELD,ANNOTATION_TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy=EmailConstraintValidator.class)
-@ClientConstraint(resolvedBy=EmailClientValidatorConstraint.class)
-@Documented
+@ClientConstraint(resolvedBy=EmailClientValidator.class)
 public @interface Email {
 	String message() default "must be an Email";
 	boolean notEmpty() default true;

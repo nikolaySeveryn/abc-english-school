@@ -7,6 +7,8 @@ import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
+import nks.abc.dao.base.interfaces.CriterionSpecification;
+
 public class ConjunctionSpecification implements CriterionSpecification {
 
 	private List<CriterionSpecification> specifications;
