@@ -19,43 +19,43 @@
 						<p:panelGrid columns="3">
 							<p:outputLabel value="Прізвище" for="sirname" />
 							<p:inputText id="sirname"
-								value="#{groupBean.editedStudent.sirName}" />
+								value="#{studentBean.editedStudent.sirName}" />
 							<p:message for="sirname" />
 
 							<p:outputLabel value="Ім’я" for="fistname" />
 							<p:inputText id="fistname"
-								value="#{groupBean.editedStudent.firstName}" />
+								value="#{studentBean.editedStudent.firstName}" />
 							<p:message for="fistname" />
 
 							<p:outputLabel value="По батькові" for="patronomic" />
 							<p:inputText id="patronomic"
-								value="#{groupBean.editedStudent.patronomic}" />
+								value="#{studentBean.editedStudent.patronomic}" />
 							<p:message for="patronomic" />
 
 							<p:outputLabel value="Телефон" for="phone" />
 							<p:inputText id="phone"
-								value="#{groupBean.editedStudent.phoneNum}" />
+								value="#{studentBean.editedStudent.phoneNum}" />
 							<p:message for="phone" />
 
 							<p:outputLabel value="Email" for="email" />
-							<p:inputText id="email" value="#{groupBean.editedStudent.email}" required="true" />
+							<p:inputText id="email" value="#{studentBean.editedStudent.email}" required="true" />
 							<p:message for="email" />
 
-							<c:if test="#{groupBean.isNewStudent}">
+							<c:if test="#{studentBean.isNewStudent}">
 								<p:outputLabel value="Логін" for="login" />
 								<p:inputText id="login" required="true"
-									value="#{groupBean.editedStudent.login}" />
+									value="#{studentBean.editedStudent.login}" />
 								<p:message for="login" />
 
 								<p:outputLabel for="password" value="Пароль" />
 								<p:password id="password" required="true"
-									value="#{groupBean.editedStudent.password}" />
+									value="#{studentBean.editedStudent.password}" />
 								<p:message for="password" />
 							</c:if>
 
 							<p:outputLabel for="birthday" value="День народження" />
 							<p:calendar id="birthday"
-								value="#{groupBean.editedStudent.birthday}" pattern="dd-MM-yyyy"
+								value="#{studentBean.editedStudent.birthday}" pattern="dd-MM-yyyy"
 								mask="true" navigator="true" yearRange="c-100:c" />
 							<p:message for="birthday" />
 
@@ -65,32 +65,32 @@
 						<p:panelGrid columns="3">
 							<p:outputLabel value="Прізвище" for="parnet_sirname" />
 							<p:inputText id="parnet_sirname"
-								value="#{groupBean.editedStudent.parent.sirName}" />
+								value="#{studentBean.editedStudent.parent.sirName}" />
 							<p:message for="parnet_sirname" />
 
 							<p:outputLabel value="Ім’я" for="parnet_fistname" />
 							<p:inputText id="parnet_fistname"
-								value="#{groupBean.editedStudent.parent.firstName}" />
+								value="#{studentBean.editedStudent.parent.firstName}" />
 							<p:message for="parnet_fistname" />
 
 							<p:outputLabel value="По батькові" for="parnet_patronomic" />
 							<p:inputText id="parnet_patronomic"
-								value="#{groupBean.editedStudent.parent.patronomic}" />
+								value="#{studentBean.editedStudent.parent.patronomic}" />
 							<p:message for="parnet_patronomic" />
 
 							<p:outputLabel value="Телефон" for="parnet_phone" />
 							<p:inputText id="parnet_phone"
-								value="#{groupBean.editedStudent.parent.phoneNum}" />
+								value="#{studentBean.editedStudent.parent.phoneNum}" />
 							<p:message for="parnet_phone" />
 
 							<p:outputLabel value="Email" for="parnet_email" />
 							<p:inputText id="parnet_email"
-								value="#{groupBean.editedStudent.parent.email}" />
+								value="#{studentBean.editedStudent.parent.email}" />
 							<p:message for="parnet_email" />
 
 							<p:outputLabel for="parnet_birthday" value="День народження" />
 							<p:calendar id="parnet_birthday"
-								value="#{groupBean.editedStudent.parent.birthday}"
+								value="#{studentBean.editedStudent.parent.birthday}"
 								pattern="dd-MM-yyyy" mask="true" navigator="true"
 								yearRange="c-100:c" />
 							<p:message for="parnet_birthday" />
@@ -100,22 +100,22 @@
 						<p:panelGrid columns="3">
 							<p:outputLabel value="Групи" for="groups" />
 							<p:autoComplete id="groups"
-								value="#{groupBean.editedStudent.groups}"
-								completeMethod="#{groupBean.complateGroup}" var="group"
+								value="#{studentBean.editedStudent.groups}"
+								completeMethod="#{studentBean.complateGroup}" var="group"
 								itemLabel="#{group.name}" itemValue="#{group}"
 								converter="#{groupConverter}" multiple="true" required="true" />
 							<p:message for="groups" />
 
 							<p:outputLabel for="discount" value="Знижка" />
 							<pe:inputNumber id="discount"
-								value="#{groupBean.editedStudent.discount}" symbol="%" decimalPlaces="0"
+								value="#{studentBean.editedStudent.discount}" symbol="%" decimalPlaces="0"
 								symbolPosition="s" emptyValue="zero" />
 							<p:message for="discount" />
 
-							<c:if test="not #{groupBean.isNewStudent}">
+							<c:if test="not #{studentBean.isNewStudent}">
 								<p:outputLabel for="money_balance" value="Баланс" />
 								<pe:inputNumber id="money_balance"
-									value="#{groupBean.editedStudent.moneyBalance}" symbol="UAH"
+									value="#{studentBean.editedStudent.moneyBalance}" symbol="UAH"
 									symbolPosition="s" disabled="true" />
 								<p:message for="money_balance" />
 							</c:if>
@@ -125,9 +125,9 @@
 				</p:tabView>
 
 
-				<p:commandButton action="#{groupBean.saveStudent()}" validateClient="true"
+				<p:commandButton action="#{studentBean.saveStudent()}" validateClient="true"
 					update="student_edit_form" value="Зберегти" icon="ui-icon-disk" />
-				<p:commandButton action="#{groupBean.cancel()}" value="Відмінити" 
+				<p:commandButton action="#{studentBean.cancel()}" value="Відмінити" 
 					icon="ui-icon-cancel" immediate="true" />
 			</h:form>
 		</ui:define>

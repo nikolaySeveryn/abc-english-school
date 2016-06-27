@@ -12,9 +12,9 @@
 			<h:form>
 				<p:toolbar>
 					<f:facet name="left">
-						<p:commandButton action="#{groupBean.addGroup()}"
+						<p:commandButton action="#{studentBean.addGroup()}"
 							icon="ui-icon-plusthick" />
-						<p:commandButton actionListener="#{groupBean.deleteGroup()}"
+						<p:commandButton actionListener="#{studentBean.deleteGroup()}"
 							update=":growl group_table" icon="ui-icon-trash">
 							<p:confirm header="Confirmation"
 								message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
@@ -23,19 +23,19 @@
 				</p:toolbar>
 				
 				<p:dataTable id="group_table" var="group"
-					value="#{groupBean.groupList}" emptyMessage="Пусто"
+					value="#{studentBean.groupList}" emptyMessage="Пусто"
 					styleClass="data-table" resizableColumns="true">
 					<p:column width="20">
 						<p:selectBooleanCheckbox
-							value="#{groupBean.checkedGroups[group.id]}" />
+							value="#{studentBean.checkedGroups[group.id]}" />
 					</p:column>
 					<p:column headerText="Група">
 						<h:outputText
 							value="#{group.name}" />
 					</p:column>
 					<p:column width="68">
-						<p:commandButton action="#{groupBean.editGroup(group)}" icon="ui-icon-pencil" />
-						<p:commandButton action="#{groupBean.viewGroup(group)}" icon="ui-icon-person" update=":student_list_form" />
+						<p:commandButton action="#{studentBean.editGroup(group)}" icon="ui-icon-pencil" />
+						<p:commandButton action="#{studentBean.viewGroup(group)}" icon="ui-icon-person" update=":student_list_form" />
 					</p:column>
 				</p:dataTable>
 			</h:form>

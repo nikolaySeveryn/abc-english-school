@@ -195,7 +195,7 @@ public class StaffServiceImpl implements StaffService {
 		return dtoConvertor.toView(entity);
 	}
 	
-	private class GuardClauses{
+	private static class GuardClauses{
 
 		private void delete(StaffServiceImpl staffServiceImpl, Long id, String currentUserLogin) {
 			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(staffServiceImpl.accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin, false));

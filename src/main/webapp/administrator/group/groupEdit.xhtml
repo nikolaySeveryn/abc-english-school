@@ -16,34 +16,34 @@
 				<p:messages />
 				<p:panelGrid columns="3">
  					<p:outputLabel value="Назва" for="name" />
-					<p:inputText id="name" value="#{groupBean.editedGroup.name}" />
+					<p:inputText id="name" value="#{studentBean.editedGroup.name}" />
 					<p:message for="name" />
 					
 					<p:outputLabel value="Рівень" for="level" />
-					<p:selectOneMenu id="level" value="#{groupBean.editedGroup.level}">
-						<f:selectItems value="#{groupBean.levels}" var="level" itemValue="#{level}"  itemLabel="#{level.label}"/>
+					<p:selectOneMenu id="level" value="#{studentBean.editedGroup.level}">
+						<f:selectItems value="#{studentBean.levels}" var="level" itemValue="#{level}"  itemLabel="#{level.label}"/>
 					</p:selectOneMenu>
 					<p:message for="level" />
 					
 					<p:outputLabel value="Вартість заняття" for="tarif" />
-					<pe:inputNumber id="tarif" value="#{groupBean.editedGroup.tarif}" symbol=" UAH" symbolPosition="s" 
+					<pe:inputNumber id="tarif" value="#{studentBean.editedGroup.tarif}" symbol=" UAH" symbolPosition="s" 
                                decimalSeparator="," thousandSeparator=" " />
                     <p:message for="tarif" />
                     
                     <p:outputLabel value="Викладач" for="teacher" />
-					<p:autoComplete id="teacher" value="#{groupBean.editedGroup.teacher}"
-						dropdown="true" completeMethod="#{groupBean.complateTeacher}"
+					<p:autoComplete id="teacher" value="#{studentBean.editedGroup.teacher}"
+						dropdown="true" completeMethod="#{studentBean.complateTeacher}"
 						var="teacher" itemLabel="#{teacher.sirName} #{teacher.firstName} #{teacher.patronomic}"
 						itemValue="#{teacher}"
 						converter="#{staffConverter}" />
 					<p:message for="teacher" />
 
 				</p:panelGrid>
-				<p:commandButton action="#{groupBean.saveGroup()}"
+				<p:commandButton action="#{studentBean.saveGroup()}"
 					validateClient="true" 
 					update="group_edit_form"
 					value="Зберегти" icon="ui-icon-disk" />
-				<p:commandButton action="#{groupBean.cancel()}"
+				<p:commandButton action="#{studentBean.cancel()}"
 					value="Відмінити" icon="ui-icon-cancel" immediate="true" />
 			</h:form>
 		</ui:define>
