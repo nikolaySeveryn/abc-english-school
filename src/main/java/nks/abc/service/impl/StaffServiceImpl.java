@@ -43,21 +43,13 @@ public class StaffServiceImpl implements StaffService {
 	@Autowired
 	private AccountViewConverter dtoConvertor;
 	
+	private GuardClauses guardClauses = new GuardClauses();
+	
 	@Override
 	@Transactional(readOnly=false)
 	public void add(StaffView employeeDTO) {
+		guardClauses.add(this, employeeDTO);
 		
-		String login = employeeDTO.getLogin();
-		if(login == null || login.length() < 1) {
-			throw new NoUserLoginException("Login is empty");
-		}
-		AccountInfoSpecificationFactory specificationFactory = accountDAO.getSpecificationFactory();
-		if(accountDAO.uniqueQuery(specificationFactory.byLogin(login)) != null) {
-			throw new ServiceDisplayedErorr("User with such login already exist!");
-		}
-		if(!employeeDTO.getIsAdministrator() && !employeeDTO.getIsTeacher()){
-			throw new ServiceDisplayedErorr("Employee should be a teacher or an administrator or both of them");
-		}
 		Account account = dtoConvertor.toDomain(employeeDTO);
 //		should work without this
 //		account.setIsDeleted(false);
@@ -88,7 +80,7 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	@Transactional(readOnly=false)
 	public void update(StaffView employeeDTO, String currentUserLogin) {
-		updateGuardClause(employeeDTO, currentUserLogin);
+		guardClauses.update(this, employeeDTO, currentUserLogin);
 		
 		Account updatingUser = dtoConvertor.toDomain(employeeDTO);
 		accountDAO.update(updatingUser);
@@ -120,31 +112,11 @@ public class StaffServiceImpl implements StaffService {
 		}
 	}
 
-	private void updateGuardClause(StaffView employeeDTO,
-			String currentUserLogin) {
-		if(currentUserLogin == null || currentUserLogin.length() < 1) {
-			throw new NoCurrentUserException("Current user login is empty");
-		}
-		CriterionSpecification specification = accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false);
-		Account currentUser = accountDAO.uniqueQuery(specification);
-		if(employeeDTO.getAccountId() == null){
-			throw new NoIdException("Trying to update account without id");
-		}
-		
-		if(currentUser == null){
-			throw new NoCurrentUserException();
-		}
-//		// restrict removing admin rights for yourself
-		// expects that change user can only administrator!!!
-		if(employeeDTO.getAccountId().equals(currentUser.getAccountId()) && !employeeDTO.getIsAdministrator()){
-			throw new RightsDeprivingException("You can't deprive administrator rights yourself");
-		}
-	}
-
 	@Override
 	@Transactional(readOnly=false)
 	public void delete(Long id, String currentUserLogin) {
-		deleteGuardClause(id, currentUserLogin);
+		guardClauses.delete(this, id, currentUserLogin);
+		
 		try{
 			log.info("delete user: ");
 			Account removed = getAccountInfoById(id);
@@ -174,17 +146,6 @@ public class StaffServiceImpl implements StaffService {
 	private Account getAccountInfoById(Long id) {
 		return accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byId(id));
 	}
-
-	private void deleteGuardClause(Long id, String currentUserLogin) {
-		Account currentUser = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin, false));
-		if(currentUser == null) {
-			throw new NoCurrentUserException("No current user. Username: " + currentUserLogin);
-		}
-		if(currentUser.getAccountId().equals(id)){
-			throw new RightsDeprivingException("You're trying to remove yourself. Nice try :)");
-		}
-	}
-	
 
 	@Override
 	public List<StaffView> getAll() {
@@ -233,4 +194,51 @@ public class StaffServiceImpl implements StaffService {
 		}
 		return dtoConvertor.toView(entity);
 	}
+	
+	private class GuardClauses{
+
+		private void delete(StaffServiceImpl staffServiceImpl, Long id, String currentUserLogin) {
+			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(staffServiceImpl.accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin, false));
+			if(currentUser == null) {
+				throw new NoCurrentUserException("No current user. Username: " + currentUserLogin);
+			}
+			if(currentUser.getAccountId().equals(id)){
+				throw new RightsDeprivingException("You're trying to remove yourself. Nice try :)");
+			}
+		}
+
+		private void update(StaffServiceImpl staffServiceImpl, StaffView employeeDTO, String currentUserLogin) {
+			if(currentUserLogin == null || currentUserLogin.length() < 1) {
+				throw new NoCurrentUserException("Current user login is empty");
+			}
+			CriterionSpecification specification = staffServiceImpl.accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false);
+			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(specification);
+			if(employeeDTO.getAccountId() == null){
+				throw new NoIdException("Trying to update account without id");
+			}
+			
+			if(currentUser == null){
+				throw new NoCurrentUserException();
+			}
+			// restrict removing admin rights for yourself
+			// expects that change user can only administrator!!!
+			if(employeeDTO.getAccountId().equals(currentUser.getAccountId()) && !employeeDTO.getIsAdministrator()){
+				throw new RightsDeprivingException("You can't deprive administrator rights yourself");
+			}
+		}
+
+		private void add(StaffServiceImpl staffServiceImpl, StaffView employeeDTO) {
+			String login = employeeDTO.getLogin();
+			if(login == null || login.length() < 1) {
+				throw new NoUserLoginException("Login is empty");
+			}
+			AccountInfoSpecificationFactory specificationFactory = staffServiceImpl.accountDAO.getSpecificationFactory();
+			if(staffServiceImpl.accountDAO.uniqueQuery(specificationFactory.byLogin(login)) != null) {
+				throw new ServiceDisplayedErorr("User with such login already exist!");
+			}
+			if(!employeeDTO.getIsAdministrator() && !employeeDTO.getIsTeacher()){
+				throw new ServiceDisplayedErorr("Employee should be a teacher or an administrator or both of them");
+			}
+		}
+	};
 }
