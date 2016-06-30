@@ -51,8 +51,6 @@ public class StaffServiceImpl implements StaffService {
 		guardClauses.add(this, employeeDTO);
 		
 		Account account = dtoConvertor.toDomain(employeeDTO);
-//		should work without this
-//		account.setIsDeleted(false);
 		account.updatePassword(employeeDTO.getPassword());
 		
 		try {
@@ -85,8 +83,8 @@ public class StaffServiceImpl implements StaffService {
 		Account updatingUser = dtoConvertor.toDomain(employeeDTO);
 		accountDAO.update(updatingUser);
 		
-		Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.getSpecificaitonFactory().byAccount(updatingUser));
-		Administrator admin = adminDAO.uniqueQuery(adminDAO.getSpecificationFactory().byAccount(updatingUser));
+		Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(updatingUser));
+		Administrator admin = adminDAO.uniqueQuery(adminDAO.specifications().byAccount(updatingUser));
 		try{
 			if(teacher == null && updatingUser.isTeacher()) {
 				teacher = UserFactory.createTeacher();
@@ -144,14 +142,14 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	private Account getAccountInfoById(Long id) {
-		return accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byId(id));
+		return accountDAO.uniqueQuery(accountDAO.specifications().byId(id));
 	}
 
 	@Override
 	public List<StaffView> getAll() {
 		List<Account> accounts= null;
 		try{
-			accounts = accountDAO.query(accountDAO.getSpecificationFactory().byIsDeleted(false));
+			accounts = accountDAO.query(accountDAO.specifications().byIsDeleted(false));
 		}
 		catch (DAOException de){
 			log.error("DAO exception on staff finding all", de);
@@ -165,17 +163,13 @@ public class StaffServiceImpl implements StaffService {
 	public List<StaffView> getAllTeachers() {
 		List<Teacher> teachers = null;
 		try{
-			teachers = teacherDAO.query(teacherDAO.getSpecificaitonFactory().byIsDeleted(false));
+			teachers = teacherDAO.query(teacherDAO.specifications().byIsDeleted(false));
 		}
 		catch(DAOException de){
 			log.error("DAO exception on teacher finding", de);
 			throw new ServiceException("dao error", de);
 		}
 		List<StaffView> dtos = new ArrayList<StaffView>();
-		System.out.println("teachers " + teachers);
-		System.out.println("teachers size " + teachers.size());
-		System.out.println("teachers type" + teachers.getClass());
-		System.out.println("teachers.get(0).getClass() = " + teachers.get(0).getClass());
 		for(Teacher teacher: teachers){
 			dtos.add(dtoConvertor.toView(teacher.getAccountInfo()));
 		}
@@ -186,7 +180,7 @@ public class StaffServiceImpl implements StaffService {
 	public StaffView getStaffByLogin(String login) {
 		Account entity = null;
 		try{
-			entity = accountDAO.uniqueQuery(accountDAO.getSpecificationFactory().byLoginAndDeleted(login, false));
+			entity = accountDAO.uniqueQuery(accountDAO.specifications().byLoginAndDeleted(login, false));
 			
 		}
 		catch (DAOException de){
@@ -198,7 +192,7 @@ public class StaffServiceImpl implements StaffService {
 	private static class GuardClauses{
 
 		private void delete(StaffServiceImpl staffServiceImpl, Long id, String currentUserLogin) {
-			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(staffServiceImpl.accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin, false));
+			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(staffServiceImpl.accountDAO.specifications().byLoginAndDeleted(currentUserLogin, false));
 			if(currentUser == null) {
 				throw new NoCurrentUserException("No current user. Username: " + currentUserLogin);
 			}
@@ -211,7 +205,7 @@ public class StaffServiceImpl implements StaffService {
 			if(currentUserLogin == null || currentUserLogin.length() < 1) {
 				throw new NoCurrentUserException("Current user login is empty");
 			}
-			CriterionSpecification specification = staffServiceImpl.accountDAO.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false);
+			CriterionSpecification specification = staffServiceImpl.accountDAO.specifications().byLoginAndDeleted(currentUserLogin,false);
 			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(specification);
 			if(employeeDTO.getAccountId() == null){
 				throw new NoIdException("Trying to update account without id");
@@ -232,7 +226,7 @@ public class StaffServiceImpl implements StaffService {
 			if(login == null || login.length() < 1) {
 				throw new NoUserLoginException("Login is empty");
 			}
-			AccountInfoSpecificationFactory specificationFactory = staffServiceImpl.accountDAO.getSpecificationFactory();
+			AccountInfoSpecificationFactory specificationFactory = staffServiceImpl.accountDAO.specifications();
 			if(staffServiceImpl.accountDAO.uniqueQuery(specificationFactory.byLogin(login)) != null) {
 				throw new ServiceDisplayedErorr("User with such login already exist!");
 			}

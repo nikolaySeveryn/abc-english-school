@@ -13,20 +13,24 @@ import nks.abc.dao.exception.DAOException;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
-public class BaseHibernrateRepositoryImpl <T> extends HibernateRepository implements BaseHibernateRepository<T>{
+@Repository
+@Scope("prototype")
+public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseHibernateRepository<T> {
 	
 	private static final int MAX_RESULT_OF_UNIQUE_QUERY = 1;
-	private static final Logger log = Logger.getLogger(BaseHibernrateRepositoryImpl.class);
+	private static final Logger log = Logger.getLogger(BaseRepositoryImpl.class);
 	
-	public BaseHibernrateRepositoryImpl(Class<T> domainClass) {
+	public BaseRepositoryImpl(Class<T> domainClass) {
 		super(domainClass);
 	}
 	
 	@Override
 	public void insert(T entity) {
 		try{
-			//TODO: loging
+			log.info("insert entity: " + entity);
 			getSession().save(entity);
 		}
 		catch (HibernateException he){
@@ -38,6 +42,7 @@ public class BaseHibernrateRepositoryImpl <T> extends HibernateRepository implem
 	@Override
 	public void update(T entity) {
 		try{
+			log.info("update entity to: " + entity);
 			T merged = (T) getSession().merge(entity);
 			getSession().update(merged);
 		}
@@ -49,6 +54,7 @@ public class BaseHibernrateRepositoryImpl <T> extends HibernateRepository implem
 	
 	@Override
 	public void delete(T entity) {
+		log.info("delete entity: " + entity);
 		getSession().delete(entity);
 	}
 	
@@ -90,17 +96,6 @@ public class BaseHibernrateRepositoryImpl <T> extends HibernateRepository implem
 		}
 	}
 	
-	private void setParameters(Query hqlQuery, Map<String,Object> paramters) {
-		for(Map.Entry<String, Object> param : paramters.entrySet()){
-			if(param.getValue() instanceof Collection){
-				hqlQuery.setParameterList(param.getKey(), (Collection) param.getValue());
-			}
-			else {
-				hqlQuery.setParameter(param.getKey(), param.getValue());
-			}
-		}
-	}
-	
 	@Override
 	public T uniqueQuery(CriterionSpecification specification) {
 		try{
@@ -111,9 +106,20 @@ public class BaseHibernrateRepositoryImpl <T> extends HibernateRepository implem
 			throw new DAOException("Error on getting all data", he);
 		}
 	}
-
+	
 	@Override
 	public List<T> getAll() {
 		return getCriteria().list();
+	}
+
+	private void setParameters(Query hqlQuery, Map<String,Object> paramters) {
+		for(Map.Entry<String, Object> param : paramters.entrySet()){
+			if(param.getValue() instanceof Collection){
+				hqlQuery.setParameterList(param.getKey(), (Collection) param.getValue());
+			}
+			else {
+				hqlQuery.setParameter(param.getKey(), param.getValue());
+			}
+		}
 	}
 }

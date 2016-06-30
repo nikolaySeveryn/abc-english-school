@@ -1,8 +1,11 @@
 package nks.abc.dao.specification.user.account;
 
+import org.springframework.stereotype.Component;
+
 import nks.abc.dao.base.ConjunctionSpecification;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 
+@Component
 public class AccountInfoSpecificationFactory {
 	
 	public CriterionSpecification byLoginAndDeleted(String login, Boolean deleted) {

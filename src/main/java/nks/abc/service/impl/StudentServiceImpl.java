@@ -72,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	private Student getStudentDomainById(Long id) {
-		return studentRepository.uniqueQuery(studentRepository.getSpecificationFactory().byId(id));
+		return studentRepository.uniqueQuery(studentRepository.specifications().byId(id));
 	}
 
 	@Override

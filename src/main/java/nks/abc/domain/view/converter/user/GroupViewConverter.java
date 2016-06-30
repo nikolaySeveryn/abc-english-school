@@ -48,7 +48,7 @@ public class GroupViewConverter extends Converter<Group,GroupView> {
 		ConvertersHolder relativeConverters = getRelativeConverters();
 		Account account = (Account) relativeConverters.pullConverter(AccountViewConverter.class).toDomain(dto.getTeacher());
 		if(account != null){
-			Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.getSpecificaitonFactory().byAccount(account));
+			Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(account));
 			bo.setTeacher(teacher);
 		}
 		//TODO: why we need convert student?

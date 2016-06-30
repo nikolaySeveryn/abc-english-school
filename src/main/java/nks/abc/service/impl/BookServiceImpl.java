@@ -3,7 +3,7 @@ package nks.abc.service.impl;
 import java.util.List;
 
 import nks.abc.dao.exception.DAOException;
-import nks.abc.dao.repository.BookDAO;
+import nks.abc.dao.repository.BookRepository;
 import nks.abc.domain.entity.Book;
 import nks.abc.domain.view.converter.BookViewConverter;
 import nks.abc.domain.view.object.BookView;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookServiceImpl implements BookService {
 	
 	@Autowired
-	private BookDAO bookDAO;
+	private BookRepository bookDAO;
 
 	@Override
 	@Transactional(readOnly=false)
@@ -57,30 +57,6 @@ public class BookServiceImpl implements BookService {
 			throw new ServiceException("dao error", de);
 		}
 	}
-
-//	@Override
-//	public BookDTO findById(Integer id) {
-//		Book bookEntity = null;
-//		try{
-//			bookEntity = bookDAO.findById(id);
-//		}
-//		catch (DAOException de){
-//			throw new ServiceException("dao error", de);
-//		}
-//		return BookDTOConvertor.toDTO(bookEntity);
-//	}
-
-//	@Override
-//	public List<BookDTO> getAll(Integer offset, Integer limit) {
-//		List<Book> allBooks = null;
-//		try {
-//			allBooks = bookDAO.getAll(offset, limit);
-//		}
-//		catch (DAOException de){
-//			throw new ServiceException("dao error", de);
-//		}
-//		return BookDTOConvertor.toDTO(allBooks);
-//	}
 
 	@Override
 	public List<BookView> getAll() {

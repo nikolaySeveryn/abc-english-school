@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
+import nks.abc.dao.base.interfaces.BaseHibernateRepository;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
@@ -37,13 +38,17 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class StaffServiceTest {
 	
 	@Mock
-	private AdministratorRepository adminRepository;
+	private AdministratorRepository adminRepository = new AdministratorRepository();
 	@Mock
-	private TeacherRepository teacherRepository;
+	private TeacherRepository teacherRepository = new TeacherRepository();
 	@Mock
 	private AccountRepository accountRepository;
 	@Spy
 	private AccountViewConverter dtoConvertor = new AccountViewConverter();
+	@Spy
+	private AdministratorSpecificationFactory adminSpecifications = new AdministratorSpecificationFactory();
+	@Spy
+	private TeacherSpecificationFactory teacherSpecifications = new TeacherSpecificationFactory();
 	
 	@InjectMocks
 	private StaffServiceImpl service = new StaffServiceImpl();
@@ -54,9 +59,10 @@ public class StaffServiceTest {
 	
 	@Before
 	public void initMocks(){
-		when(adminRepository.getSpecificationFactory()).thenReturn(new AdministratorSpecificationFactory());
-		when(teacherRepository.getSpecificaitonFactory()).thenReturn(new TeacherSpecificationFactory());
-		when(accountRepository.getSpecificationFactory()).thenReturn(new AccountInfoSpecificationFactory());
+		when(adminRepository.specifications()).thenReturn(new AdministratorSpecificationFactory());
+		when(teacherRepository.specifications()).thenReturn(new TeacherSpecificationFactory());
+		when(accountRepository.specifications()).thenReturn(new AccountInfoSpecificationFactory());
+		
 	}
 	
 	@Before
@@ -92,7 +98,7 @@ public class StaffServiceTest {
 	public void existingUser(){
 		String userName = "username";
 		emptyEmployee.setLogin(userName);
-		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLogin(userName)))
+		when(accountRepository.uniqueQuery(accountRepository.specifications().byLogin(userName)))
 				.thenReturn(new Account());
 		service.add(emptyEmployee);
 	}
@@ -101,7 +107,7 @@ public class StaffServiceTest {
 	public void noTeahcerOrAdmin(){
 		String userName = "login";
 		emptyEmployee.setLogin(userName);
-		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLogin(userName)))
+		when(accountRepository.uniqueQuery(accountRepository.specifications().byLogin(userName)))
 			.thenReturn(null);
 		emptyEmployee.setIsAdministrator(false);
 		emptyEmployee.setIsTeacher(false);
@@ -183,7 +189,7 @@ public class StaffServiceTest {
 		Account account = new Account();
 		account.setAccountId(4L);
 		when(
-				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
+				accountRepository.uniqueQuery(accountRepository.specifications().byLoginAndDeleted(currentUserLogin,false))
 			).thenReturn(account);
 		
 		service.update(employee, currentUserLogin);
@@ -199,7 +205,7 @@ public class StaffServiceTest {
 		currentUser.setLogin(currentUserLogin);
 		currentUser.setAccountId(3L);
 		when(
-				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
+				accountRepository.uniqueQuery(accountRepository.specifications().byLoginAndDeleted(currentUserLogin,false))
 				).thenReturn(currentUser);
 		employee.setIsAdministrator(true);
 		employee.setIsTeacher(true);
@@ -226,7 +232,7 @@ public class StaffServiceTest {
 		currentUser.setLogin(currentUserLogin);
 		currentUser.setAccountId(3L);
 		when(
-				accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))
+				accountRepository.uniqueQuery(accountRepository.specifications().byLoginAndDeleted(currentUserLogin,false))
 				).thenReturn(currentUser);
 		employee.setIsAdministrator(false);
 		employee.setIsTeacher(false);
@@ -254,7 +260,7 @@ public class StaffServiceTest {
 		Account currentUser = new Account();
 		currentUser.setAccountId(5L);
 		currentUser.setLogin(currentUserLogin);
-		when(accountRepository.uniqueQuery(accountRepository.getSpecificationFactory().byLoginAndDeleted(currentUserLogin,false))).thenReturn(currentUser);
+		when(accountRepository.uniqueQuery(accountRepository.specifications().byLoginAndDeleted(currentUserLogin,false))).thenReturn(currentUser);
 		service.delete(5L, currentUserLogin);
 	}
 	

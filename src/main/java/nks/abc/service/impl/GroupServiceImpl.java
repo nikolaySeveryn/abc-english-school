@@ -78,7 +78,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	private Group getDomainGroupById(Long id) {
-		return groupDAO.uniqueQuery(groupDAO.getSpecificationFactory().byId(id));
+		return groupDAO.uniqueQuery(groupDAO.specifications().byId(id));
 	}
 
 	@Override
