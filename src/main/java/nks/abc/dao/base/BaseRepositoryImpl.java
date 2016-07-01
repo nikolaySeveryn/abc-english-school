@@ -5,10 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.dao.base.interfaces.BaseHibernateRepository;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.base.interfaces.HQLSpecification;
-import nks.abc.dao.exception.DAOException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -35,26 +35,26 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 		}
 		catch (HibernateException he){
 			log.error("hibernate exception" , he);
-			throw new DAOException("Error on insert", he);
+			throw new RepositoryException("Error on insert", he);
 		}
 	}
 
 	@Override
 	public void update(T entity) {
 		try{
-			log.info("update entity to: " + entity);
+			log.info("update entity [" + domainClass.getName() +"] to: \n" + entity);
 			T merged = (T) getSession().merge(entity);
 			getSession().update(merged);
 		}
 		catch (HibernateException he) {
 			log.error("hibernate exception" , he);
-			throw new DAOException("Error on update", he);
+			throw new RepositoryException("Error on update", he);
 		}
 	}
 	
 	@Override
 	public void delete(T entity) {
-		log.info("delete entity: " + entity);
+		log.info("delete entity [" + domainClass.getName() +"]: \n" + entity);
 		getSession().delete(entity);
 	}
 	
@@ -65,7 +65,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 		}
 		catch (HibernateException he){
 			log.error("hibernate exception" , he);
-			throw new DAOException("Error on getting all data", he);
+			throw new RepositoryException("Error on getting all data", he);
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 		}
 		catch (HibernateException he){
 			log.error("hibernate exception" , he);
-			throw new DAOException("Error on getting all data", he);
+			throw new RepositoryException("Error on getting all data", he);
 		}
 	}
 	
@@ -92,7 +92,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 		}
 		catch (HibernateException he){
 			log.error("hibernate exception" , he);
-			throw new DAOException("Error on getting all data", he);
+			throw new RepositoryException("Error on getting all data", he);
 		}
 	}
 	
@@ -103,7 +103,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 		}
 		catch (HibernateException he){
 			log.error("hibernate exception" , he);
-			throw new DAOException("Error on getting all data", he);
+			throw new RepositoryException("Error on getting all data", he);
 		}
 	}
 	

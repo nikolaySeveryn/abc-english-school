@@ -8,8 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.core.exception.repository.RepositoryException;
+import nks.abc.core.exception.service.NoCurrentUserException;
+import nks.abc.core.exception.service.NoIdException;
+import nks.abc.core.exception.service.NoUserLoginException;
+import nks.abc.core.exception.service.RightsDeprivingException;
+import nks.abc.core.exception.service.ServiceDisplayedErorr;
+import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
-import nks.abc.dao.exception.DAOException;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
@@ -21,12 +27,6 @@ import nks.abc.domain.entity.user.UserFactory;
 import nks.abc.domain.view.converter.user.AccountViewConverter;
 import nks.abc.domain.view.object.objects.user.StaffView;
 import nks.abc.service.StaffService;
-import nks.abc.service.exception.NoCurrentUserException;
-import nks.abc.service.exception.NoUserLoginException;
-import nks.abc.service.exception.NoIdException;
-import nks.abc.service.exception.RightsDeprivingException;
-import nks.abc.service.exception.ServiceDisplayedErorr;
-import nks.abc.service.exception.ServiceException;
 
 @Service("staffService")
 @Transactional(readOnly=true)
@@ -68,7 +68,7 @@ public class StaffServiceImpl implements StaffService {
 				log.info("adding teacher: " + teacher);
 				teacherDAO.insert(teacher);
 			}
-		} catch (DAOException de) {
+		} catch (RepositoryException de) {
 			log.error("add staff: DAO error", de);
 			throw new ServiceException("dao error", de);
 		}
@@ -104,7 +104,7 @@ public class StaffServiceImpl implements StaffService {
 				adminDAO.update(admin);
 			}
 		}
-		catch (DAOException de) {
+		catch (RepositoryException de) {
 			log.error("DAO exception on update staff", de);
 			throw new ServiceException("dao error", de);
 		}
@@ -121,7 +121,7 @@ public class StaffServiceImpl implements StaffService {
 			removed.setIsDeleted(true);
 			accountDAO.update(removed);
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			log.error("DAO exception on staff deleting", de);
 			throw new ServiceException("dao error", de);
 		}
@@ -135,7 +135,7 @@ public class StaffServiceImpl implements StaffService {
 			Account account = getAccountInfoById(id);
 			return dtoConvertor.toView(account);
 		}
-		catch(DAOException de){
+		catch(RepositoryException de){
 			log.error("DAO exception on geting by id", de);
 			throw new ServiceException("dao error", de);
 		}
@@ -151,7 +151,7 @@ public class StaffServiceImpl implements StaffService {
 		try{
 			accounts = accountDAO.query(accountDAO.specifications().byIsDeleted(false));
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			log.error("DAO exception on staff finding all", de);
 			throw new ServiceException("dao error", de);
 		}
@@ -165,7 +165,7 @@ public class StaffServiceImpl implements StaffService {
 		try{
 			teachers = teacherDAO.query(teacherDAO.specifications().byIsDeleted(false));
 		}
-		catch(DAOException de){
+		catch(RepositoryException de){
 			log.error("DAO exception on teacher finding", de);
 			throw new ServiceException("dao error", de);
 		}
@@ -183,7 +183,7 @@ public class StaffServiceImpl implements StaffService {
 			entity = accountDAO.uniqueQuery(accountDAO.specifications().byLoginAndDeleted(login, false));
 			
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			throw new ServiceException("dao error", de);
 		}
 		return dtoConvertor.toView(entity);

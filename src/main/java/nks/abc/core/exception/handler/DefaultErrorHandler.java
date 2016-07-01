@@ -1,12 +1,13 @@
-package nks.abc.web.common.util;
+package nks.abc.core.exception.handler;
 
 import java.util.ArrayList;
 
 import javax.faces.application.FacesMessage;
 
+import nks.abc.core.exception.service.ServiceDisplayedErorr;
+import nks.abc.core.exception.service.ServiceException;
+import nks.abc.core.util.FacesUtilit;
 import nks.abc.domain.view.object.objects.user.StaffView;
-import nks.abc.service.exception.ServiceDisplayedErorr;
-import nks.abc.service.exception.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package nks.abc.domain.exception;
+package nks.abc.core.exception.repository;
 
 
 public class ConversionException extends RuntimeException {

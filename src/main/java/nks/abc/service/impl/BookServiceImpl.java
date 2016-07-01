@@ -2,13 +2,13 @@ package nks.abc.service.impl;
 
 import java.util.List;
 
-import nks.abc.dao.exception.DAOException;
+import nks.abc.core.exception.repository.RepositoryException;
+import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.repository.BookRepository;
 import nks.abc.domain.entity.Book;
 import nks.abc.domain.view.converter.BookViewConverter;
 import nks.abc.domain.view.object.BookView;
 import nks.abc.service.BookService;
-import nks.abc.service.exception.ServiceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService {
 		try{
 			bookDAO.insert(bookEntity);
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			throw new ServiceException("dao error", de);
 		}
 	}
@@ -41,7 +41,7 @@ public class BookServiceImpl implements BookService {
 		try{
 			bookDAO.update(bookEntity);
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			throw new ServiceException("dao error", de);
 		}
 	}
@@ -53,7 +53,7 @@ public class BookServiceImpl implements BookService {
 		try{
 			bookDAO.delete(bookEntity);
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			throw new ServiceException("dao error", de);
 		}
 	}
@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService {
 		try{
 			all = bookDAO.getAll();
 		}
-		catch (DAOException de){
+		catch (RepositoryException de){
 			throw new ServiceException("dao error", de);
 		}
 		return BookViewConverter.toView(all);

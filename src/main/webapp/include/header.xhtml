@@ -10,13 +10,27 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form>
-			<h:outputText value="#{userBean.currentUserName}" />
-			<h:outputText value="&#160;" />
-			<p:commandLink id="logout_btn" actionListener="#{userBean.logout()}" oncomplete="window.location.reload()">
-				<h:outputText value="Вийти" />
-			</p:commandLink>
-		</h:form>
+		<div id="header">
+			<div class="left">
+				<h:graphicImage value="/images/abc-logo.png" id="logo" />
+			</div>
+
+			<div class="right user_wrap">
+				<h:form styleClass="user_info">
+					<span class="ui-icon ui-icon-person"></span>
+					<p:link href="javascript:void(0)" styleClass="user_name">
+						#{userBean.currentUserName}
+						</p:link>
+					<h:outputText value="&#160;" />
+							<p:commandLink id="logout_btn"
+							styleClass="logout_btn"
+						actionListener="#{userBean.logout()}"
+						oncomplete="window.location.reload()">
+						<h:outputText value="(вийти)" />
+					</p:commandLink>
+					</h:form>
+			</div>
+		</div>
 	</ui:composition>
 </h:body>
 </html>

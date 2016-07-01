@@ -1,4 +1,4 @@
-package nks.abc.service.exception;
+package nks.abc.core.exception.service;
 
 public class ServiceException extends RuntimeException{
 

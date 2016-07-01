@@ -5,6 +5,11 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
+import nks.abc.core.exception.service.NoCurrentUserException;
+import nks.abc.core.exception.service.NoIdException;
+import nks.abc.core.exception.service.NoUserLoginException;
+import nks.abc.core.exception.service.RightsDeprivingException;
+import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.dao.base.interfaces.BaseHibernateRepository;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.repository.user.AccountRepository;
@@ -18,11 +23,6 @@ import nks.abc.domain.entity.user.Administrator;
 import nks.abc.domain.entity.user.Teacher;
 import nks.abc.domain.view.converter.user.AccountViewConverter;
 import nks.abc.domain.view.object.objects.user.StaffView;
-import nks.abc.service.exception.NoCurrentUserException;
-import nks.abc.service.exception.NoUserLoginException;
-import nks.abc.service.exception.NoIdException;
-import nks.abc.service.exception.RightsDeprivingException;
-import nks.abc.service.exception.ServiceDisplayedErorr;
 import nks.abc.service.impl.StaffServiceImpl;
 
 import org.junit.Before;

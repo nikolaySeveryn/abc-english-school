@@ -7,15 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sun.faces.facelets.Facelet;
 
-import nks.abc.dao.exception.DAOException;
+import nks.abc.core.exception.repository.ConversionException;
+import nks.abc.core.exception.repository.RepositoryException;
+import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.repository.user.StudentRepository;
 import nks.abc.domain.entity.user.Student;
-import nks.abc.domain.exception.ConversionException;
 import nks.abc.domain.view.converter.user.GroupViewConverter;
 import nks.abc.domain.view.converter.user.StudentViewConverter;
 import nks.abc.domain.view.object.objects.user.StudentView;
 import nks.abc.service.StudentService;
-import nks.abc.service.exception.ServiceException;
 import nks.abc.web.common.converter.GroupConverter;
 
 @Service
@@ -47,7 +47,7 @@ public class StudentServiceImpl implements StudentService {
 				studentRepository.update(student);
 			}
 		}
-		catch(DAOException de){
+		catch(RepositoryException de){
 			log.error("Error on saving student", de);
 			throw new ServiceException("Error on saving student", de);
 		}
@@ -61,7 +61,7 @@ public class StudentServiceImpl implements StudentService {
 			return studentConverter.toView(student);
 		}
 		//TODO: exception refactoring
-		catch(DAOException de) {
+		catch(RepositoryException de) {
 			log.error("error during getting student by id", de);
 			throw new ServiceException("error during getting student by id", de);
 		}
@@ -83,7 +83,7 @@ public class StudentServiceImpl implements StudentService {
 				studentRepository.delete(getStudentDomainById(id));
 			}
 		}
-		catch(DAOException de) {
+		catch(RepositoryException de) {
 			log.error("error during deleting student", de);
 			throw new ServiceException("error during deleting student", de);
 		}

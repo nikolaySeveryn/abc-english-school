@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import nks.abc.domain.exception.ConversionException;
+import nks.abc.core.exception.repository.ConversionException;
 
 public class ConvertersHolder implements Cloneable{
 

@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.dao.base.interfaces.UniqueChecker;
-import nks.abc.dao.exception.DAOException;
 
 @Repository
 @Transactional(readOnly=true)
@@ -49,7 +49,7 @@ public class UniqueCheckerImpl implements UniqueChecker{
 		catch (Exception e){
 			String message = "An error on the checing of the uniqueness of " + entity.getName() + "." + field;
 			log.error(message);
-			throw new DAOException(message, e);
+			throw new RepositoryException(message, e);
 		}
 	}
 	

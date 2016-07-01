@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.domain.entity.user.Level;
 import nks.abc.domain.view.factory.UserViewFactory;
 import nks.abc.domain.view.object.objects.user.GroupView;
@@ -17,7 +18,6 @@ import nks.abc.service.GroupService;
 import nks.abc.service.StaffService;
 import nks.abc.service.StudentService;
 import nks.abc.web.common.enumeration.EditingMode;
-import nks.abc.web.common.util.ErrorHandler;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

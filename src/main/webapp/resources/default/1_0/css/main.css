@@ -59,3 +59,43 @@ table#login_form tr:LAST-CHILD td {
 	background-color: #f1f1f1;
 	padding: 8px;
 }
+
+#header .ui-layout-unit {
+	border: none;
+	padding: 0;
+}
+
+#header .ui-layout-center{
+	text-align: right;
+}
+
+#header #logo {
+	height: 60px;
+	margin-left: 10px;
+}
+
+#header .user_info {
+	margin-top: 20px;
+	font-size: 12pt;
+	font-style: oblique;
+}
+#header .user_info a.user_name{
+	text-decoration: none;
+}
+
+#header .user_info span.ui-icon{
+	float: left;
+	padding-right: 5px;
+}
+
+#header .user_info .logout_btn{
+	font-size: 10pt;
+}
+
+.left{
+	float: left;
+}
+
+.right{
+	float: right;
+}

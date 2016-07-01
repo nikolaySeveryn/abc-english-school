@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.dao.exception.DAOException;
+import nks.abc.core.exception.repository.RepositoryException;
+import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.repository.user.GroupRepository;
 import nks.abc.domain.entity.user.Group;
 import nks.abc.domain.view.converter.Converter;
@@ -16,7 +17,6 @@ import nks.abc.domain.view.converter.user.AccountViewConverter;
 import nks.abc.domain.view.converter.user.StudentViewConverter;
 import nks.abc.domain.view.object.objects.user.GroupView;
 import nks.abc.service.GroupService;
-import nks.abc.service.exception.ServiceException;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,7 +38,7 @@ public class GroupServiceImpl implements GroupService {
 			List<GroupView> groupsDto = converter.toView(groups);
 			return groupsDto;
 		}
-		catch (DAOException de) {
+		catch (RepositoryException de) {
 			log.error("DAO Error during getting groups", de);
 			throw new ServiceException("DAO Error during getting groups", de);
 		}
@@ -59,7 +59,7 @@ public class GroupServiceImpl implements GroupService {
 				groupDAO.insert(group);
 			}
 		}
-		catch (DAOException de) {
+		catch (RepositoryException de) {
 			log.error("DAO Error during saving group", de);
 			throw new ServiceException("DAO Error during saving group", de);
 		}
@@ -71,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
 			Group bo = getDomainGroupById(id);
 			return converter.toView(bo);
 		}
-		catch (DAOException de) {
+		catch (RepositoryException de) {
 			log.error("DAO Error during getting group by id", de);
 			throw new ServiceException("DAO Error during getting group by id", de);
 		}
@@ -89,7 +89,7 @@ public class GroupServiceImpl implements GroupService {
 				groupDAO.delete(getDomainGroupById(id));
 			}
 		}
-		catch (DAOException de) {
+		catch (RepositoryException de) {
 			//TODO: refactoring
 			log.error("DAO Error during deleting group", de);
 			throw new ServiceException("DAO Error during deleting group", de);
