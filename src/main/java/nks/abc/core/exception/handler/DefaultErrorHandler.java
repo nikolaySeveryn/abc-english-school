@@ -3,10 +3,12 @@ package nks.abc.core.exception.handler;
 import java.util.ArrayList;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.FacesUtilit;
+import nks.abc.core.util.ExternalMessage;
+import nks.abc.core.util.ExternalMessage.MessageSeverity;
 import nks.abc.domain.view.object.objects.user.StaffView;
 
 import org.apache.log4j.Logger;
@@ -16,8 +18,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultErrorHandler implements ErrorHandler {
 	
+	private static final MessageSeverity SEVERITY_ERROR = MessageSeverity.ERROR;
+
 	@Autowired
-	private FacesUtilit utilit;
+	private ExternalMessage utilit;
 	
 	private Logger log = getDefaultLogger();
 	
@@ -33,15 +37,15 @@ public class DefaultErrorHandler implements ErrorHandler {
 	public void handle(Exception e) {
 		if(e instanceof ServiceDisplayedErorr){
 			ServiceDisplayedErorr sde = (ServiceDisplayedErorr) e;
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error: " + sde.getDisplayedText());
+			utilit.send(SEVERITY_ERROR, "Error: " + sde.getDisplayedText());
 			log.error("Catch service displayed error", sde);
 		}
 		else if(e instanceof ServiceException){
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(SEVERITY_ERROR, "Error");
 			log.error("Catch service not displayed error", e);
 		}
 		else {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(SEVERITY_ERROR, "Error");
 			log.error("Catch undefined exception", e);
 		}
 	}

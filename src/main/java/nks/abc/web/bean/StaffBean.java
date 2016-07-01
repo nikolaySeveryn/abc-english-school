@@ -1,4 +1,4 @@
-package nks.abc.web;
+package nks.abc.web.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +12,8 @@ import javax.faces.bean.ManagedBean;
 
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.FacesUtilit;
+import nks.abc.core.util.ExternalMessage;
+import nks.abc.core.util.ExternalMessage.MessageSeverity;
 import nks.abc.domain.view.factory.UserViewFactory;
 import nks.abc.domain.view.object.objects.user.StaffView;
 import nks.abc.service.StaffService;
@@ -38,7 +39,7 @@ public class StaffBean implements Serializable {
 	private UserBean userBean;
 	
 	@Autowired
-	private FacesUtilit utilit;
+	private ExternalMessage utilit;
 	
 	private Map<Long,Boolean> checked = new HashMap<Long, Boolean>();
 	private StaffView edited = null;
@@ -48,16 +49,16 @@ public class StaffBean implements Serializable {
 		try {
 			return staffService.getAll();
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,
+			utilit.send(MessageSeverity.ERROR,
 					"Error: " + e.getDisplayedText());
 			log.error("error on getting staff lisst", e);
 			return new ArrayList<StaffView>();
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("error on getting staff lisst", e);
 			return new ArrayList<StaffView>();
 		} catch (Exception e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("undifined error", e);
 			return new ArrayList<StaffView>();
 		}
@@ -70,15 +71,15 @@ public class StaffBean implements Serializable {
 					staffService.delete(en.getKey(), userBean.getCurrentUserName());
 				}
 			}
-			utilit.addMessage(FacesMessage.SEVERITY_INFO, "Deleted");
+			utilit.send(MessageSeverity.INFO, "Deleted");
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on deleting staff", e);
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("error on deleting staff", e);
 		} catch (Exception e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("undifined error", e);
 		}
 	}
@@ -88,15 +89,15 @@ public class StaffBean implements Serializable {
 			editMode = EditingMode.ADD;
 			edited = UserViewFactory.newStaff();
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on adding staff", e);
 			return null;
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("error on adding staff", e);
 			return null;
 		} catch (Exception e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("undifined error", e);
 			return null;
 		}
@@ -108,15 +109,15 @@ public class StaffBean implements Serializable {
 			editMode = EditingMode.EDIT;
 			this.edited = edited;
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on editing staff", e);
 			return null;
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("error on editing staff", e);
 			return null;
 		} catch (Exception e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("undifined error", e);
 			return null;
 		}
@@ -133,24 +134,24 @@ public class StaffBean implements Serializable {
 				staffService.add(edited);
 				msg = "Added";
 			} else {
-				utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+				utilit.send(MessageSeverity.ERROR, "Error");
 				return null;
 			}
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			log.error("error on saving staff", e);
 			return null;
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("error on saving staff", e);
 			return null;
 		} catch (Exception e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			log.error("undifined error", e);
 			return null;
 		}
 		
-		utilit.addMessage(FacesMessage.SEVERITY_INFO, msg);
+		utilit.send(MessageSeverity.INFO, msg);
 		return "staffList.xhtml";
 	}
 	

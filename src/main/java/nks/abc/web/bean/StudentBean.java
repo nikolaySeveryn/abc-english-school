@@ -1,4 +1,4 @@
-package nks.abc.web;
+package nks.abc.web.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;

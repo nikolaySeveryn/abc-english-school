@@ -1,20 +1,18 @@
-package nks.abc.web;
+package nks.abc.web.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.FacesUtilit;
+import nks.abc.core.util.ExternalMessage;
+import nks.abc.core.util.ExternalMessage.MessageSeverity;
 import nks.abc.domain.view.object.BookView;
 import nks.abc.service.BookService;
 import nks.abc.web.common.enumeration.EditingMode;
@@ -32,7 +30,7 @@ public class BookBean implements Serializable {
 	private BookService bookService;
 	
 	@Autowired
-	private FacesUtilit utilit;
+	private ExternalMessage utilit;
 	
 	private EditingMode mode = EditingMode.NONE;
 	private BookView book = new BookView.NullBookDTO();
@@ -52,21 +50,21 @@ public class BookBean implements Serializable {
 			if(mode.equals(EditingMode.ADD)){
 				System.out.println("save adding");
 				bookService.add(book);
-				utilit.addMessage(FacesMessage.SEVERITY_INFO, "Added");
+				utilit.send(MessageSeverity.INFO, "Added");
 			}
 			else if(mode.equals(EditingMode.EDIT)){
 				System.out.println("save editing");
 				bookService.update(book);
-				utilit.addMessage(FacesMessage.SEVERITY_INFO, "Updated");
+				utilit.send(MessageSeverity.INFO, "Updated");
 			}
 			else {
-				utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+				utilit.send(MessageSeverity.ERROR, "Error");
 			}
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
 		}
 	}
@@ -74,18 +72,18 @@ public class BookBean implements Serializable {
 	public void cancel(){
 		this.mode = EditingMode.NONE;
 		this.book = new BookView.NullBookDTO();
-		utilit.addMessage(FacesMessage.SEVERITY_INFO, "скасовано");
+		utilit.send(MessageSeverity.INFO, "Canceled");
 	}
 	
 	public void delete(BookView book) {
 		try {
 			bookService.delete(book);
-			utilit.addMessage(FacesMessage.SEVERITY_WARN, "Deleted");
+			utilit.send(MessageSeverity.WARNING, "Deleted");
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
 		}	
 	}
@@ -94,11 +92,11 @@ public class BookBean implements Serializable {
 		try {
 			return bookService.getAll();
 		} catch (ServiceDisplayedErorr e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR,  "Error: " + e.getDisplayedText());
+			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 			return new ArrayList<BookView>();
 		} catch (ServiceException e) {
-			utilit.addMessage(FacesMessage.SEVERITY_ERROR, "Error");
+			utilit.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
 			return new ArrayList<BookView>();
 		}

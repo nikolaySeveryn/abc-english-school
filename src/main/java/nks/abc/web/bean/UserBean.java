@@ -1,4 +1,4 @@
-package nks.abc.web;
+package nks.abc.web.bean;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
