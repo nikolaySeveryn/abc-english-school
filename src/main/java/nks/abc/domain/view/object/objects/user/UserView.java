@@ -15,7 +15,7 @@ import nks.abc.domain.view.validation.annotation.Unique;
 public abstract class UserView {
 	private Long accountId;
 	private Long personalInfoId;
-	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){5,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 5 symbol")
+	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){3,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 3 symbol")
 	@Unique(entity=Account.class, field = "login")
 	private String login;
 	@Pattern(regexp="^.{7,}$", message="Minimum size 7 symbols")

@@ -2,6 +2,7 @@ package nks.abc.service.impl;
 
 import java.util.List;
 
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.repository.BookRepository;
@@ -11,6 +12,7 @@ import nks.abc.domain.view.object.BookView;
 import nks.abc.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,28 +23,37 @@ public class BookServiceImpl implements BookService {
 	
 	@Autowired
 	private BookRepository bookDAO;
+	
+	private ErrorHandler errorHandler;
+	
+	@Autowired
+	@Qualifier("serviceErrorHandler")
+	public void setErrorHandler(ErrorHandler errorHandler){
+		this.errorHandler = errorHandler;
+		this.errorHandler.loggerFor(this.getClass());
+	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void add(BookView book) {
-		Book bookEntity = BookViewConverter.toEntity(book);
+	public void add(BookView bookView) {
+		Book bookEntity = BookViewConverter.toEntity(bookView);
 		try{
 			bookDAO.insert(bookEntity);
 		}
-		catch (RepositoryException de){
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "add book: " + bookView); 
 		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(BookView book) {
-		Book bookEntity = BookViewConverter.toEntity(book);
+	public void update(BookView bookView) {
+		Book bookEntity = BookViewConverter.toEntity(bookView);
 		try{
 			bookDAO.update(bookEntity);
 		}
-		catch (RepositoryException de){
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "update book: " + bookView);
 		}
 	}
 
@@ -53,8 +64,8 @@ public class BookServiceImpl implements BookService {
 		try{
 			bookDAO.delete(bookEntity);
 		}
-		catch (RepositoryException de){
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "delete book:" + book);
 		}
 	}
 
@@ -64,11 +75,9 @@ public class BookServiceImpl implements BookService {
 		try{
 			all = bookDAO.getAll();
 		}
-		catch (RepositoryException de){
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "get all books");
 		}
 		return BookViewConverter.toView(all);
 	}
-	
-	
 }

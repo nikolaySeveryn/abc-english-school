@@ -1,12 +1,15 @@
 package nks.abc.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.repository.user.GroupRepository;
@@ -29,19 +32,28 @@ public class GroupServiceImpl implements GroupService {
 
 	@Autowired
 	private Converter<Group,GroupView> converter;
+	
+	private ErrorHandler errorHandler;
+	
+	@Autowired
+	@Qualifier("serviceErrorHandler")
+	public void setErrorHandler(ErrorHandler errorHandler){
+		this.errorHandler = errorHandler;
+		this.errorHandler.loggerFor(this.getClass());
+	}
 
 	@Override
 	public List<GroupView> getGroups() {
+		List<GroupView> groupsDto = null;
 		try {
 			List<Group> groups = groupDAO.getAll();
 			converter.setRelativeConvertersPattern(new StudentViewConverter(), new AccountViewConverter());
-			List<GroupView> groupsDto = converter.toView(groups);
-			return groupsDto;
+			groupsDto = converter.toView(groups);
 		}
-		catch (RepositoryException de) {
-			log.error("DAO Error during getting groups", de);
-			throw new ServiceException("DAO Error during getting groups", de);
+		catch (Exception e) {
+			errorHandler.handle(e, "get all groups");
 		}
+		return groupsDto;
 	}
 
 	@Override
@@ -59,9 +71,8 @@ public class GroupServiceImpl implements GroupService {
 				groupDAO.insert(group);
 			}
 		}
-		catch (RepositoryException de) {
-			log.error("DAO Error during saving group", de);
-			throw new ServiceException("DAO Error during saving group", de);
+		catch (Exception e) {
+			errorHandler.handle(e, "save group: " + dto);
 		}
 	}
 
@@ -71,9 +82,9 @@ public class GroupServiceImpl implements GroupService {
 			Group bo = getDomainGroupById(id);
 			return converter.toView(bo);
 		}
-		catch (RepositoryException de) {
-			log.error("DAO Error during getting group by id", de);
-			throw new ServiceException("DAO Error during getting group by id", de);
+		catch (Exception e) {
+			errorHandler.handle(e, "get group by id = " + id);
+			return null;
 		}
 	}
 
@@ -89,10 +100,8 @@ public class GroupServiceImpl implements GroupService {
 				groupDAO.delete(getDomainGroupById(id));
 			}
 		}
-		catch (RepositoryException de) {
-			//TODO: refactoring
-			log.error("DAO Error during deleting group", de);
-			throw new ServiceException("DAO Error during deleting group", de);
+		catch (Exception e) {
+			errorHandler.handle(e, "delete groups: " + Arrays.toString(ids));
 		}
 	}
 }

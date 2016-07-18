@@ -30,7 +30,7 @@ public class BookBean implements Serializable {
 	private BookService bookService;
 	
 	@Autowired
-	private ExternalMessage utilit;
+	private ExternalMessage message;
 	
 	private EditingMode mode = EditingMode.NONE;
 	private BookView book = new BookView.NullBookDTO();
@@ -50,21 +50,21 @@ public class BookBean implements Serializable {
 			if(mode.equals(EditingMode.ADD)){
 				System.out.println("save adding");
 				bookService.add(book);
-				utilit.send(MessageSeverity.INFO, "Added");
+				message.send(MessageSeverity.INFO, "Added");
 			}
 			else if(mode.equals(EditingMode.EDIT)){
 				System.out.println("save editing");
 				bookService.update(book);
-				utilit.send(MessageSeverity.INFO, "Updated");
+				message.send(MessageSeverity.INFO, "Updated");
 			}
 			else {
-				utilit.send(MessageSeverity.ERROR, "Error");
+				message.send(MessageSeverity.ERROR, "Error");
 			}
 		} catch (ServiceDisplayedErorr e) {
-			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
+			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			utilit.send(MessageSeverity.ERROR, "Error");
+			message.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
 		}
 	}
@@ -72,18 +72,18 @@ public class BookBean implements Serializable {
 	public void cancel(){
 		this.mode = EditingMode.NONE;
 		this.book = new BookView.NullBookDTO();
-		utilit.send(MessageSeverity.INFO, "Canceled");
+		message.send(MessageSeverity.INFO, "Canceled");
 	}
 	
 	public void delete(BookView book) {
 		try {
 			bookService.delete(book);
-			utilit.send(MessageSeverity.WARNING, "Deleted");
+			message.send(MessageSeverity.WARNING, "Deleted");
 		} catch (ServiceDisplayedErorr e) {
-			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
+			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 		} catch (ServiceException e) {
-			utilit.send(MessageSeverity.ERROR, "Error");
+			message.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
 		}	
 	}
@@ -92,11 +92,11 @@ public class BookBean implements Serializable {
 		try {
 			return bookService.getAll();
 		} catch (ServiceDisplayedErorr e) {
-			utilit.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
+			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
 			return new ArrayList<BookView>();
 		} catch (ServiceException e) {
-			utilit.send(MessageSeverity.ERROR, "Error");
+			message.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
 			return new ArrayList<BookView>();
 		}

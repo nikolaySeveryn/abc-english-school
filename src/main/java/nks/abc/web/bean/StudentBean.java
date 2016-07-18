@@ -21,6 +21,7 @@ import nks.abc.web.common.enumeration.EditingMode;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -54,6 +55,7 @@ public class StudentBean implements Serializable {
 	private EditingMode studentMode = EditingMode.NONE;
 
 	@Autowired
+	@Qualifier("webErrorHandler")
 	public void setErrorHandler(ErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 		this.errorHandler.loggerFor(this.getClass());

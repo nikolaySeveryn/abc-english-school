@@ -1,22 +1,20 @@
 package nks.abc.service.impl;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sun.faces.facelets.Facelet;
-
-import nks.abc.core.exception.repository.ConversionException;
-import nks.abc.core.exception.repository.RepositoryException;
-import nks.abc.core.exception.service.ServiceException;
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.dao.repository.user.StudentRepository;
 import nks.abc.domain.entity.user.Student;
 import nks.abc.domain.view.converter.user.GroupViewConverter;
 import nks.abc.domain.view.converter.user.StudentViewConverter;
 import nks.abc.domain.view.object.objects.user.StudentView;
 import nks.abc.service.StudentService;
-import nks.abc.web.common.converter.GroupConverter;
 
 @Service
 @Transactional(readOnly=true)
@@ -29,11 +27,19 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Autowired
 	private StudentViewConverter studentConverter;
+	
+	private ErrorHandler errorHandler;
+	
+	@Autowired
+	@Qualifier("serviceErrorHandler")
+	public void setErrorHandler(ErrorHandler errorHandler){
+		this.errorHandler = errorHandler;
+		this.errorHandler.loggerFor(this.getClass());
+	}
 
 	@Override
 	@Transactional(readOnly=false)
 	public void save(StudentView studentDTO) {
-		//TODO: unique login
 		studentConverter.setRelativeConvertersPattern(new GroupViewConverter());
 		Student student = studentConverter.toDomain(studentDTO);
 		try{
@@ -47,32 +53,23 @@ public class StudentServiceImpl implements StudentService {
 				studentRepository.update(student);
 			}
 		}
-		catch(RepositoryException de){
-			log.error("Error on saving student", de);
-			throw new ServiceException("Error on saving student", de);
+		catch(Exception e){
+			errorHandler.handle(e, "save student: " + studentDTO);
 		}
 	}
 
 	@Override
 	public StudentView getById(Long id) {
 		try{
+			System.out.println("error handler: " + this.errorHandler);
 			Student student = getStudentDomainById(id);
 			studentConverter.setRelativeConvertersPattern(new GroupViewConverter());
 			return studentConverter.toView(student);
 		}
-		//TODO: exception refactoring
-		catch(RepositoryException de) {
-			log.error("error during getting student by id", de);
-			throw new ServiceException("error during getting student by id", de);
+		catch(Exception e) {
+			errorHandler.handle(e, "get student by id=" + id);
+			return null;
 		}
-		catch (ConversionException ce) {
-			log.error("error during converting student", ce);
-			throw new ServiceException("error during converting student", ce);
-		}
-	}
-
-	private Student getStudentDomainById(Long id) {
-		return studentRepository.uniqueQuery(studentRepository.specifications().byId(id));
 	}
 
 	@Override
@@ -83,14 +80,12 @@ public class StudentServiceImpl implements StudentService {
 				studentRepository.delete(getStudentDomainById(id));
 			}
 		}
-		catch(RepositoryException de) {
-			log.error("error during deleting student", de);
-			throw new ServiceException("error during deleting student", de);
-		}
-		catch (ConversionException ce) {
-			log.error("error during converting student", ce);
-			throw new ServiceException("error during converting student", ce);
+		catch(Exception e) {
+			errorHandler.handle(e, "delete students: " + Arrays.toString(ids));
 		}
 	}
 
+	private Student getStudentDomainById(Long id) {
+		return studentRepository.uniqueQuery(studentRepository.specifications().byId(id));
+	}
 }

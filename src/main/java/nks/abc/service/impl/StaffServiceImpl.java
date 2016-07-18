@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.core.exception.service.NoCurrentUserException;
 import nks.abc.core.exception.service.NoIdException;
@@ -45,6 +47,15 @@ public class StaffServiceImpl implements StaffService {
 	
 	private GuardClauses guardClauses = new GuardClauses();
 	
+	private ErrorHandler errorHandler;
+	
+	@Autowired
+	@Qualifier("serviceErrorHandler")
+	public void setErrorHandler(ErrorHandler errorHandler){
+		this.errorHandler = errorHandler;
+		this.errorHandler.loggerFor(this.getClass());
+	}
+	
 	@Override
 	@Transactional(readOnly=false)
 	public void add(StaffView employeeDTO) {
@@ -68,9 +79,8 @@ public class StaffServiceImpl implements StaffService {
 				log.info("adding teacher: " + teacher);
 				teacherDAO.insert(teacher);
 			}
-		} catch (RepositoryException de) {
-			log.error("add staff: DAO error", de);
-			throw new ServiceException("dao error", de);
+		} catch (Exception e) {
+			errorHandler.handle(e, "add staff: " + employeeDTO);
 		}
 		
 	}
@@ -104,9 +114,8 @@ public class StaffServiceImpl implements StaffService {
 				adminDAO.update(admin);
 			}
 		}
-		catch (RepositoryException de) {
-			log.error("DAO exception on update staff", de);
-			throw new ServiceException("dao error", de);
+		catch (Exception e) {
+			errorHandler.handle(e, "update staff: " + employeeDTO);
 		}
 	}
 
@@ -121,9 +130,8 @@ public class StaffServiceImpl implements StaffService {
 			removed.setIsDeleted(true);
 			accountDAO.update(removed);
 		}
-		catch (RepositoryException de){
-			log.error("DAO exception on staff deleting", de);
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "delete staff id=" + id); 
 		}
 	}
 	
@@ -135,9 +143,9 @@ public class StaffServiceImpl implements StaffService {
 			Account account = getAccountInfoById(id);
 			return dtoConvertor.toView(account);
 		}
-		catch(RepositoryException de){
-			log.error("DAO exception on geting by id", de);
-			throw new ServiceException("dao error", de);
+		catch(Exception e){
+			errorHandler.handle(e, "get staff by id=" + id);
+			return null;
 		}
 	}
 
@@ -151,9 +159,8 @@ public class StaffServiceImpl implements StaffService {
 		try{
 			accounts = accountDAO.query(accountDAO.specifications().byIsDeleted(false));
 		}
-		catch (RepositoryException de){
-			log.error("DAO exception on staff finding all", de);
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "get all staff");
 		}
 		
 		return new ArrayList<StaffView>(dtoConvertor.toView(accounts));
@@ -165,9 +172,8 @@ public class StaffServiceImpl implements StaffService {
 		try{
 			teachers = teacherDAO.query(teacherDAO.specifications().byIsDeleted(false));
 		}
-		catch(RepositoryException de){
-			log.error("DAO exception on teacher finding", de);
-			throw new ServiceException("dao error", de);
+		catch(Exception e){
+			errorHandler.handle(e, "get all teachers");
 		}
 		List<StaffView> dtos = new ArrayList<StaffView>();
 		for(Teacher teacher: teachers){
@@ -183,11 +189,12 @@ public class StaffServiceImpl implements StaffService {
 			entity = accountDAO.uniqueQuery(accountDAO.specifications().byLoginAndDeleted(login, false));
 			
 		}
-		catch (RepositoryException de){
-			throw new ServiceException("dao error", de);
+		catch (Exception e){
+			errorHandler.handle(e, "get staff by login");
 		}
 		return dtoConvertor.toView(entity);
 	}
+	
 	
 	private static class GuardClauses{
 
