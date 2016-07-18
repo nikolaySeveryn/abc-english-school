@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.stereotype.Component;
 
-import nks.abc.domain.view.object.objects.user.StaffView;
+import nks.abc.bl.view.object.objects.user.StaffView;
 
 @Component
 public class Validation {

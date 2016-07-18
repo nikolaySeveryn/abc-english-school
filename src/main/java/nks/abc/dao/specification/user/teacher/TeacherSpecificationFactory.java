@@ -2,9 +2,9 @@ package nks.abc.dao.specification.user.teacher;
 
 import org.springframework.stereotype.Component;
 
+import nks.abc.bl.domain.user.Account;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.base.interfaces.HQLSpecification;
-import nks.abc.domain.entity.user.Account;
 
 @Component
 public class TeacherSpecificationFactory {

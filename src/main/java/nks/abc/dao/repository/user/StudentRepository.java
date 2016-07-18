@@ -3,9 +3,9 @@ package nks.abc.dao.repository.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import nks.abc.bl.domain.user.Student;
 import nks.abc.dao.base.BaseRepositoryImpl;
 import nks.abc.dao.specification.user.student.StudentSpecificationFactory;
-import nks.abc.domain.entity.user.Student;
 
 @Repository
 public class StudentRepository extends BaseRepositoryImpl<Student> {

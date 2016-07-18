@@ -1,9 +1,10 @@
 package nks.abc.test.domain.entity.user;
 
 import static org.junit.Assert.*;
-import nks.abc.domain.entity.user.Account;
 
 import org.junit.Test;
+
+import nks.abc.bl.domain.user.Account;
 
 public class UserTest {
 

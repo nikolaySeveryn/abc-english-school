@@ -6,9 +6,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
+import nks.abc.bl.service.GroupService;
+import nks.abc.bl.view.object.objects.user.GroupView;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.domain.view.object.objects.user.GroupView;
-import nks.abc.service.GroupService;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

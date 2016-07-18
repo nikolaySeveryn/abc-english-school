@@ -3,8 +3,8 @@ package nks.abc.dao.specification.user.teacher;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
+import nks.abc.bl.domain.user.Account;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
-import nks.abc.domain.entity.user.Account;
 
 class ByAccountSpecification implements CriterionSpecification{
 	
