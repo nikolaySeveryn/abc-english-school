@@ -1,4 +1,4 @@
-package nks.abc.bl.service.impl;
+package nks.abc.bl.service.user;
 
 import java.util.Arrays;
 
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.bl.domain.user.Student;
-import nks.abc.bl.service.StudentService;
 import nks.abc.bl.view.converter.user.GroupViewConverter;
 import nks.abc.bl.view.converter.user.StudentViewConverter;
 import nks.abc.bl.view.object.objects.user.StudentView;

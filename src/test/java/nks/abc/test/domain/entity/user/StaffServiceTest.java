@@ -8,7 +8,7 @@ import java.util.Date;
 import nks.abc.bl.domain.user.Account;
 import nks.abc.bl.domain.user.Administrator;
 import nks.abc.bl.domain.user.Teacher;
-import nks.abc.bl.service.impl.StaffServiceImpl;
+import nks.abc.bl.service.user.StaffServiceImpl;
 import nks.abc.bl.view.converter.user.AccountViewConverter;
 import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.service.NoCurrentUserException;

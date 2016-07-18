@@ -10,7 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
-import nks.abc.bl.service.StaffService;
+import nks.abc.bl.service.user.StaffService;
 import nks.abc.bl.view.factory.UserViewFactory;
 import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;

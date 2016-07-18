@@ -1,9 +1,8 @@
-package nks.abc.bl.service.impl;
+package nks.abc.bl.service.plan;
 
 import java.util.List;
 
 import nks.abc.bl.domain.Book;
-import nks.abc.bl.service.BookService;
 import nks.abc.bl.view.converter.BookViewConverter;
 import nks.abc.bl.view.object.BookView;
 import nks.abc.core.exception.handler.ErrorHandler;

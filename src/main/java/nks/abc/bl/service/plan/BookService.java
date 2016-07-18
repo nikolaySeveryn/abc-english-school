@@ -1,4 +1,4 @@
-package nks.abc.bl.service;
+package nks.abc.bl.service.plan;
 
 import java.util.List;
 

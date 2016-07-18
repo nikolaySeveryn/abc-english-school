@@ -1,4 +1,4 @@
-package nks.abc.bl.service.impl;
+package nks.abc.bl.service.user;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.bl.domain.user.Group;
-import nks.abc.bl.service.GroupService;
 import nks.abc.bl.view.converter.Converter;
 import nks.abc.bl.view.converter.ConvertersHolder;
 import nks.abc.bl.view.converter.user.AccountViewConverter;

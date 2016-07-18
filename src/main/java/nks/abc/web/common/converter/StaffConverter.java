@@ -7,7 +7,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import nks.abc.bl.service.StaffService;
+import nks.abc.bl.service.user.StaffService;
 import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.service.ServiceException;
 

@@ -1,4 +1,4 @@
-package nks.abc.bl.service.impl;
+package nks.abc.bl.service.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,6 @@ import nks.abc.bl.domain.user.Account;
 import nks.abc.bl.domain.user.Administrator;
 import nks.abc.bl.domain.user.Teacher;
 import nks.abc.bl.domain.user.UserFactory;
-import nks.abc.bl.service.StaffService;
 import nks.abc.bl.view.converter.user.AccountViewConverter;
 import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.handler.ErrorHandler;

@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
-import nks.abc.bl.service.GroupService;
+import nks.abc.bl.service.user.GroupService;
 import nks.abc.bl.view.object.objects.user.GroupView;
 import nks.abc.core.exception.service.ServiceException;
 

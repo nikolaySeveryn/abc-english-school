@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import nks.abc.bl.service.BookService;
+import nks.abc.bl.service.plan.BookService;
 import nks.abc.bl.view.object.BookView;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
