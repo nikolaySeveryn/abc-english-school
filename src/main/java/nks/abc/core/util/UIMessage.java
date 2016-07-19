@@ -1,6 +1,6 @@
 package nks.abc.core.util;
 
-public interface ExternalMessage {
+public interface UIMessage {
 	
 	public enum MessageSeverity {
 		ERROR,

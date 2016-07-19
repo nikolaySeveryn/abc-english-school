@@ -13,8 +13,8 @@ import nks.abc.bl.service.plan.BookService;
 import nks.abc.bl.view.object.BookView;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.ExternalMessage;
-import nks.abc.core.util.ExternalMessage.MessageSeverity;
+import nks.abc.core.util.UIMessage;
+import nks.abc.core.util.UIMessage.MessageSeverity;
 import nks.abc.web.common.enumeration.EditingMode;
 
 import java.io.Serializable;
@@ -30,7 +30,7 @@ public class BookBean implements Serializable {
 	private BookService bookService;
 	
 	@Autowired
-	private ExternalMessage message;
+	private UIMessage message;
 	
 	private EditingMode mode = EditingMode.NONE;
 	private BookView book = new BookView.NullBookDTO();

@@ -2,8 +2,8 @@ package nks.abc.core.exception.handler;
 
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.ExternalMessage;
-import nks.abc.core.util.ExternalMessage.MessageSeverity;
+import nks.abc.core.util.UIMessage;
+import nks.abc.core.util.UIMessage.MessageSeverity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ public class WebErrorHandler extends ErrorHandler {
 	private static final String DEFAULT_ERROR_MESSAGE = "Action is not committed! Something went wrong!";
 
 	@Autowired
-	private ExternalMessage message;
+	private UIMessage message;
 	
 	@Override
 	public void handle(Exception e, String where) {

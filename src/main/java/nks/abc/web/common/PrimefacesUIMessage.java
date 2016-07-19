@@ -5,10 +5,10 @@ import javax.faces.context.FacesContext;
 
 import org.springframework.stereotype.Component;
 
-import nks.abc.core.util.ExternalMessage;
+import nks.abc.core.util.UIMessage;
 
 @Component
-public class PrimefacesExternalMessage implements ExternalMessage {
+public class PrimefacesUIMessage implements UIMessage {
 
 	@Override
 	public void send(MessageSeverity severity, String msg) {
