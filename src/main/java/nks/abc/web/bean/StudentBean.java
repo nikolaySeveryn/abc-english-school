@@ -36,6 +36,7 @@ public class StudentBean implements Serializable {
 	private static final String STUDENT_EDIT_PAGE = "studentEdit.xhtml";
 
 	private static final Logger log = Logger.getLogger(StudentBean.class);
+	private ErrorHandler errorHandler;
 
 	@Autowired
 	private GroupService groupService;
@@ -43,8 +44,6 @@ public class StudentBean implements Serializable {
 	private StaffService staffService;
 	@Autowired
 	private StudentService studentService;
-
-	private ErrorHandler errorHandler;
 
 	private Map<Long,Boolean> checkedGroups = new HashMap<Long,Boolean>();
 	private Map<Long,Boolean> checkedStudents = new HashMap<Long,Boolean>();

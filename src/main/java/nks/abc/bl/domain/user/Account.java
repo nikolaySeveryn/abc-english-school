@@ -1,16 +1,11 @@
 package nks.abc.bl.domain.user;
 
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.sql.Date;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -22,21 +17,20 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Transient;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.varia.FallbackErrorHandler;
 import org.hibernate.validator.constraints.Email;
 
 @Entity
 @Table(name="accountinfo")
 public class Account {
+	
+	@Transient
+	private PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="account_id_seq")
@@ -44,12 +38,12 @@ public class Account {
 	private Long accountId;
 	
 	@Column(nullable=false, unique=true)
-	private String login;
+	@Email
+	private String email;
 	
 	@Column(name="password", nullable=false)
 	private String passwordHash;
 	
-//	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	@OneToOne(cascade={CascadeType.ALL})
 	@JoinColumn(name="personal_info")
 	private PersonalInfo peronalInfo;
@@ -59,22 +53,24 @@ public class Account {
 	@CollectionTable(name="user_role", joinColumns=@JoinColumn(name="accountinfo_accountid"))
 	@Column(name="ROLE",nullable=false)
 	private Set<Role> role = new HashSet<Role>();
+	
 	@Column(nullable=false)
-	private Boolean isDeleted=false;
+	private Boolean isDisable=false;
 	
 	public void updatePassword(String password) {
-		
-		byte[] bytesOfPassword = password.getBytes();
-		MessageDigest md=null;
-		try {
-			md = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e2) {
-			e2.printStackTrace();
-		}
-		byte[] md5 = md.digest(bytesOfPassword);
-		byte[] base64 = Base64.encodeBase64(md5);
-		
-        setPasswordHash(new String(base64));
+        setPasswordHash(passwordEncryptor.encrypt(password));
+	}
+	
+	public String updatePasswordToRandom() {
+		String newPass = generateRandomString();
+		updatePassword(newPass);
+		return newPass;
+	}
+	
+	private String generateRandomString() {
+		SecureRandom random = new SecureRandom();
+		String res = new BigInteger(130, random).toString(32);
+		return res.substring(0, random.nextInt(16)+10);
 	}
 	
 	public boolean isAdministrator(){
@@ -116,7 +112,6 @@ public class Account {
 		}
 	}
 	
-	
 	/*
 	 * plain getters & setters
 	 */
@@ -126,11 +121,11 @@ public class Account {
 	public void setAccountId(Long id) {
 		this.accountId = id;
 	}
-	public String getLogin() {
-		return login;
+	public String getEmail() {
+		return email;
 	}
-	public void setLogin(String login) {
-		this.login = login;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	private Set<Role> getRole() {
 		return role;
@@ -144,11 +139,11 @@ public class Account {
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;
 	}
-	public Boolean getIsDeleted() {
-		return isDeleted;
+	public Boolean getIsDisable() {
+		return isDisable;
 	}
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	public void setIsDisable(Boolean isDeleted) {
+		this.isDisable = isDeleted;
 	}
 	public PersonalInfo getPeronalInfo() {
 		return peronalInfo;
@@ -159,10 +154,10 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "AccountInfo [accountId=" + accountId + ", login=" + login
+		return "AccountInfo [accountId=" + accountId 
 				+ ", passwordHash=" + passwordHash + ", peronalInfo="
-				+ peronalInfo + ", role=" + role + ", isDeleted=" + isDeleted
-				+ ", super=" + super.toString() + "]";
+				+ peronalInfo + ", role=" + role + ", isDeleted=" + isDisable
+				+ ", super=" + super.toString() + ", email=" + email + "]";
 	}
 	
 	

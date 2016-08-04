@@ -8,24 +8,24 @@ import nks.abc.dao.base.interfaces.CriterionSpecification;
 @Component
 public class AccountInfoSpecificationFactory {
 	
-	public CriterionSpecification byLoginAndDeleted(String login, Boolean deleted) {
-		return new ConjunctionSpecification(new LoginSpecification(login), new IsDeletedSpecification(deleted));
+	public CriterionSpecification byEmailAndDisable(String login, Boolean disable) {
+		return new ConjunctionSpecification(new EmailSpecification(login), new IsDisableSpecification(disable));
 	}
 	
-	public CriterionSpecification byIdAndDeleted(Long id, Boolean deleted){
-		return new ConjunctionSpecification(new IdSpecification(id), new IsDeletedSpecification(deleted));
+	public CriterionSpecification byIdAndDisabled(Long id, Boolean disable){
+		return new ConjunctionSpecification(new IdSpecification(id), new IsDisableSpecification(disable));
 	}
 	
 	public CriterionSpecification byId(Long id){
 		return new IdSpecification(id);
 	}
 	
-	public CriterionSpecification byLogin(String login){
-		return new LoginSpecification(login);
+	public CriterionSpecification byEmail(String login){
+		return new EmailSpecification(login);
 	}
 	
-	public CriterionSpecification byIsDeleted(Boolean isDeleted){
-		return new IsDeletedSpecification(isDeleted);
+	public CriterionSpecification byIsDisable(Boolean isDeleted){
+		return new IsDisableSpecification(isDeleted);
 	}
 	
 	@Override

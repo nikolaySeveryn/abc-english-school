@@ -12,15 +12,18 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 @Entity
 @PrimaryKeyJoinColumn(name="id")
+@OnDelete(action=OnDeleteAction.CASCADE)
 public class Student extends User {
 	
 	
-//	@OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	private PersonalInfo parent;
+	private Parrent parent;
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="student_group", 
 		joinColumns={@JoinColumn(name="student_id")},
@@ -31,10 +34,10 @@ public class Student extends User {
 	@Column(nullable=false)
 	private Integer moneyBalance = 0;
 	
-	public PersonalInfo getParent() {
+	public Parrent getParent() {
 		return parent;
 	}
-	public void setParent(PersonalInfo parent) {
+	public void setParent(Parrent parent) {
 		this.parent = parent;
 	}
 	public Set<Group> getGroups() {

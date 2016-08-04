@@ -6,8 +6,6 @@ import javax.annotation.ManagedBean;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
-import nks.abc.bl.domain.user.Account;
-import nks.abc.bl.domain.user.PersonalInfo;
 import nks.abc.bl.view.validation.annotation.Email;
 import nks.abc.bl.view.validation.annotation.Unique;
 
@@ -15,10 +13,10 @@ import nks.abc.bl.view.validation.annotation.Unique;
 public abstract class UserView {
 	private Long accountId;
 	private Long personalInfoId;
-	@Pattern(regexp="^([a-z]|[A-Z]|[0-9]|[_-]){3,}", message="Avaliable symbols: a-z,A-Z,0-9,'_','-'. Minimum size 3 symbol")
-	@Unique(entity=Account.class, field = "login")
-	private String login;
-	@Pattern(regexp="^.{7,}$", message="Minimum size 7 symbols")
+	@Email
+	@Unique(entity=UserView.class, field="email")
+	private String email;
+	@Pattern(regexp="^.{5,}$", message="Minimum size 5 symbols")
 	private String password;
 	private String passwordHash;
 	private String firstName;
@@ -28,10 +26,7 @@ public abstract class UserView {
 	private Date birthday;
 	@Pattern(regexp="^\\+?([0-9]|\\-){0,15}$", message="Avaliable symbols: '+'(at begining), 0-9,'-'. Maximum size 15 symbols")
 	private String phoneNum;
-	@Email
-	@Unique(entity=PersonalInfo.class, field="email")
-	private String email;
-	private Boolean isDeleted;
+	private Boolean isDisabled;
 	
 	
 	/**
@@ -42,12 +37,6 @@ public abstract class UserView {
 	}
 	public void setAccountId(Long id) {
 		this.accountId = id;
-	}
-	public String getLogin() {
-		return login;
-	}
-	public void setLogin(String login) {
-		this.login = login;
 	}
 	public String getPassword() {
 		return password;
@@ -99,11 +88,11 @@ public abstract class UserView {
 		this.patronomic = patronomic;
 	}
 	
-	public Boolean getIsDeleted() {
-		return isDeleted;
+	public Boolean getIsDisabled() {
+		return isDisabled;
 	}
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
+	public void setIsDisabled(Boolean isDeleted) {
+		this.isDisabled = isDeleted;
 	}
 	public Long getPersonalInfoId() {
 		return personalInfoId;
@@ -114,11 +103,11 @@ public abstract class UserView {
 
 	@Override
 	public String toString() {
-		return "UserDTO [id=" + accountId + ", personalInfoId=" + personalInfoId + ", login=" + login + ", password="
+		return "UserDTO [id=" + accountId + ", personalInfoId=" + personalInfoId + ", password="
 				+ password + ", passwordHash=" + passwordHash + ", firstName="
 				+ firstName + ", sirName=" + sirName + ", patronomic="
 				+ patronomic + ", birthday=" + birthday + ", phoneNum="
-				+ phoneNum + ", email=" + email + ", isDeleted=" + isDeleted
+				+ phoneNum + ", email=" + email + ", isDisabled=" + isDisabled
 				+ "]";
 	}
 }

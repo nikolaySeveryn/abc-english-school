@@ -30,7 +30,12 @@ public class UserBean implements Serializable {
 	public StaffView getCurrentUser() {
 		System.out.println("get current user");
 		System.out.println("Username= " + getCurrentUserName());
-		return userService.getStaffByLogin(getCurrentUserName());
+		return userService.getStaffByEmail(getCurrentUserName());
+//		StaffView staff = new StaffView();
+//		staff.setEmail("root");
+//		staff.setIsAdministrator(true);
+//		staff.setIsTeacher(true);
+//		return staff;
 	}
 
 	private ExternalContext getExternalContext() {

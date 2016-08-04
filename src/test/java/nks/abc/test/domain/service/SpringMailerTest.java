@@ -2,6 +2,9 @@ package nks.abc.test.domain.service;
 
 import static org.junit.Assert.*;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +23,7 @@ import nks.abc.bl.service.message.SpringMailer;
 public class SpringMailerTest {
 
 	@Test
-//	@Ignore
+	@Ignore
 	public void test() {
 		GenericApplicationContext ctx = new GenericApplicationContext();
 		XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);

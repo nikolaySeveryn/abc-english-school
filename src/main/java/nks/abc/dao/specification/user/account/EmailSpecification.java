@@ -5,27 +5,25 @@ import org.hibernate.criterion.Restrictions;
 
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 
-class IsDeletedSpecification implements CriterionSpecification {
+class EmailSpecification implements CriterionSpecification{
 
-	private Boolean isDelete;
+	private String email;
 	
-	IsDeletedSpecification(Boolean isDelete) {
-		this.isDelete = isDelete;
+	EmailSpecification(String email) {
+		super();
+		this.email = email;
 	}
-	
 
 	@Override
 	public Criterion toCriteria() {
-		return Restrictions.eqOrIsNull("isDeleted", isDelete);
+		return Restrictions.eq("email", email);
 	}
-
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((isDelete == null) ? 0 : isDelete.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -37,12 +35,13 @@ class IsDeletedSpecification implements CriterionSpecification {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IsDeletedSpecification other = (IsDeletedSpecification) obj;
-		if (isDelete == null) {
-			if (other.isDelete != null)
+		EmailSpecification other = (EmailSpecification) obj;
+		if (email == null) {
+			if (other.email != null)
 				return false;
-		} else if (!isDelete.equals(other.isDelete))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
+
 }

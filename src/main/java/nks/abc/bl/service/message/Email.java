@@ -7,6 +7,10 @@ public class Email {
 	private String subject;
 	private String body;
 	
+	public Email(){
+		
+	}
+	
 	public Email(String recipient, String subject, String body){
 		this.recipient = recipient;
 		this.subject = subject;

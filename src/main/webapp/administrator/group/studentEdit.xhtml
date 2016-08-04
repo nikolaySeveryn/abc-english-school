@@ -42,11 +42,6 @@
 							<p:message for="email" />
 
 							<c:if test="#{studentBean.isNewStudent}">
-								<p:outputLabel value="Логін" for="login" />
-								<p:inputText id="login" required="true"
-									value="#{studentBean.editedStudent.login}" />
-								<p:message for="login" />
-
 								<p:outputLabel for="password" value="Пароль" />
 								<p:password id="password" required="true"
 									value="#{studentBean.editedStudent.password}" />

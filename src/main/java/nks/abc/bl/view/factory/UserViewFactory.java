@@ -13,13 +13,13 @@ public class UserViewFactory {
 		StudentView instance = new StudentView();
 		instance.setGroups(new ArrayList<GroupView>());
 		instance.setParent(new ParentInfoView());
-		instance.setIsDeleted(false);
+		instance.setIsDisabled(false);
 		instance.setMoneyBalance(0);
 		return instance;
 	}
 	public static StaffView newStaff(){
 		StaffView instace = new StaffView();
-		instace.setIsDeleted(false);
+		instace.setIsDisabled(false);
 		return instace;
 	}
 }

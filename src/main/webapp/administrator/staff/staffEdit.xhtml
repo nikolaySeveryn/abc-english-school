@@ -31,18 +31,11 @@
 					<p:inputText id="phone" value="#{staffBean.edited.phoneNum}" />
 					<p:message for="phone" />
 					
-					<p:outputLabel value="Email" for="email" />
-					<p:inputText id="email" required="true" value="#{staffBean.edited.email}" />
-					<p:message for="email" />
 					
 					<c:if test="#{staffBean.isNew}">
-						<p:outputLabel value="Логін" for="login" />
-						<p:inputText id="login" required="true" value="#{staffBean.edited.login}" />
-						<p:message for="login" />
-						
-						<p:outputLabel for="password" value="Пароль" />
-						<p:password id="password" required="true" value="#{staffBean.edited.password}" />
-						<p:message for="password" />
+						<p:outputLabel value="Email" for="email" />
+						<p:inputText id="email" required="true" value="#{staffBean.edited.email}" />
+						<p:message for="email" />
 					</c:if>
 					
 					<p:outputLabel for="birthday" value="День народження" />

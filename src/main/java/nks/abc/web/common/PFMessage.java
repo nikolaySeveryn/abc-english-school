@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import nks.abc.core.util.UIMessage;
 
 @Component
-public class PrimefacesUIMessage implements UIMessage {
+public class PFMessage implements UIMessage {
 
 	@Override
 	public void send(MessageSeverity severity, String msg) {

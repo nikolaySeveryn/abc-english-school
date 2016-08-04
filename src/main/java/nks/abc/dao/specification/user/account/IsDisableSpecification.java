@@ -5,25 +5,27 @@ import org.hibernate.criterion.Restrictions;
 
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 
-class LoginSpecification implements CriterionSpecification{
+class IsDisableSpecification implements CriterionSpecification {
 
-	private String login;
+	private Boolean isDisable;
 	
-	LoginSpecification(String login) {
-		super();
-		this.login = login;
+	IsDisableSpecification(Boolean isDelete) {
+		this.isDisable = isDelete;
 	}
+	
 
 	@Override
 	public Criterion toCriteria() {
-		return Restrictions.eq("login", login);
+		return Restrictions.eqOrIsNull("isDisable", isDisable);
 	}
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		result = prime * result
+				+ ((isDisable == null) ? 0 : isDisable.hashCode());
 		return result;
 	}
 
@@ -35,13 +37,12 @@ class LoginSpecification implements CriterionSpecification{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LoginSpecification other = (LoginSpecification) obj;
-		if (login == null) {
-			if (other.login != null)
+		IsDisableSpecification other = (IsDisableSpecification) obj;
+		if (isDisable == null) {
+			if (other.isDisable != null)
 				return false;
-		} else if (!login.equals(other.login))
+		} else if (!isDisable.equals(other.isDisable))
 			return false;
 		return true;
 	}
-
 }

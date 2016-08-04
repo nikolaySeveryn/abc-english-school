@@ -10,7 +10,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
-@Service("mailService")
+@Service
 public class SpringMailer implements MailService {
 	
 	private final static Logger log = Logger.getLogger(SpringMailer.class);

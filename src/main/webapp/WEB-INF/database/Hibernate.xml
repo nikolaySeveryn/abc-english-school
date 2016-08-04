@@ -9,7 +9,7 @@
 						http://www.springframework.org/schema/util  http://www.springframework.org/schema/util/spring-util.xsd
 						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
-	<util:properties id="hibernateProperties" location="classpath:hibernate.properties"/>
+	<util:properties id="hibernateProperties" location="classpath:config/hibernate.properties"/>
 	
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
@@ -31,7 +31,7 @@
 		<property name="hibernateProperties">
 			<ref bean="hibernateProperties" />
 		</property>
-		<property name="packagesToScan" value="nks.abc.domain" />
+		<property name="packagesToScan" value="nks.abc.bl.domain" />
 	</bean>
 		
 	<tx:annotation-driven transaction-manager="transactionManager" />

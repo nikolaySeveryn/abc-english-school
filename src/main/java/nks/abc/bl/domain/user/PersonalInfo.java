@@ -25,8 +25,7 @@ public class PersonalInfo {
 	private String patronomic;
 	private Date birthday;
 	private String phoneNum;
-	@Email
-	private String email;
+	
 	
 	public static PersonalInfo getNew() {
 		return new PersonalInfo();
@@ -65,13 +64,7 @@ public class PersonalInfo {
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
+
 	public String getPatronomic() {
 		return patronomic;
 	}
@@ -83,8 +76,7 @@ public class PersonalInfo {
 	public String toString() {
 		return "PersonalInfo [id=" + id + ", firstName=" + firstName
 				+ ", sirName=" + sirName + ", patronomic=" + patronomic
-				+ ", birthday=" + birthday + ", phoneNum=" + phoneNum
-				+ ", email=" + email + "]";
+				+ ", birthday=" + birthday + ", phoneNum=" + phoneNum + "]";
 	}
 	
 	

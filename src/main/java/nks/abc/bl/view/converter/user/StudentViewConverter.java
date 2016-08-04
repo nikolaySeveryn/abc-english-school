@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import nks.abc.bl.domain.user.Group;
+import nks.abc.bl.domain.user.Parrent;
 import nks.abc.bl.domain.user.PersonalInfo;
 import nks.abc.bl.domain.user.Student;
 import nks.abc.bl.domain.user.User;
@@ -15,7 +16,6 @@ import nks.abc.bl.view.object.objects.user.StudentView;
 
 @Component
 public class StudentViewConverter extends Converter<Student, StudentView> {
-
 	
 	@Override
 	public StudentView toView(Student bo) {
@@ -43,28 +43,27 @@ public class StudentViewConverter extends Converter<Student, StudentView> {
 		return bo;
 	}
 
-	private ParentInfoView parentToDTO(PersonalInfo bo) {
+	private ParentInfoView parentToDTO(Parrent bo) {
 		ParentInfoView dto = new ParentInfoView();
-		dto.setBirthday(bo.getBirthday());
+		dto.setBirthday(bo.getPersonalInfo().getBirthday());
 		dto.setEmail(bo.getEmail());
-		dto.setFirstName(bo.getFirstName());
+		dto.setFirstName(bo.getPersonalInfo().getFirstName());
 		dto.setId(bo.getId());
-		dto.setPatronomic(bo.getPatronomic());
-		dto.setPhoneNum(bo.getPhoneNum());
-		dto.setSirName(bo.getSirName());
+		dto.setPatronomic(bo.getPersonalInfo().getPatronomic());
+		dto.setPhoneNum(bo.getPersonalInfo().getPhoneNum());
+		dto.setSirName(bo.getPersonalInfo().getSirName());
 		return dto;
 	}
 	
-	private PersonalInfo parentToDomain(ParentInfoView dto){
-		PersonalInfo bo = new PersonalInfo();
-		bo.setBirthday(dto.getBirthday());
+	private Parrent parentToDomain(ParentInfoView dto) {
+		Parrent bo = new Parrent();
+		bo.getPersonalInfo().setBirthday(dto.getBirthday());
 		bo.setEmail(dto.getEmail());
-		bo.setFirstName(dto.getFirstName());
+		bo.getPersonalInfo().setFirstName(dto.getFirstName());
 		bo.setId(dto.getId());
-		bo.setPatronomic(dto.getPatronomic());
-		bo.setPhoneNum(dto.getPhoneNum());
-		bo.setSirName(dto.getSirName());
+		bo.getPersonalInfo().setPatronomic(dto.getPatronomic());
+		bo.getPersonalInfo().setPhoneNum(dto.getPhoneNum());
+		bo.getPersonalInfo().setSirName(dto.getSirName());
 		return bo;
 	}
-
 }

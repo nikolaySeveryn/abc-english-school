@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public abstract class User {
@@ -26,6 +29,7 @@ public abstract class User {
 	
 	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="account_info", nullable=false)
+	@OnDelete(action=OnDeleteAction.CASCADE)
 	private Account accountInfo;
 	
 	//TODO: move to factory

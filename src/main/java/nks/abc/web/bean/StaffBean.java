@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import nks.abc.bl.service.user.StaffService;
 import nks.abc.bl.view.factory.UserViewFactory;
 import nks.abc.bl.view.object.objects.user.StaffView;
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.core.util.UIMessage;
@@ -21,6 +22,7 @@ import nks.abc.web.common.enumeration.EditingMode;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 
@@ -31,7 +33,8 @@ public class StaffBean implements Serializable {
 	
 	private static final long serialVersionUID = -5855175113160274311L;
 	private static final Logger log = Logger.getLogger(StaffBean.class);
-
+	private ErrorHandler errorHandler;
+	
 	@Autowired
 	private StaffService staffService;
 	
@@ -45,21 +48,23 @@ public class StaffBean implements Serializable {
 	private StaffView edited = null;
 	private EditingMode editMode = EditingMode.NONE;
 	
+	@Autowired
+	@Qualifier("webErrorHandler")
+	public void setErrorHandler(ErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
+		this.errorHandler.loggerFor(this.getClass());
+	}
+	
 	public List<StaffView> getList() {
 		try {
+			System.out.println("all staff");
+			for(StaffView el : staffService.getAll()){
+				System.out.println(el);
+			}
+			System.out.println("------------------------------------");
 			return staffService.getAll();
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,
-					"Error: " + e.getDisplayedText());
-			log.error("error on getting staff lisst", e);
-			return new ArrayList<StaffView>();
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("error on getting staff lisst", e);
-			return new ArrayList<StaffView>();
 		} catch (Exception e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("undifined error", e);
+			errorHandler.handle(e, "getting all staff");
 			return new ArrayList<StaffView>();
 		}
 	}
@@ -71,16 +76,38 @@ public class StaffBean implements Serializable {
 					staffService.delete(en.getKey(), userBean.getCurrentUserName());
 				}
 			}
+			checked.clear();
 			message.send(MessageSeverity.INFO, "Deleted");
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			log.error("error on deleting staff", e);
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("error on deleting staff", e);
 		} catch (Exception e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("undifined error", e);
+			errorHandler.handle(e, "delete users");
+		}
+	}
+	
+	public void disable(){
+		try {
+			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
+				if(en.getValue()){
+					staffService.disable(en.getKey(), userBean.getCurrentUserName());
+				}
+			}
+			checked.clear();
+			message.send(MessageSeverity.INFO, "Disabled");
+		} catch (Exception e) {
+			errorHandler.handle(e, "disable users");
+		}
+	}
+	
+	public void enable(){
+		try {
+			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
+				if(en.getValue()){
+					staffService.enable(en.getKey());
+				}
+			}
+			checked.clear();
+			message.send(MessageSeverity.INFO, "Activated");
+		} catch (Exception e) {
+			errorHandler.handle(e, "enable users");
 		}
 	}
 
@@ -88,17 +115,8 @@ public class StaffBean implements Serializable {
 		try {
 			editMode = EditingMode.ADD;
 			edited = UserViewFactory.newStaff();
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			log.error("error on adding staff", e);
-			return null;
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("error on adding staff", e);
-			return null;
 		} catch (Exception e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("undifined error", e);
+			errorHandler.handle(e, "start adding user");
 			return null;
 		}
 		return "staffEdit.xhtml";
@@ -108,17 +126,8 @@ public class StaffBean implements Serializable {
 		try {
 			editMode = EditingMode.EDIT;
 			this.edited = edited;
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			log.error("error on editing staff", e);
-			return null;
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("error on editing staff", e);
-			return null;
 		} catch (Exception e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("undifined error", e);
+			errorHandler.handle(e, "start editing user");
 			return null;
 		}
 		return "staffEdit.xhtml";
@@ -137,17 +146,8 @@ public class StaffBean implements Serializable {
 				message.send(MessageSeverity.ERROR, "Error");
 				return null;
 			}
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			log.error("error on saving staff", e);
-			return null;
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("error on saving staff", e);
-			return null;
 		} catch (Exception e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			log.error("undifined error", e);
+			errorHandler.handle(e, "save user");
 			return null;
 		}
 		

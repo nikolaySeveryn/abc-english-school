@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,8 @@ import nks.abc.bl.domain.user.Account;
 import nks.abc.bl.domain.user.Administrator;
 import nks.abc.bl.domain.user.Teacher;
 import nks.abc.bl.domain.user.UserFactory;
+import nks.abc.bl.service.message.MailFactory;
+import nks.abc.bl.service.message.MailService;
 import nks.abc.bl.view.converter.user.AccountViewConverter;
 import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.handler.ErrorHandler;
@@ -21,6 +24,7 @@ import nks.abc.core.exception.service.NoCurrentUserException;
 import nks.abc.core.exception.service.NoIdException;
 import nks.abc.core.exception.service.NoUserLoginException;
 import nks.abc.core.exception.service.RightsDeprivingException;
+import nks.abc.core.exception.service.SendMailException;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
@@ -43,6 +47,10 @@ public class StaffServiceImpl implements StaffService {
 	private AccountRepository accountDAO;
 	@Autowired
 	private AccountViewConverter dtoConvertor;
+	@Autowired
+	private MailService mailer;
+	@Autowired
+	private MailFactory mailFactory;
 	
 	private GuardClauses guardClauses = new GuardClauses();
 	
@@ -58,12 +66,18 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	@Transactional(readOnly=false)
 	public void add(StaffView employeeDTO) {
-		guardClauses.add(this, employeeDTO);
-		
-		Account account = dtoConvertor.toDomain(employeeDTO);
-		account.updatePassword(employeeDTO.getPassword());
+		guardClauses.add(employeeDTO);
 		
 		try {
+			Account account = dtoConvertor.toDomain(employeeDTO);
+			String password = account.updatePasswordToRandom();
+			try{
+				mailer.sendEmail(mailFactory.newStaff(account.getEmail(), password));
+			}
+			catch (SendMailException e){
+				log.warn("Email with password wasn't sent to user " + account.getEmail());
+			}
+		
 			if (employeeDTO.getIsAdministrator()) {
 				Administrator admin = UserFactory.createAdministrator();
 				admin.setAccountInfo(account);
@@ -87,7 +101,7 @@ public class StaffServiceImpl implements StaffService {
 	@Override
 	@Transactional(readOnly=false)
 	public void update(StaffView employeeDTO, String currentUserLogin) {
-		guardClauses.update(this, employeeDTO, currentUserLogin);
+		guardClauses.update(employeeDTO, currentUserLogin);
 		
 		Account updatingUser = dtoConvertor.toDomain(employeeDTO);
 		accountDAO.update(updatingUser);
@@ -120,19 +134,46 @@ public class StaffServiceImpl implements StaffService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Long id, String currentUserLogin) {
-		guardClauses.delete(this, id, currentUserLogin);
-		
+	public void delete(Long id, String currentUserEmail) {
+		guardClauses.delete(id, currentUserEmail);
 		try{
-			log.info("delete user: ");
-			Account removed = getAccountInfoById(id);
-			removed.setIsDeleted(true);
-			accountDAO.update(removed);
+			//TODO:related entities
+			Account deletedUser = getAccountInfoById(id);
+			accountDAO.delete(deletedUser);
 		}
 		catch (Exception e){
-			errorHandler.handle(e, "delete staff id=" + id); 
+			errorHandler.handle(e, "delete user id=" + id);
 		}
 	}
+	
+	@Override
+	@Transactional(readOnly=false)
+	public void disable(Long id, String currentUserEmail) {
+		guardClauses.delete(id, currentUserEmail);
+		try{
+			Account disabledUser = getAccountInfoById(id);
+			disabledUser.setIsDisable(true);
+			accountDAO.update(disabledUser);
+			log.info("disable user: " + disabledUser);
+		}
+		catch (Exception e){
+			errorHandler.handle(e, "disable staff id=" + id); 
+		}
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public void enable(Long id) {
+		try{
+			Account activatedUser = getAccountInfoById(id);
+			activatedUser.setIsDisable(false);
+			accountDAO.update(activatedUser);
+			log.info("enable user: " + activatedUser);
+		}
+		catch (Exception e){
+			errorHandler.handle(e, "disable staff id=" + id); 
+		}
+	};
 	
 	
 
@@ -156,7 +197,7 @@ public class StaffServiceImpl implements StaffService {
 	public List<StaffView> getAll() {
 		List<Account> accounts= null;
 		try{
-			accounts = accountDAO.query(accountDAO.specifications().byIsDeleted(false));
+			accounts = accountDAO.getAll();
 		}
 		catch (Exception e){
 			errorHandler.handle(e, "get all staff");
@@ -182,37 +223,38 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public StaffView getStaffByLogin(String login) {
+	public StaffView getStaffByEmail(String email) {
 		Account entity = null;
 		try{
-			entity = accountDAO.uniqueQuery(accountDAO.specifications().byLoginAndDeleted(login, false));
+			entity = accountDAO.uniqueQuery(accountDAO.specifications().byEmailAndDisable(email, false));
 			
 		}
 		catch (Exception e){
-			errorHandler.handle(e, "get staff by login");
+			errorHandler.handle(e, "get staff by email");
 		}
 		return dtoConvertor.toView(entity);
 	}
 	
 	
-	private static class GuardClauses{
+	private class GuardClauses{
 
-		private void delete(StaffServiceImpl staffServiceImpl, Long id, String currentUserLogin) {
-			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(staffServiceImpl.accountDAO.specifications().byLoginAndDeleted(currentUserLogin, false));
+		private void delete(Long id, String currentUserEmail) {
+			Account currentUser = accountDAO.uniqueQuery(accountDAO.specifications().byEmailAndDisable(currentUserEmail, false));
+			
 			if(currentUser == null) {
-				throw new NoCurrentUserException("No current user. Username: " + currentUserLogin);
+				throw new NoCurrentUserException("No current user. Username: " + currentUserEmail);
 			}
 			if(currentUser.getAccountId().equals(id)){
 				throw new RightsDeprivingException("You're trying to remove yourself. Nice try :)");
 			}
 		}
 
-		private void update(StaffServiceImpl staffServiceImpl, StaffView employeeDTO, String currentUserLogin) {
-			if(currentUserLogin == null || currentUserLogin.length() < 1) {
+		private void update(StaffView employeeDTO, String currentUserEmail) {
+			if(currentUserEmail == null || currentUserEmail.length() < 1) {
 				throw new NoCurrentUserException("Current user login is empty");
 			}
-			CriterionSpecification specification = staffServiceImpl.accountDAO.specifications().byLoginAndDeleted(currentUserLogin,false);
-			Account currentUser = staffServiceImpl.accountDAO.uniqueQuery(specification);
+			CriterionSpecification specification = accountDAO.specifications().byEmailAndDisable(currentUserEmail,false);
+			Account currentUser = accountDAO.uniqueQuery(specification);
 			if(employeeDTO.getAccountId() == null){
 				throw new NoIdException("Trying to update account without id");
 			}
@@ -227,18 +269,18 @@ public class StaffServiceImpl implements StaffService {
 			}
 		}
 
-		private void add(StaffServiceImpl staffServiceImpl, StaffView employeeDTO) {
-			String login = employeeDTO.getLogin();
+		private void add(StaffView employeeDTO) {
+			String login = employeeDTO.getEmail();
 			if(login == null || login.length() < 1) {
-				throw new NoUserLoginException("Login is empty");
+				throw new NoUserLoginException("Email is empty");
 			}
-			AccountInfoSpecificationFactory specificationFactory = staffServiceImpl.accountDAO.specifications();
-			if(staffServiceImpl.accountDAO.uniqueQuery(specificationFactory.byLogin(login)) != null) {
+			AccountInfoSpecificationFactory specificationFactory = accountDAO.specifications();
+			if(accountDAO.uniqueQuery(specificationFactory.byEmail(login)) != null) {
 				throw new ServiceDisplayedErorr("User with such login already exist!");
 			}
 			if(!employeeDTO.getIsAdministrator() && !employeeDTO.getIsTeacher()){
 				throw new ServiceDisplayedErorr("Employee should be a teacher or an administrator or both of them");
 			}
 		}
-	};
+	}
 }
