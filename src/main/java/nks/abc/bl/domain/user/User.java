@@ -37,6 +37,7 @@ public abstract class User {
 		Student instance = new Student();
 		instance.setGroups(new HashSet<Group>());
 		instance.setAccountInfo(new Account());
+		instance.getAccountInfo().setIsStudent(true);
 		return instance;
 	}
 	

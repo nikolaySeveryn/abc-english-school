@@ -6,6 +6,7 @@ import javax.annotation.ManagedBean;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import nks.abc.bl.domain.user.Account;
 import nks.abc.bl.view.validation.annotation.Email;
 import nks.abc.bl.view.validation.annotation.Unique;
 
@@ -14,7 +15,7 @@ public abstract class UserView {
 	private Long accountId;
 	private Long personalInfoId;
 	@Email
-	@Unique(entity=UserView.class, field="email")
+	@Unique(entity=Account.class, field="email")
 	private String email;
 	@Pattern(regexp="^.{5,}$", message="Minimum size 5 symbols")
 	private String password;

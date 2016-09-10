@@ -1,6 +1,6 @@
 package nks.abc.bl.view.object.objects.user;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
@@ -11,6 +11,7 @@ import nks.abc.bl.view.validation.annotation.Email;
 public class ParentInfoView {
 	
 	private Long id;
+	private Long personalInfoId;
 	private String firstName;
 	private String sirName;
 	private String patronomic;
@@ -26,6 +27,12 @@ public class ParentInfoView {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Long getPersonalInfoId() {
+		return personalInfoId;
+	}
+	public void setPersonalInfoId(Long personalInfoId) {
+		this.personalInfoId = personalInfoId;
 	}
 	public String getFirstName() {
 		return firstName;

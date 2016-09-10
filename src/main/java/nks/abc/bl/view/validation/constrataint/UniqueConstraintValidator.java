@@ -34,7 +34,6 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique,Obj
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		synchronized (this) {
-			System.out.println("\nis valid:\n[ this="+ this + "\nchecker=" + uniqueChecker + "\n]\n");
 			if(value == null) {
 				return false;
 			}

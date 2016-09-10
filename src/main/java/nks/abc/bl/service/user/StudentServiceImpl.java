@@ -8,11 +8,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.bl.domain.user.Account;
 import nks.abc.bl.domain.user.Student;
+import nks.abc.bl.service.message.MailFactory;
+import nks.abc.bl.service.message.MailService;
 import nks.abc.bl.view.converter.user.GroupViewConverter;
 import nks.abc.bl.view.converter.user.StudentViewConverter;
 import nks.abc.bl.view.object.objects.user.StudentView;
 import nks.abc.core.exception.handler.ErrorHandler;
+import nks.abc.core.exception.service.SendMailException;
+import nks.abc.dao.newspecification.user.StudentSpecifications;
 import nks.abc.dao.repository.user.StudentRepository;
 
 @Service
@@ -23,9 +28,12 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Autowired
 	private StudentRepository studentRepository;
-	
 	@Autowired
 	private StudentViewConverter studentConverter;
+	@Autowired
+	private MailService mailer;
+	@Autowired
+	private MailFactory mailFactory;
 	
 	private ErrorHandler errorHandler;
 	
@@ -44,10 +52,17 @@ public class StudentServiceImpl implements StudentService {
 		try{
 			if(student.isNew()){
 				log.info("Insert new student: " + student);
-				student.updatePassword(studentDTO.getPassword());
+				Account account = student.getAccountInfo();
+				String password = account.updatePasswordToRandom();
 				studentRepository.insert(student);
+				try {
+					mailer.sendEmail(mailFactory.newStudent(account.getEmail(), password));
+				}
+				catch (SendMailException e) {
+					log.warn("Email with password wasn't sent to student + " + account.getFullName() + " - " + account.getEmail());
+				}
 			}
-			else{
+			else {
 				log.info("Update student: " + student);
 				studentRepository.update(student);
 			}
@@ -85,6 +100,6 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	private Student getStudentDomainById(Long id) {
-		return studentRepository.uniqueQuery(studentRepository.specifications().byId(id));
+		return studentRepository.uniqueQuery(StudentSpecifications.byId(id));
 	}
 }

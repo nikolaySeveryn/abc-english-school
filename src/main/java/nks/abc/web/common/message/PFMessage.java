@@ -1,11 +1,9 @@
-package nks.abc.web.common;
+package nks.abc.web.common.message;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.springframework.stereotype.Component;
-
-import nks.abc.core.util.UIMessage;
 
 @Component
 public class PFMessage implements UIMessage {
@@ -18,19 +16,21 @@ public class PFMessage implements UIMessage {
 	}
 	
 	private FacesMessage.Severity toPrimeSeverity(MessageSeverity severity){
-		switch (severity) {
-			case ERROR:
-				return FacesMessage.SEVERITY_ERROR;
-			case FATAL_ERROR:
-				return FacesMessage.SEVERITY_FATAL;
-			case INFO:
-				return FacesMessage.SEVERITY_INFO;
-			case WARNING:
-				return FacesMessage.SEVERITY_WARN;
-			default:
-				throw new IllegalArgumentException("Unknown message severity"); 
+		
+		if(severity.equals(MessageSeverity.ERROR)){
+			return FacesMessage.SEVERITY_ERROR;
+		}
+		if(severity.equals(MessageSeverity.FATAL_ERROR)){
+			return FacesMessage.SEVERITY_FATAL; 
+		}
+		if(severity.equals(MessageSeverity.INFO)){
+			return FacesMessage.SEVERITY_INFO;
+		}
+		if(severity.equals(MessageSeverity.WARNING)){
+			return FacesMessage.SEVERITY_WARN;
 		}
 		
+		throw new IllegalArgumentException("Unknown message severity");
 	}
 
 }

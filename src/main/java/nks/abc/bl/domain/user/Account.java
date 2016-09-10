@@ -29,6 +29,9 @@ import org.hibernate.validator.constraints.Email;
 @Table(name="accountinfo")
 public class Account {
 	
+	private static final int MAX_PASS_LENGTH = 15;
+	private static final int MIN_PASS_LENGTH = 6;
+
 	@Transient
 	private PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
 	
@@ -70,10 +73,10 @@ public class Account {
 	private String generateRandomString() {
 		SecureRandom random = new SecureRandom();
 		String res = new BigInteger(130, random).toString(32);
-		return res.substring(0, random.nextInt(16)+10);
+		return res.substring(0, random.nextInt(MAX_PASS_LENGTH - MIN_PASS_LENGTH) + MIN_PASS_LENGTH);
 	}
 	
-	public boolean isAdministrator(){
+	public boolean isAdministrator() {
 		return getRole().contains(Role.ADMINISTRATOR);
 	}
 	
@@ -85,7 +88,7 @@ public class Account {
 		return getRole().contains(Role.STUDENT);
 	}
 	
-	public void isAdministrator(boolean is){
+	public void setIsAdministrator(boolean is){
 		if(is){
 			role.add(Role.ADMINISTRATOR);
 		}
@@ -94,7 +97,7 @@ public class Account {
 		}
 	}
 	
-	public void isTeacher(boolean is){
+	public void setIsTeacher(boolean is){
 		if(is){
 			role.add(Role.TEACHER);
 		}
@@ -103,13 +106,17 @@ public class Account {
 		}
 	}
 	
-	public void isStudent(boolean is){
+	public void setIsStudent(boolean is){
 		if(is){
 			role.add(Role.STUDENT);
 		}
 		else {
 			role.remove(Role.STUDENT);
 		}
+	}
+	
+	public String getFullName() {
+		return peronalInfo.getFullName();
 	}
 	
 	/*

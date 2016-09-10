@@ -23,7 +23,7 @@ public class Student extends User {
 	
 	
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	private Parrent parent;
+	private Parent parent;
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="student_group", 
 		joinColumns={@JoinColumn(name="student_id")},
@@ -34,10 +34,10 @@ public class Student extends User {
 	@Column(nullable=false)
 	private Integer moneyBalance = 0;
 	
-	public Parrent getParent() {
+	public Parent getParent() {
 		return parent;
 	}
-	public void setParent(Parrent parent) {
+	public void setParent(Parent parent) {
 		this.parent = parent;
 	}
 	public Set<Group> getGroups() {

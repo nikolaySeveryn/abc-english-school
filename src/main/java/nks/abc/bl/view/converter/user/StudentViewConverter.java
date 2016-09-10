@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import nks.abc.bl.domain.user.Group;
-import nks.abc.bl.domain.user.Parrent;
+import nks.abc.bl.domain.user.Parent;
 import nks.abc.bl.domain.user.PersonalInfo;
 import nks.abc.bl.domain.user.Student;
 import nks.abc.bl.domain.user.User;
@@ -43,7 +43,7 @@ public class StudentViewConverter extends Converter<Student, StudentView> {
 		return bo;
 	}
 
-	private ParentInfoView parentToDTO(Parrent bo) {
+	private ParentInfoView parentToDTO(Parent bo) {
 		ParentInfoView dto = new ParentInfoView();
 		dto.setBirthday(bo.getPersonalInfo().getBirthday());
 		dto.setEmail(bo.getEmail());
@@ -52,12 +52,18 @@ public class StudentViewConverter extends Converter<Student, StudentView> {
 		dto.setPatronomic(bo.getPersonalInfo().getPatronomic());
 		dto.setPhoneNum(bo.getPersonalInfo().getPhoneNum());
 		dto.setSirName(bo.getPersonalInfo().getSirName());
+		dto.setPersonalInfoId(bo.getPersonalInfo().getId());
 		return dto;
 	}
 	
-	private Parrent parentToDomain(ParentInfoView dto) {
-		Parrent bo = new Parrent();
-		bo.getPersonalInfo().setBirthday(dto.getBirthday());
+	private Parent parentToDomain(ParentInfoView dto) {
+		Parent bo = Parent.newParent();
+		java.sql.Date sqlDate = null;
+		if(dto.getBirthday() != null){
+			sqlDate = new java.sql.Date(dto.getBirthday().getTime());
+		}
+		bo.getPersonalInfo().setId(dto.getPersonalInfoId());
+		bo.getPersonalInfo().setBirthday(sqlDate);
 		bo.setEmail(dto.getEmail());
 		bo.getPersonalInfo().setFirstName(dto.getFirstName());
 		bo.setId(dto.getId());

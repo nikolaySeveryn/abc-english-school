@@ -16,9 +16,9 @@ import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.UIMessage;
-import nks.abc.core.util.UIMessage.MessageSeverity;
 import nks.abc.web.common.enumeration.EditingMode;
+import nks.abc.web.common.message.MessageSeverity;
+import nks.abc.web.common.message.UIMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +57,7 @@ public class StaffBean implements Serializable {
 	
 	public List<StaffView> getList() {
 		try {
-			System.out.println("all staff");
-			for(StaffView el : staffService.getAll()){
-				System.out.println(el);
-			}
-			System.out.println("------------------------------------");
-			return staffService.getAll();
+			return staffService.getAllStaff();
 		} catch (Exception e) {
 			errorHandler.handle(e, "getting all staff");
 			return new ArrayList<StaffView>();

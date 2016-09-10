@@ -2,6 +2,8 @@ package nks.abc.core.exception.handler;
 
 import org.apache.log4j.Logger;
 
+import nks.abc.web.common.WebErrorHandler;
+
 public abstract class ErrorHandler {
 	
 	protected Logger log = getDefaultLogger();

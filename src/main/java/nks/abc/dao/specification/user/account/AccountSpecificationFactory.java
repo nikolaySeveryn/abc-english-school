@@ -6,7 +6,7 @@ import nks.abc.dao.base.ConjunctionSpecification;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 
 @Component
-public class AccountInfoSpecificationFactory {
+public class AccountSpecificationFactory {
 	
 	public CriterionSpecification byEmailAndDisable(String login, Boolean disable) {
 		return new ConjunctionSpecification(new EmailSpecification(login), new IsDisableSpecification(disable));

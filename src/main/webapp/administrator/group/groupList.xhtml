@@ -30,8 +30,10 @@
 							value="#{studentBean.checkedGroups[group.id]}" />
 					</p:column>
 					<p:column headerText="Група">
-						<h:outputText
-							value="#{group.name}" />
+						<h:outputText value="#{group.name}" />
+					</p:column>
+					<p:column headerText="Рівень">
+						<h:outputText value="#{group.level.label}" />
 					</p:column>
 					<p:column width="68">
 						<p:commandButton action="#{studentBean.editGroup(group)}" icon="ui-icon-pencil" />

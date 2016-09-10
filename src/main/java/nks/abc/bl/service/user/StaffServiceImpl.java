@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import nks.abc.bl.domain.user.Account;
 import nks.abc.bl.domain.user.Administrator;
 import nks.abc.bl.domain.user.Teacher;
+import nks.abc.bl.domain.user.User;
 import nks.abc.bl.domain.user.UserFactory;
 import nks.abc.bl.service.message.MailFactory;
 import nks.abc.bl.service.message.MailService;
@@ -28,10 +29,12 @@ import nks.abc.core.exception.service.SendMailException;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
+import nks.abc.dao.newspecification.user.AccountSpecifications;
+import nks.abc.dao.newspecification.user.UserSpecifications;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
-import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
+import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
 
 @Service("staffService")
 @Transactional(readOnly=true)
@@ -190,14 +193,23 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	private Account getAccountInfoById(Long id) {
-		return accountDAO.uniqueQuery(accountDAO.specifications().byId(id));
+		return accountDAO.uniqueQuery(AccountSpecifications.byId(id));
 	}
 
 	@Override
-	public List<StaffView> getAll() {
-		List<Account> accounts= null;
+	public List<StaffView> getAllStaff() {
+		List<User> users= new ArrayList<User>();
+		List<Account>accounts = new ArrayList<Account>();
+		List<Long>accountIds = new ArrayList<Long>();
 		try{
-			accounts = accountDAO.getAll();
+			users.addAll(teacherDAO.getAll());
+			users.addAll(adminDAO.getAll());
+			for(User user : users) {
+				if(! accountIds.contains(user.getAccountId())) {
+					accounts.add(user.getAccountInfo());
+					accountIds.add(user.getAccountId());
+				}
+			}
 		}
 		catch (Exception e){
 			errorHandler.handle(e, "get all staff");
@@ -210,7 +222,7 @@ public class StaffServiceImpl implements StaffService {
 	public List<StaffView> getAllTeachers() {
 		List<Teacher> teachers = null;
 		try{
-			teachers = teacherDAO.query(teacherDAO.specifications().byIsDeleted(false));
+			teachers = teacherDAO.query(AccountSpecifications.active(true));
 		}
 		catch(Exception e){
 			errorHandler.handle(e, "get all teachers");
@@ -226,7 +238,7 @@ public class StaffServiceImpl implements StaffService {
 	public StaffView getStaffByEmail(String email) {
 		Account entity = null;
 		try{
-			entity = accountDAO.uniqueQuery(accountDAO.specifications().byEmailAndDisable(email, false));
+			entity = accountDAO.uniqueQuery(AccountSpecifications.byEmail(email).and(AccountSpecifications.active()));
 			
 		}
 		catch (Exception e){
@@ -274,7 +286,7 @@ public class StaffServiceImpl implements StaffService {
 			if(login == null || login.length() < 1) {
 				throw new NoUserLoginException("Email is empty");
 			}
-			AccountInfoSpecificationFactory specificationFactory = accountDAO.specifications();
+			AccountSpecificationFactory specificationFactory = accountDAO.specifications();
 			if(accountDAO.uniqueQuery(specificationFactory.byEmail(login)) != null) {
 				throw new ServiceDisplayedErorr("User with such login already exist!");
 			}

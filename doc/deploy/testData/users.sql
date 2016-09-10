@@ -20,10 +20,23 @@ SET search_path = abc, pg_catalog;
 -- Dependencies: 176
 -- Data for Name: personalinfo; Type: TABLE DATA; Schema: abc; Owner: -
 --
+-- staff
 
-INSERT INTO personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (8, '1990-08-01', 'Teacher', '', '', 'Test');
-INSERT INTO personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (9, '1971-03-10', 'Administrator', '', '', 'Test');
-INSERT INTO personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (10, '1955-11-14', 'Superuser', '', '', 'Test');
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (1, '1990-08-01', 'Teacher', '', '', 'Test');
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (2, '1971-03-10', 'Administrator', '', '', 'Test');
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (3, '1955-11-14', 'Superuser', '', '', 'Test');
+
+--students & parrent
+
+
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (4, '2016-08-01', 'Student', '1', '', 'Test');
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (5, '1969-08-12', 'Parent', '1', '54678645453', 'Test');
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (6, '2001-06-12', 'Student', '2', '56-00-80', 'Test');
+INSERT INTO abc.personalinfo (id, birthday, firstname, patronomic, phonenum, sirname) VALUES (7, '1975-12-30', 'Parent', '2', '', 'Test');
+
+
+
+ALTER SEQUENCE abc.personal_info_id_seq RESTART WITH 8;
 
 
 --
@@ -33,9 +46,14 @@ INSERT INTO personalinfo (id, birthday, firstname, patronomic, phonenum, sirname
 --
 -- pass:"password"
 
-INSERT INTO accountinfo (accountid, email, password, personal_info, isdisable) VALUES (8, 'nkstestemail2@mail.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 8, false);
-INSERT INTO accountinfo (accountid, email, password, personal_info, isdisable) VALUES (9, 'nkstestemail3@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 9, false);
-INSERT INTO accountinfo (accountid, email, password, personal_info, isdisable) VALUES (10, 'nkstestemail4@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 10, false);
+INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isdisable) VALUES (1, 'nkstestemail2@mail.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 1, false);
+INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isdisable) VALUES (2, 'nkstestemail3@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 2, false);
+INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isdisable) VALUES (3, 'nkstestemail4@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 3, false);
+
+INSERT INTO abc.accountinfo (accountid, email, isdisable, password, personal_info) VALUES (4, 'NksTestEmail1@gmail.com', false, 'Kyr3kp7wKjT5N3zz1OSJaQ==', 4);
+INSERT INTO abc.accountinfo (accountid, email, isdisable, password, personal_info) VALUES (5, 'nkstestemail5@yandex.ru', false, '3CS1V+BwoLuqdsRp0nj2pQ==', 6);
+
+ALTER SEQUENCE abc.account_id_seq RESTART WITH 6;
 
 
 
@@ -45,10 +63,15 @@ INSERT INTO accountinfo (accountid, email, password, personal_info, isdisable) V
 -- Data for Name: user; Type: TABLE DATA; Schema: abc; Owner: -
 --
 
-INSERT INTO "user" (id, account_info) VALUES (14, 8);
-INSERT INTO "user" (id, account_info) VALUES (15, 9);
-INSERT INTO "user" (id, account_info) VALUES (16, 10);
-INSERT INTO "user" (id, account_info) VALUES (17, 10);
+INSERT INTO "abc"."user" (id, account_info) VALUES (1, 1);
+INSERT INTO "abc"."user" (id, account_info) VALUES (2, 2);
+INSERT INTO "abc"."user" (id, account_info) VALUES (3, 3);
+INSERT INTO "abc"."user" (id, account_info) VALUES (4, 3);
+
+INSERT INTO "abc"."user" (id, account_info) VALUES (5, 4);
+INSERT INTO "abc"."user" (id, account_info) VALUES (6, 5);
+
+ALTER SEQUENCE abc.user_id_seq RESTART WITH 7;
 
 
 --
@@ -57,8 +80,8 @@ INSERT INTO "user" (id, account_info) VALUES (17, 10);
 -- Data for Name: administrator; Type: TABLE DATA; Schema: abc; Owner: -
 --
 
-INSERT INTO administrator (id) VALUES (15);
-INSERT INTO administrator (id) VALUES (16);
+INSERT INTO abc.administrator (id) VALUES (2);
+INSERT INTO abc.administrator (id) VALUES (3);
 
 
 
@@ -68,8 +91,27 @@ INSERT INTO administrator (id) VALUES (16);
 -- Data for Name: teacher; Type: TABLE DATA; Schema: abc; Owner: -
 --
 
-INSERT INTO teacher (id) VALUES (14);
-INSERT INTO teacher (id) VALUES (17);
+INSERT INTO abc.teacher (id) VALUES (1);
+INSERT INTO abc.teacher (id) VALUES (4);
+
+
+
+-- Data for Name: student; Type: TABLE DATA; Schema: abc; Owner: postgres
+
+INSERT INTO abc.parent (id, email, personal_info) VALUES(1, 'parent email', 5);
+INSERT INTO abc.parent (id, email, personal_info) VALUES(2, '', 7);
+
+ALTER SEQUENCE abc.parrent_id_seq RESTART WITH 3;
+
+
+--
+-- TOC entry 2016 (class 0 OID 17395)
+-- Dependencies: 177
+-- Data for Name: student; Type: TABLE DATA; Schema: abc; Owner: postgres
+--
+
+INSERT INTO abc.student (discount, moneybalance, id, parent_id) VALUES (5, 0, 5, 1);
+INSERT INTO abc.student (discount, moneybalance, id, parent_id) VALUES (0, 0, 6, 2);
 
 
 --
@@ -78,14 +120,31 @@ INSERT INTO teacher (id) VALUES (17);
 -- Data for Name: user_role; Type: TABLE DATA; Schema: abc; Owner: -
 --
 
-INSERT INTO user_role (accountinfo_accountid, role) VALUES (8, 'TEACHER');
-INSERT INTO user_role (accountinfo_accountid, role) VALUES (9, 'ADMINISTRATOR');
-INSERT INTO user_role (accountinfo_accountid, role) VALUES (10, 'ADMINISTRATOR');
-INSERT INTO user_role (accountinfo_accountid, role) VALUES (10, 'TEACHER');
+INSERT INTO abc.user_role (accountinfo_accountid, role) VALUES (1, 'TEACHER');
+INSERT INTO abc.user_role (accountinfo_accountid, role) VALUES (2, 'ADMINISTRATOR');
+INSERT INTO abc.user_role (accountinfo_accountid, role) VALUES (3, 'ADMINISTRATOR');
+INSERT INTO abc.user_role (accountinfo_accountid, role) VALUES (3, 'TEACHER');
+INSERT INTO abc.user_role (accountinfo_accountid, role) VALUES (4, 'STUDENT');
+INSERT INTO abc.user_role (accountinfo_accountid, role) VALUES (5, 'STUDENT');
 
-
--- Completed on 2016-08-04 11:37:10 EEST
 
 --
--- PostgreSQL database dump complete
+-- TOC entry 2015 (class 0 OID 17374)
+-- Dependencies: 174
+-- Data for Name: group; Type: TABLE DATA; Schema: abc; Owner: postgres
 --
+
+INSERT INTO "abc"."group" (id, level, name, tarif, teacher) VALUES (1, 'BEGINER', 'TestGroup1', 4000, 1);
+INSERT INTO "abc"."group" (id, level, name, tarif, teacher) VALUES (2, 'UPPER_INTERMEDIATE', 'TestGroup2', 9000, 4);
+
+ALTER SEQUENCE abc.group_id_seq RESTART WITH 3;
+
+
+--
+-- TOC entry 2016 (class 0 OID 17418)
+-- Dependencies: 181
+-- Data for Name: student_group; Type: TABLE DATA; Schema: abc; Owner: postgres
+--
+
+INSERT INTO abc.student_group (student_id, group_id) VALUES (5, 1);
+INSERT INTO abc.student_group (student_id, group_id) VALUES (6, 1);

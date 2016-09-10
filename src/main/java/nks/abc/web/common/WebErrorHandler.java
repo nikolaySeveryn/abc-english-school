@@ -1,9 +1,10 @@
-package nks.abc.core.exception.handler;
+package nks.abc.web.common;
 
+import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.core.util.UIMessage;
-import nks.abc.core.util.UIMessage.MessageSeverity;
+import nks.abc.web.common.message.MessageSeverity;
+import nks.abc.web.common.message.UIMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

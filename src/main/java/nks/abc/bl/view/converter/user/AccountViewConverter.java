@@ -13,8 +13,8 @@ public class AccountViewConverter extends Converter<Account, StaffView>{
 	public Account toDomain(StaffView dto) {
 		Account entity = new Account();
 		UserViewConvertor.toEntity(dto, entity);
-		entity.isAdministrator(dto.getIsAdministrator());
-		entity.isTeacher(dto.getIsTeacher());
+		entity.setIsAdministrator(dto.getIsAdministrator());
+		entity.setIsTeacher(dto.getIsTeacher());
 		return entity;
 	}
 	

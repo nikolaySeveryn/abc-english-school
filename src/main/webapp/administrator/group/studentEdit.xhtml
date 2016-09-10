@@ -37,15 +37,11 @@
 								value="#{studentBean.editedStudent.phoneNum}" />
 							<p:message for="phone" />
 
-							<p:outputLabel value="Email" for="email" />
-							<p:inputText id="email" value="#{studentBean.editedStudent.email}" required="true" />
-							<p:message for="email" />
 
 							<c:if test="#{studentBean.isNewStudent}">
-								<p:outputLabel for="password" value="Пароль" />
-								<p:password id="password" required="true"
-									value="#{studentBean.editedStudent.password}" />
-								<p:message for="password" />
+								<p:outputLabel value="Email" for="email" />
+								<p:inputText id="email" value="#{studentBean.editedStudent.email}" required="true" autocomplete="false" />
+								<p:message for="email" />
 							</c:if>
 
 							<p:outputLabel for="birthday" value="День народження" />

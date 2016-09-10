@@ -11,13 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.bl.domain.user.Group;
 import nks.abc.bl.view.converter.Converter;
-import nks.abc.bl.view.converter.ConvertersHolder;
 import nks.abc.bl.view.converter.user.AccountViewConverter;
 import nks.abc.bl.view.converter.user.StudentViewConverter;
 import nks.abc.bl.view.object.objects.user.GroupView;
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.repository.RepositoryException;
-import nks.abc.core.exception.service.ServiceException;
+import nks.abc.dao.newspecification.user.GroupSpecifications;
 import nks.abc.dao.repository.user.GroupRepository;
 
 @Service
@@ -88,7 +86,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	private Group getDomainGroupById(Long id) {
-		return groupDAO.uniqueQuery(groupDAO.specifications().byId(id));
+		return groupDAO.uniqueQuery(GroupSpecifications.byId(id));
 	}
 
 	@Override

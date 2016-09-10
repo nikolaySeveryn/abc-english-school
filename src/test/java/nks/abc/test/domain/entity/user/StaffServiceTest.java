@@ -26,7 +26,7 @@ import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdministratorRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
-import nks.abc.dao.specification.user.account.AccountInfoSpecificationFactory;
+import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
 import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
 import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
 
@@ -74,7 +74,7 @@ public class StaffServiceTest {
 	public void initMocks(){
 		when(adminRepository.specifications()).thenReturn(new AdministratorSpecificationFactory());
 		when(teacherRepository.specifications()).thenReturn(new TeacherSpecificationFactory());
-		when(accountRepository.specifications()).thenReturn(new AccountInfoSpecificationFactory());
+		when(accountRepository.specifications()).thenReturn(new AccountSpecificationFactory());
 		
 	}
 	
