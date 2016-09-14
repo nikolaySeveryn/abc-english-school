@@ -1,5 +1,9 @@
 package nks.abc.bl.domain.user;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+
+import org.hibernate.annotations.OrderBy;
 
 @Entity
 public class Group {
@@ -74,8 +80,19 @@ public class Group {
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
+	
 	public Set<Student> getStudents() {
 		return students;
+	}
+	public List<Student>getSortedStudents(){
+		List<Student> studentsList = new ArrayList<Student>(students);
+		Collections.sort(studentsList, new Comparator<Student>() {
+			@Override
+			public int compare(Student student1, Student student2) {
+				return student1.getUserId().compareTo(student2.getUserId());
+			}
+		});
+		return studentsList;
 	}
 	public void setStudents(Set<Student> students) {
 		this.students = students;

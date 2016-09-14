@@ -3,6 +3,7 @@ package nks.abc.dao.base;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class HibernateRepository {
@@ -24,7 +25,7 @@ public abstract class HibernateRepository {
 	}
 
 	protected Criteria getCriteria() {
-		return getSession().createCriteria(domainClass);
+		return getSession().createCriteria(domainClass).addOrder(Order.asc("id"));
 	}
 
 }

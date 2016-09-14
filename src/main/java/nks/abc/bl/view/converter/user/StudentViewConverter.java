@@ -21,7 +21,7 @@ public class StudentViewConverter extends Converter<Student, StudentView> {
 	public StudentView toView(Student bo) {
 		StudentView dto = new StudentView();
 		UserViewConvertor.toDTO(bo.getAccountInfo(), dto);
-		dto.setId(bo.getId());
+		dto.setId(bo.getUserId());
 		dto.setParent(parentToDTO(bo.getParent()));
 		
 		dto.setGroups(getRelativeConverters().pullConverter(GroupViewConverter.class).toView(bo.getGroups()));
@@ -34,7 +34,7 @@ public class StudentViewConverter extends Converter<Student, StudentView> {
 	public Student toDomain(StudentView dto) {
 		Student bo = User.newStudent();
 		UserViewConvertor.toEntity(dto, bo.getAccountInfo());
-		bo.setId(dto.getId());
+		bo.setUserId(dto.getId());
 		bo.setParent(parentToDomain(dto.getParent()));
 		Set<Group>groups = new HashSet<Group>(getRelativeConverters().pullConverter(GroupViewConverter.class).toDomain(dto.getGroups()));
 		bo.setGroups(groups);

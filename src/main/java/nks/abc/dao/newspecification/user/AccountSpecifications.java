@@ -18,6 +18,7 @@ public class AccountSpecifications {
 	private static EqualSpecification EqualsSpecificationWithAlias() {
 		EqualSpecification specification = new EqualSpecification();
 		specification.setAlias(getAlias());
+		
 		return specification;
 	}
 	

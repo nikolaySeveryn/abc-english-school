@@ -24,7 +24,7 @@ public abstract class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_id_gen")
 	@SequenceGenerator(name="user_id_gen", allocationSize=1, sequenceName="user_id_seq")
-	private Long id;
+	private Long userId;
 	
 	
 	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
@@ -46,14 +46,14 @@ public abstract class User {
 	}
 	
 	public Boolean isNew() {
-		return id == null || id < 1;
+		return userId == null || userId < 1;
 	}
 	
-	public Long getId() {
-		return id;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long id) {
+		this.userId = id;
 	}
 	
 	public Account getAccountInfo() {
@@ -68,7 +68,7 @@ public abstract class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", accountInfo=" + accountInfo
+		return "User [id=" + userId + ", accountInfo=" + accountInfo
 				+ ", super =" + super.toString() + "]";
 	}
 	

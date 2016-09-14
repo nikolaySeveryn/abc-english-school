@@ -2,6 +2,7 @@ package nks.abc.dao.newspecification.base;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 
 
 public class EqualSpecification extends SimpleSpecification {
@@ -31,7 +32,8 @@ public class EqualSpecification extends SimpleSpecification {
 		else{
 			fieldName = this.fieldName; 
 		}
-		return Restrictions.eq(fieldName, value);
+		SimpleExpression crit = Restrictions.eq(fieldName, value);		
+		return crit;
 	}
 
 }
