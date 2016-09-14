@@ -15,8 +15,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import nks.abc.bl.service.message.Email;
-import nks.abc.bl.service.message.SpringMailer;
+import nks.abc.depricated.service.message.Email;
+import nks.abc.depricated.service.message.SpringMailer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:WEB-INF/testApplicationContext.xml" }) 

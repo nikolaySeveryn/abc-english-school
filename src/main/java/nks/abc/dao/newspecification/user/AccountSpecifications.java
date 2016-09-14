@@ -1,9 +1,9 @@
 package nks.abc.dao.newspecification.user;
 
-import nks.abc.bl.domain.user.Account;
 import nks.abc.dao.newspecification.base.EqualSpecification;
 import nks.abc.dao.newspecification.base.HibernateAlias;
 import nks.abc.dao.newspecification.base.HibernateSpecification;
+import nks.abc.domain.user.Account;
 
 public class AccountSpecifications {
 	

@@ -5,17 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Date;
 
-import nks.abc.bl.domain.user.Account;
-import nks.abc.bl.domain.user.Administrator;
-import nks.abc.bl.domain.user.PasswordEncryptor;
-import nks.abc.bl.domain.user.PasswordEncryptor;
-import nks.abc.bl.domain.user.Teacher;
-import nks.abc.bl.service.message.Email;
-import nks.abc.bl.service.message.MailFactory;
-import nks.abc.bl.service.message.MailService;
-import nks.abc.bl.service.user.StaffServiceImpl;
-import nks.abc.bl.view.converter.user.AccountViewConverter;
-import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.handler.ServiceErrorHandler;
 import nks.abc.core.exception.service.NoCurrentUserException;
@@ -29,6 +18,16 @@ import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
 import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
 import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
+import nks.abc.depricated.service.message.Email;
+import nks.abc.depricated.service.message.MailFactory;
+import nks.abc.depricated.service.message.MailService;
+import nks.abc.depricated.service.user.StaffServiceImpl;
+import nks.abc.depricated.view.converter.user.AccountViewConverter;
+import nks.abc.depricated.view.object.objects.user.StaffView;
+import nks.abc.domain.user.Account;
+import nks.abc.domain.user.Administrator;
+import nks.abc.domain.user.PasswordEncryptor;
+import nks.abc.domain.user.Teacher;
 
 import org.junit.Before;
 import org.junit.Test;

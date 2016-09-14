@@ -8,15 +8,15 @@ import java.util.Map;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
-import nks.abc.bl.domain.user.Level;
-import nks.abc.bl.service.user.GroupService;
-import nks.abc.bl.service.user.StaffService;
-import nks.abc.bl.service.user.StudentService;
-import nks.abc.bl.view.factory.UserViewFactory;
-import nks.abc.bl.view.object.objects.user.GroupView;
-import nks.abc.bl.view.object.objects.user.StaffView;
-import nks.abc.bl.view.object.objects.user.StudentView;
 import nks.abc.core.exception.handler.ErrorHandler;
+import nks.abc.depricated.service.user.GroupService;
+import nks.abc.depricated.service.user.StaffService;
+import nks.abc.depricated.service.user.StudentService;
+import nks.abc.depricated.view.factory.UserViewFactory;
+import nks.abc.depricated.view.object.objects.user.GroupView;
+import nks.abc.depricated.view.object.objects.user.StaffView;
+import nks.abc.depricated.view.object.objects.user.StudentView;
+import nks.abc.domain.user.Level;
 import nks.abc.web.common.enumeration.EditingMode;
 
 import org.apache.log4j.Logger;

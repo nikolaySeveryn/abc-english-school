@@ -2,8 +2,8 @@ package nks.abc.dao.specification.user.administrator;
 
 import org.springframework.stereotype.Component;
 
-import nks.abc.bl.domain.user.Account;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
+import nks.abc.domain.user.Account;
 
 @Component
 public class AdministratorSpecificationFactory {

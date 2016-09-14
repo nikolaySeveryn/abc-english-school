@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import nks.abc.bl.domain.user.Account;
+import nks.abc.domain.user.Account;
 
 public class UserTest {
 

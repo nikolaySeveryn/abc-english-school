@@ -10,12 +10,12 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
-import nks.abc.bl.service.user.StaffService;
-import nks.abc.bl.view.factory.UserViewFactory;
-import nks.abc.bl.view.object.objects.user.StaffView;
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
+import nks.abc.depricated.service.user.StaffService;
+import nks.abc.depricated.view.factory.UserViewFactory;
+import nks.abc.depricated.view.object.objects.user.StaffView;
 import nks.abc.web.common.enumeration.EditingMode;
 import nks.abc.web.common.message.MessageSeverity;
 import nks.abc.web.common.message.UIMessage;

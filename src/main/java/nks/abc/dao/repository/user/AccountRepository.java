@@ -4,9 +4,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import nks.abc.bl.domain.user.Account;
 import nks.abc.dao.base.BaseRepositoryImpl;
 import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
+import nks.abc.domain.user.Account;
 
 @Repository
 public class AccountRepository extends BaseRepositoryImpl<Account> {

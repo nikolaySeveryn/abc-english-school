@@ -8,8 +8,8 @@ import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import nks.abc.bl.service.user.StaffService;
-import nks.abc.bl.view.object.objects.user.StaffView;
+import nks.abc.depricated.service.user.StaffService;
+import nks.abc.depricated.view.object.objects.user.StaffView;
 
 import java.io.Serializable;
 

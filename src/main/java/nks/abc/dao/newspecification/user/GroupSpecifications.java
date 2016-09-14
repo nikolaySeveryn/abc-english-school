@@ -1,9 +1,9 @@
 package nks.abc.dao.newspecification.user;
 
-import nks.abc.bl.domain.user.Group;
 import nks.abc.dao.newspecification.base.EqualSpecification;
 import nks.abc.dao.newspecification.base.HibernateAlias;
 import nks.abc.dao.newspecification.base.HibernateSpecification;
+import nks.abc.domain.user.Group;
 
 public class GroupSpecifications {
 	private static final String ID_FIELD = "id";
