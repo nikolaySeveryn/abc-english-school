@@ -1,4 +1,4 @@
-package nks.abc.depricated.view.validation.constrataint;
+package nks.abc.domain.validation.constrataint;
 
 
 import javax.validation.ConstraintValidator;
@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import nks.abc.dao.base.interfaces.UniqueChecker;
-import nks.abc.depricated.view.validation.annotation.Unique;
+import nks.abc.domain.validation.annotation.Unique;
 
 @Component
 public class UniqueConstraintValidator implements ConstraintValidator<Unique,Object>{

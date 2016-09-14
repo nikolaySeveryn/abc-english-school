@@ -1,4 +1,4 @@
-package nks.abc.depricated.view.validation.annotation;
+package nks.abc.domain.validation.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -10,8 +10,8 @@ import javax.validation.Payload;
 
 import org.primefaces.validate.bean.ClientConstraint;
 
-import nks.abc.depricated.view.validation.client.UniqueClientValidator;
-import nks.abc.depricated.view.validation.constrataint.UniqueConstraintValidator;
+import nks.abc.domain.validation.client.UniqueClientValidator;
+import nks.abc.domain.validation.constrataint.UniqueConstraintValidator;
 
 
 @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})

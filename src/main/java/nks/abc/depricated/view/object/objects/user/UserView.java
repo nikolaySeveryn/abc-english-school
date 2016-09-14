@@ -6,9 +6,9 @@ import javax.annotation.ManagedBean;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
-import nks.abc.depricated.view.validation.annotation.Email;
-import nks.abc.depricated.view.validation.annotation.Unique;
 import nks.abc.domain.user.Account;
+import nks.abc.domain.validation.annotation.Email;
+import nks.abc.domain.validation.annotation.Unique;
 
 @ManagedBean
 public abstract class UserView {

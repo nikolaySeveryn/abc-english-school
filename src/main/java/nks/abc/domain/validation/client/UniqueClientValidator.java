@@ -1,4 +1,4 @@
-package nks.abc.depricated.view.validation.client;
+package nks.abc.domain.validation.client;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,14 +7,14 @@ import javax.validation.metadata.ConstraintDescriptor;
 
 import org.primefaces.validate.bean.ClientValidationConstraint;
 
-import nks.abc.depricated.view.validation.annotation.Email;
+import nks.abc.domain.validation.annotation.Unique;
 
-public class EmailClientValidator implements ClientValidationConstraint {
+public class UniqueClientValidator  implements ClientValidationConstraint{
 	
 	public static final String MESSAGE_METADATA = "data-p-email-msg";
 
 	@Override
-	public Map<String, Object> getMetadata(ConstraintDescriptor constraintDescriptor) {
+	public Map<String,Object> getMetadata(ConstraintDescriptor constraintDescriptor) {
 		Map<String,Object> metadata = new HashMap<String, Object>();
         Map<String,Object> attrs = constraintDescriptor.getAttributes();
         Object message = attrs.get("message");    
@@ -27,6 +27,7 @@ public class EmailClientValidator implements ClientValidationConstraint {
 
 	@Override
 	public String getValidatorId() {
-		return Email.class.getSimpleName();
+		return Unique.class.getSimpleName();
 	}
+
 }

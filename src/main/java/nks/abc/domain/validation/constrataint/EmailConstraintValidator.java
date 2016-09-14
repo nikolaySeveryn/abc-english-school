@@ -1,11 +1,11 @@
-package nks.abc.depricated.view.validation.constrataint;
+package nks.abc.domain.validation.constrataint;
 
 import java.util.regex.Pattern;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import nks.abc.depricated.view.validation.annotation.Email;
+import nks.abc.domain.validation.annotation.Email;
 
 public class EmailConstraintValidator implements ConstraintValidator<Email,String> {
 
