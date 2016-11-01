@@ -1,4 +1,4 @@
-package nks.abc.domain.user;
+package nks.abc.domain.user.impl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

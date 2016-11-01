@@ -6,15 +6,16 @@ import org.springframework.stereotype.Repository;
 import nks.abc.dao.base.BaseRepositoryImpl;
 import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
 import nks.abc.domain.user.Administrator;
+import nks.abc.domain.user.impl.AdministratorImpl;
 
 @Repository
-public class AdministratorRepository extends BaseRepositoryImpl<Administrator> {
+public class AdminRepository extends BaseRepositoryImpl<Administrator> {
 
 	@Autowired
 	private AdministratorSpecificationFactory specificationFactory;
 	
-	public AdministratorRepository() {
-		super(Administrator.class);
+	public AdminRepository() {
+		super(AdministratorImpl.class);
 	}
 
 	public AdministratorSpecificationFactory specifications(){

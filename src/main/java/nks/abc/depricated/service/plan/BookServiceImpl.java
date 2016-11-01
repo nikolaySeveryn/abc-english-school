@@ -72,7 +72,7 @@ public class BookServiceImpl implements BookService {
 	public List<BookView> getAll() {
 		List<Book> all = null;
 		try{
-			all = bookDAO.getAll();
+			all = bookDAO.retrieveAll();
 		}
 		catch (Exception e){
 			errorHandler.handle(e, "get all books");

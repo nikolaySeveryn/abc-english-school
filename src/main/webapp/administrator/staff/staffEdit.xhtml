@@ -10,37 +10,49 @@
 <h:body>
 	<ui:composition template="/include/layout.xhtml">
 		<ui:define name="content">
+			<h1>Редагування користувача</h1>
 			<h:form id="staffEditForm">
 				<p:messages />
 				<p:panelGrid columns="3">
 					<p:outputLabel value="Прізвище" for="sirname" />
-					<p:inputText id="sirname" value="#{staffBean.edited.sirName}" />
+					<p:inputText id="sirname" value="#{staffBean.edited.peronalInfo.sirName}" />
 					<p:message for="sirname" />
 					
 					<p:outputLabel value="Ім’я" for="fistname" />
 					<p:inputText id="fistname"
-						value="#{staffBean.edited.firstName}" />
+						value="#{staffBean.edited.peronalInfo.firstName}" />
 					<p:message for="fistname" />
 					
 					<p:outputLabel value="По батькові" for="patronomic" />
 					<p:inputText id="patronomic"
-						value="#{staffBean.edited.patronomic}" />
+						value="#{staffBean.edited.peronalInfo.patronomic}" />
 					<p:message for="patronomic" />
 					
 					<p:outputLabel value="Телефон" for="phone" />
-					<p:inputText id="phone" value="#{staffBean.edited.phoneNum}" />
+					<p:inputMask mask="+380(99)9999999" id="phone" value="#{staffBean.edited.peronalInfo.phoneNum}">
+						<f:validator validatorId="uniqueColumnValidator" />
+						<f:attribute name="entity" value="#{staffBean.edited.peronalInfo}" />
+						<f:attribute name="field" value="phoneNum" />
+						<f:attribute name="idField" value="id" />
+					</p:inputMask> 
 					<p:message for="phone" />
 					
 					
 					<c:if test="#{staffBean.isNew}">
 						<p:outputLabel value="Email" for="email" />
-						<p:inputText id="email" required="true" value="#{staffBean.edited.email}" />
+						<p:inputText id="email" required="true" value="#{staffBean.edited.email}">
+							<f:validator validatorId="uniqueColumnValidator" />
+							<f:attribute name="entity" value="#{staffBean.edited}" />
+							<f:attribute name="field" value="email" />
+						</p:inputText>
 						<p:message for="email" />
 					</c:if>
 					
 					<p:outputLabel for="birthday" value="День народження" />
-        			<p:calendar id="birthday" value="#{staffBean.edited.birthday}" pattern="dd-MM-yyyy" mask="true" navigator="true" yearRange="c-100:c" />
+        			<p:calendar id="birthday" value="#{staffBean.edited.peronalInfo.birthdayUtilDate}" 
+        				pattern="dd-MM-yyyy" mask="true" navigator="true" yearRange="c-100:c" />
 					<p:message for="birthday" />
+					
 					
 					<p:outputLabel for="isTeacher" value="Викладач" />
 					<p:selectBooleanCheckbox id="isTeacher" value="#{staffBean.edited.isTeacher}" />

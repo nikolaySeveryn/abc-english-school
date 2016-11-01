@@ -7,6 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.dao.base.interfaces.UniqueChecker;
 import nks.abc.domain.validation.annotation.Unique;
@@ -22,7 +23,7 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique,Obj
 	
 	@Autowired
 	public void setApplicationContext(ApplicationContext context){
-		this.context = context;
+		UniqueConstraintValidator.context = context;
 	}
 	
 	@Override
@@ -32,12 +33,13 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique,Obj
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		synchronized (this) {
 			if(value == null) {
 				return false;
 			}
-			return uniqueChecker.isUnique(constraintAnnotation.entity(), constraintAnnotation.field(), value);
+			return uniqueChecker.isUnique(constraintAnnotation.entity(), constraintAnnotation.field(), value, null, null);
 		}
 	}
 

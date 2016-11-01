@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import nks.abc.dao.base.BaseRepositoryImpl;
 import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
 import nks.abc.domain.user.Account;
+import nks.abc.domain.user.impl.AccountImpl;
 
 @Repository
 public class AccountRepository extends BaseRepositoryImpl<Account> {
@@ -17,7 +18,7 @@ public class AccountRepository extends BaseRepositoryImpl<Account> {
 	private AccountSpecificationFactory specificationFactory;
 
 	public AccountRepository() {
-		super(Account.class);
+		super(AccountImpl.class);
 	}
 
 	public AccountSpecificationFactory specifications(){

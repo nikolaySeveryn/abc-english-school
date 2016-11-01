@@ -28,12 +28,14 @@ public class UserBean implements Serializable {
 	}
 
 	public StaffView getCurrentUser() {
-		return userService.getStaffByEmail(getCurrentUserName());
-//		StaffView staff = new StaffView();
-//		staff.setEmail("root");
-//		staff.setIsAdministrator(true);
-//		staff.setIsTeacher(true);
-//		return staff;
+//		return userService.getStaffByEmail(getCurrentUserName());
+		StaffView staff = new StaffView();
+		staff.setEmail("nkstestemail1@gmail.com");
+		staff.setFirstName("Test");
+		staff.setSirName("User");
+		staff.setIsAdministrator(true);
+		staff.setIsTeacher(true);
+		return staff;
 	}
 
 	private ExternalContext getExternalContext() {
@@ -41,8 +43,8 @@ public class UserBean implements Serializable {
 	}
 	
 	public String getCurrentUserName() {
-		return getExternalContext().getUserPrincipal().getName();
-//		return "root";
+//		return getExternalContext().getUserPrincipal().getName();
+		return "nkstestemail1@gmail.com";
 	}
 
 }

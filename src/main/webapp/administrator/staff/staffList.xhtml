@@ -14,50 +14,62 @@
 
 			<p:growl id="growl" life="4000" />
 			<h:form>
-				<p:toolbar>
-					<f:facet name="left">
-						<p:commandButton action="#{staffBean.add()}"
-							icon="ui-icon-plusthick" />
 
-						<p:commandButton actionListener="#{staffBean.disable()}"
-							update=":growl staff_dt" icon="ui-icon-locked">
-							<p:confirm header="Confirmation"
-								message="Ви дійсно бажаєете заблокувати користувача? Заблокований користувач не зможе користуватися додатком, але дані про нього залишаться в базі даних."
-								icon="ui-icon-alert" severity="info" closeOnEscape="true" />
-						</p:commandButton>
+				<p:dataTable id="staff_dt" var="employee"
+					value="#{staffBean.accountsList}" emptyMessage="Пусто"
+					styleClass="data-table" resizableColumns="true">
 
-						<p:commandButton actionListener="#{staffBean.enable()}"
-							update=":growl staff_dt" icon="ui-icon-unlocked">
-							<p:confirm header="Confirmation"
-								message="Активувати користувача?" icon="ui-icon-alert"
-								severity="info" closeOnEscape="true" />
-						</p:commandButton>
+					<f:facet name="header">
+						<p:toolbar>
+							<f:facet name="right">
+								<p:commandButton action="#{staffBean.add()}"
+									icon="ui-icon-plusthick" />
 
-						<p:commandButton actionListener="#{staffBean.delete()}"
-							update=":growl staff_dt" icon="ui-icon-trash">
-							<p:confirm header="Confirmation" severity="alert"
-								message="Ви дійсно бажаєте видалити користувача? Після видалення користувача будуть пошкодженні дані повязані з корисувачем!!! Видаляйте користувача тільки якщо немає даних пов’язаних з ним"
-								icon="ui-icon-alert" closeOnEscape="true" />
-						</p:commandButton>
+								<p:commandButton actionListener="#{staffBean.disable()}"
+									update=":growl staff_dt" icon="ui-icon-locked">
+									<p:confirm header="Confirmation"
+										message="Ви дійсно бажаєете заблокувати користувача? Заблокований користувач не зможе користуватися додатком, але дані про нього залишаться в базі даних."
+										icon="ui-icon-alert" severity="info" closeOnEscape="true" />
+								</p:commandButton>
 
+								<p:commandButton actionListener="#{staffBean.enable()}"
+									update=":growl staff_dt" icon="ui-icon-unlocked">
+									<p:confirm header="Confirmation"
+										message="Активувати користувача?" icon="ui-icon-alert"
+										severity="info" closeOnEscape="true" />
+								</p:commandButton>
+
+								<p:commandButton actionListener="#{staffBean.delete()}"
+									update=":growl staff_dt" icon="ui-icon-trash">
+									<p:confirm header="Confirmation" severity="alert"
+										message="Ви дійсно бажаєте видалити користувача? Після видалення користувача будуть пошкодженні дані повязані з корисувачем!!! Видаляйте користувача тільки якщо немає даних пов’язаних з ним"
+										icon="ui-icon-alert" closeOnEscape="true" />
+								</p:commandButton>
+
+							</f:facet>
+						</p:toolbar>
 					</f:facet>
-				</p:toolbar>
-				<p:dataTable id="staff_dt" var="employee" value="#{staffBean.list}"
-					emptyMessage="Пусто" styleClass="data-table"
-					resizableColumns="true">
+
+
 					<p:column width="20">
 						<p:selectBooleanCheckbox
 							value="#{staffBean.checked[employee.accountId]}" />
 					</p:column>
 					<p:column headerText="Cпівробітник">
-						<h:outputText style="#{employee.isDisabled ? 'color: #c4c4c4; text-decoration:line-through;' : ''}" 
-						value="#{employee.sirName} #{employee.firstName} #{employee.patronomic}" />
+						<h:outputText
+							value="#{employee.peronalInfo.sirName} #{employee.peronalInfo.firstName} #{employee.peronalInfo.patronomic}" />
 					</p:column>
 					<p:column headerText="Email">
 						<h:outputText value="#{employee.email}" />
 					</p:column>
+					<p:column headerText="Телефон">
+						<h:outputText value="#{employee.peronalInfo.phoneNum}" />
+					</p:column>
+					<p:column headerText="Активний" width="30">
+						<p:selectBooleanCheckbox disabled="true" value="#{employee.isActive}" />
+					</p:column>
 					<p:column width="40">
-						<p:commandButton action="#{staffBean.edit(employee)}"
+						<p:commandButton action="#{staffBean.edit(employee.accountId)}"
 							icon="ui-icon-pencil" />
 					</p:column>
 				</p:dataTable>

@@ -1,4 +1,4 @@
-package nks.abc.domain.user;
+package nks.abc.domain.user.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,8 +18,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.OrderBy;
+
+import nks.abc.domain.user.Level;
+import nks.abc.domain.user.Teacher;
 
 @Entity
 public class Group {
@@ -31,13 +36,17 @@ public class Group {
 	@SequenceGenerator(name="group_id_gen", allocationSize=1, sequenceName="group_id_seq")
 	private Long id;
 	@Column(nullable=false)
+	@NotNull
+	@Size(min=1)
 	private String name;
 	@Column(nullable=false)
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private Level level;
 	@Column(nullable=false)
+	@NotNull
 	private Integer tarif;
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, targetEntity=TeacherImpl.class)
 	@JoinColumn(name="teacher")
 	private Teacher teacher;
 	@ManyToMany(fetch=FetchType.LAZY, mappedBy="groups")

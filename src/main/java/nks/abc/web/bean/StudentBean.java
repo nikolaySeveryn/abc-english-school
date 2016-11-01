@@ -17,6 +17,7 @@ import nks.abc.depricated.view.object.objects.user.GroupView;
 import nks.abc.depricated.view.object.objects.user.StaffView;
 import nks.abc.depricated.view.object.objects.user.StudentView;
 import nks.abc.domain.user.Level;
+import nks.abc.domain.user.impl.Group;
 import nks.abc.web.common.enumeration.EditingMode;
 
 import org.apache.log4j.Logger;
@@ -47,8 +48,8 @@ public class StudentBean implements Serializable {
 
 	private Map<Long,Boolean> checkedGroups = new HashMap<Long,Boolean>();
 	private Map<Long,Boolean> checkedStudents = new HashMap<Long,Boolean>();
-	private GroupView editedGroup;
-	private GroupView viewedGroup;
+	private Group editedGroup;
+	private Group viewedGroup;
 	private StudentView editedStudent;
 	private EditingMode groupMode = EditingMode.NONE;
 	private EditingMode studentMode = EditingMode.NONE;
@@ -60,18 +61,18 @@ public class StudentBean implements Serializable {
 		this.errorHandler.loggerFor(this.getClass());
 	}
 
-	public List<GroupView> getGroupList() {
+	public List<Group> getGroupList() {
 		try {
 			return groupService.getGroups();
 		}
 		catch (Exception e) {
 			errorHandler.handle(e);
-			return new ArrayList<GroupView>();
+			return new ArrayList<Group>();
 		}
 	}
 
 	public String addGroup() {
-		editedGroup = new GroupView();
+		editedGroup = new Group();
 		groupMode = EditingMode.ADD;
 		return GROUP_EDIT_PAGE;
 	}
@@ -79,20 +80,20 @@ public class StudentBean implements Serializable {
 	public String addStudent() {
 		editedStudent = UserViewFactory.newStudent();
 		if (viewedGroup != null) {
-			List<GroupView> groups = editedStudent.getGroups();
-			groups.add(viewedGroup);
-			editedStudent.setGroups(groups);
+//			List<Group> groups = editedStudent.getGroups();
+//			groups.add(viewedGroup);
+//			editedStudent.setGroups(groups);
 		}
 		studentMode = EditingMode.ADD;
 		return STUDENT_EDIT_PAGE;
 	}
 
-	public void viewGroup(GroupView group) {
+	public void viewGroup(Group group) {
 		this.viewedGroup = group;
 		checkedStudents.clear();
 	}
 
-	public String editGroup(GroupView group) {
+	public String editGroup(Group group) {
 		System.out.println("edit group");
 		editedGroup = group;
 		groupMode = EditingMode.EDIT;
@@ -177,23 +178,23 @@ public class StudentBean implements Serializable {
 	public List<StaffView> complateTeacher(String query) {
 		query = query.trim();
 		List<StaffView> complate = new ArrayList<StaffView>();
-		for (StaffView teacher : staffService.getAllTeachers()) {
-			String name = teacher.getFirstName() + " " + teacher.getSirName() + " " + teacher.getPatronomic();
-			if (name.contains(query)) {
-				complate.add(teacher);
-			}
-		}
+//		for (StaffView teacher : staffService.getAllTeachers()) {
+//			String name = teacher.getFirstName() + " " + teacher.getSirName() + " " + teacher.getPatronomic();
+//			if (name.contains(query)) {
+//				complate.add(teacher);
+//			}
+//		}
 		return complate;
 	}
 
 	public List<GroupView> complateGroup(String query) {
 		query = query.trim();
 		List<GroupView> complate = new ArrayList<GroupView>();
-		for (GroupView group : groupService.getGroups()) {
-			if (group.getName().contains(query)) {
-				complate.add(group);
-			}
-		}
+//		for (GroupView group : groupService.getGroups()) {
+//			if (group.getName().contains(query)) {
+//				complate.add(group);
+//			}
+//		}
 		return complate;
 	}
 
@@ -209,13 +210,13 @@ public class StudentBean implements Serializable {
 	public void setCheckedStudents(Map<Long,Boolean> checkedStudents) {
 		this.checkedStudents = checkedStudents;
 	}
-	public GroupView getEditedGroup() {
+	public Group getEditedGroup() {
 		return editedGroup;
 	}
-	public void setEditedGroup(GroupView edited) {
+	public void setEditedGroup(Group edited) {
 		this.editedGroup = edited;
 	}
-	public GroupView getViewed() {
+	public Group getViewed() {
 		return viewedGroup;
 	}
 	public StudentView getEditedStudent() {

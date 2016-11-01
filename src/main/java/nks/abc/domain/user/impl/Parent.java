@@ -1,4 +1,4 @@
-package nks.abc.domain.user;
+package nks.abc.domain.user.impl;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,6 +12,8 @@ import javax.persistence.SequenceGenerator;
 
 import org.hibernate.validator.constraints.Email;
 
+import nks.abc.domain.user.PersonalInfo;
+
 
 @Entity
 public class Parent {
@@ -21,7 +23,7 @@ public class Parent {
 	@SequenceGenerator(name="parrent_id_gen", allocationSize=1, sequenceName="parrent_id_seq")
 	private Long id;
 	//TODO: check all cascade type
-	@OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, targetEntity=PersonalInfoImpl.class)
 	@JoinColumn(name="personal_info")
 	private PersonalInfo personalInfo;
 	@Email
@@ -29,7 +31,7 @@ public class Parent {
 	
 	public static Parent newParent() {
 		Parent instance = new Parent();
-		instance.setPersonalInfo(new PersonalInfo());
+		instance.setPersonalInfo(new PersonalInfoImpl());
 		return instance;
 	}
 	

@@ -31,10 +31,10 @@
 		<property name="hibernateProperties">
 			<ref bean="hibernateProperties" />
 		</property>
-		<property name="packagesToScan" value="nks.abc.bl.domain" />
+		<property name="packagesToScan" value="nks.abc.domain" />
 	</bean>
 		
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	<tx:annotation-driven transaction-manager="transactionManager" mode="aspectj" />
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />

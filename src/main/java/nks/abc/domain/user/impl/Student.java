@@ -1,4 +1,4 @@
-package nks.abc.domain.user;
+package nks.abc.domain.user.impl;
 
 import java.util.Set;
 
@@ -19,7 +19,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @PrimaryKeyJoinColumn(name="id")
 @OnDelete(action=OnDeleteAction.CASCADE)
-public class Student extends User {
+public class Student extends UserImpl {
 	
 	
 	@OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)

@@ -18,7 +18,7 @@ import nks.abc.depricated.view.converter.user.GroupViewConverter;
 import nks.abc.depricated.view.converter.user.StudentViewConverter;
 import nks.abc.depricated.view.object.objects.user.StudentView;
 import nks.abc.domain.user.Account;
-import nks.abc.domain.user.Student;
+import nks.abc.domain.user.impl.Student;
 
 @Service
 @Transactional(readOnly=true)

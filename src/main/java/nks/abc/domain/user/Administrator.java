@@ -1,13 +1,5 @@
 package nks.abc.domain.user;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+public interface Administrator extends Staff{
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-@Entity
-@PrimaryKeyJoinColumn(name="id")
-@OnDelete(action=OnDeleteAction.CASCADE)
-public class Administrator extends User{
 }

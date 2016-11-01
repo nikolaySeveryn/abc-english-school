@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import nks.abc.domain.user.Group;
+import nks.abc.domain.user.impl.Group;
 
 public class GroupTest {
 	

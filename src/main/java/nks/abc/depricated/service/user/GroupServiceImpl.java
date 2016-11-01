@@ -1,5 +1,6 @@
 package nks.abc.depricated.service.user;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,11 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.dao.newspecification.user.GroupSpecifications;
 import nks.abc.dao.repository.user.GroupRepository;
-import nks.abc.depricated.view.converter.Converter;
-import nks.abc.depricated.view.converter.user.AccountViewConverter;
-import nks.abc.depricated.view.converter.user.StudentViewConverter;
-import nks.abc.depricated.view.object.objects.user.GroupView;
-import nks.abc.domain.user.Group;
+import nks.abc.domain.user.impl.Group;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,9 +24,6 @@ public class GroupServiceImpl implements GroupService {
 	@Autowired
 	private GroupRepository groupDAO;
 
-	@Autowired
-	private Converter<Group,GroupView> converter;
-	
 	private ErrorHandler errorHandler;
 	
 	@Autowired
@@ -40,24 +34,20 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public List<GroupView> getGroups() {
-		List<GroupView> groupsDto = null;
+	public List<Group> getGroups() {
+		List<Group> groups = new ArrayList<Group>();
 		try {
-			List<Group> groups = groupDAO.getAll();
-			converter.setRelativeConvertersPattern(new StudentViewConverter(), new AccountViewConverter());
-			groupsDto = converter.toView(groups);
+			 groups = groupDAO.retrieveAll();
 		}
 		catch (Exception e) {
 			errorHandler.handle(e, "get all groups");
 		}
-		return groupsDto;
+		return groups;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void saveGroup(GroupView dto) {
-		converter.setRelativeConvertersPattern(new AccountViewConverter());
-		Group group = converter.toDomain(dto);
+	public void saveGroup(Group group) {
 		try {
 			if (group.getId() != null && group.getId() > 0L) {
 				log.info("updating group: " + group);
@@ -69,15 +59,15 @@ public class GroupServiceImpl implements GroupService {
 			}
 		}
 		catch (Exception e) {
-			errorHandler.handle(e, "save group: " + dto);
+			errorHandler.handle(e, "save group: " + group);
 		}
 	}
 
 	@Override
-	public GroupView getById(Long id) {
+	public Group getById(Long id) {
 		try {
-			Group bo = getDomainGroupById(id);
-			return converter.toView(bo);
+			Group group = groupDAO.uniqueQuery(GroupSpecifications.byId(id));
+			return group;
 		}
 		catch (Exception e) {
 			errorHandler.handle(e, "get group by id = " + id);
@@ -85,16 +75,12 @@ public class GroupServiceImpl implements GroupService {
 		}
 	}
 
-	private Group getDomainGroupById(Long id) {
-		return groupDAO.uniqueQuery(GroupSpecifications.byId(id));
-	}
-
 	@Override
 	@Transactional(readOnly = false)
 	public void deleteGroups(Long... ids) {
 		try {
 			for (Long id : ids) {
-				groupDAO.delete(getDomainGroupById(id));
+				groupDAO.delete(getById(id));
 			}
 		}
 		catch (Exception e) {

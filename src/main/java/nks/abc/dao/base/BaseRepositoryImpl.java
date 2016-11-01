@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.dao.base.interfaces.BaseHibernateRepository;
@@ -17,9 +16,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.dialect.function.TrimFunctionTemplate.Specification;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Scope("prototype")
@@ -28,7 +27,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 	private static final int MAX_RESULT_OF_UNIQUE_QUERY = 1;
 	private static final Logger log = Logger.getLogger(BaseRepositoryImpl.class);
 	
-	public BaseRepositoryImpl(Class<T> domainClass) {
+	public BaseRepositoryImpl(Class<? extends T> domainClass) {
 		super(domainClass);
 	}
 	
@@ -146,7 +145,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 	
 
 	@Override
-	public List<T> getAll() {
+	public List<T> retrieveAll() {
 		return getCriteria().list();
 	}
 

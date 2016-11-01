@@ -29,17 +29,20 @@ public class UniqueCheckerImpl implements UniqueChecker{
 	}
 
 	@Override
-	public boolean isUnique(Class<?> entity, String field, Object value) {
+	public boolean isUnique(Class<?> entity, String field, Object value, String idField, Object verifiableEntiryId) {
 		if(entity == null || field == null || value == null){
-			throw new NullPointerException("One of parameters is null");
+			throw new IllegalArgumentException("Checking of uniqueness is failed. Entity tyme, field name or value is null");
 		}
 		field = field.trim();
 		if(field.length() < 1){
-			throw new IllegalArgumentException("Field name is empty");
+			throw new IllegalArgumentException("Checking of uniqueness is failed. Field name is empty");
 		}
 		try{
 			Criteria criteria = getSession().createCriteria(entity);
 			criteria.add(Restrictions.eq(field, value));
+			if(idField != null && verifiableEntiryId != null){
+				criteria.add(Restrictions.ne(idField, verifiableEntiryId));
+			}
 			criteria.setMaxResults(1);
 			if(criteria.uniqueResult() == null){
 				return true;

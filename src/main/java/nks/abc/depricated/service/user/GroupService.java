@@ -2,12 +2,11 @@ package nks.abc.depricated.service.user;
 
 import java.util.List;
 
-import nks.abc.depricated.view.object.objects.user.GroupView;
-import nks.abc.domain.user.Group;
+import nks.abc.domain.user.impl.Group;
 
 public interface GroupService {
-	List<GroupView> getGroups();
-	void saveGroup(GroupView group);
-	GroupView getById(Long id);
+	List<Group> getGroups();
+	void saveGroup(Group group);
+	Group getById(Long id);
 	void deleteGroups(Long... ids);
 }

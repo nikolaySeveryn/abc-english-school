@@ -5,18 +5,18 @@ import org.hibernate.criterion.Restrictions;
 
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 
-class IsDisableSpecification implements CriterionSpecification {
+class IsActiveSpecification implements CriterionSpecification {
 
-	private Boolean isDisable;
+	private Boolean isActive;
 	
-	IsDisableSpecification(Boolean isDelete) {
-		this.isDisable = isDelete;
+	IsActiveSpecification(Boolean isActive) {
+		this.isActive = isActive;
 	}
 	
 
 	@Override
 	public Criterion toCriteria() {
-		return Restrictions.eqOrIsNull("isDisable", isDisable);
+		return Restrictions.eqOrIsNull("active", isActive);
 	}
 
 
@@ -25,7 +25,7 @@ class IsDisableSpecification implements CriterionSpecification {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((isDisable == null) ? 0 : isDisable.hashCode());
+				+ ((isActive == null) ? 0 : isActive.hashCode());
 		return result;
 	}
 
@@ -37,11 +37,11 @@ class IsDisableSpecification implements CriterionSpecification {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		IsDisableSpecification other = (IsDisableSpecification) obj;
-		if (isDisable == null) {
-			if (other.isDisable != null)
+		IsActiveSpecification other = (IsActiveSpecification) obj;
+		if (isActive == null) {
+			if (other.isActive != null)
 				return false;
-		} else if (!isDisable.equals(other.isDisable))
+		} else if (!isActive.equals(other.isActive))
 			return false;
 		return true;
 	}

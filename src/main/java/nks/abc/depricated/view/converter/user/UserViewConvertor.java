@@ -2,7 +2,7 @@ package nks.abc.depricated.view.converter.user;
 
 import nks.abc.depricated.view.object.objects.user.UserView;
 import nks.abc.domain.user.Account;
-import nks.abc.domain.user.PersonalInfo;
+import nks.abc.domain.user.impl.PersonalInfoImpl;
 
 public class UserViewConvertor {
 	
@@ -16,7 +16,7 @@ public class UserViewConvertor {
 		dto.setSirName(entity.getPeronalInfo().getSirName());
 		dto.setPatronomic(entity.getPeronalInfo().getPatronomic());
 		dto.setPasswordHash(entity.getPasswordHash());
-		dto.setIsDisabled(entity.getIsDisable());
+//		dto.setIsDisabled(entity.getIsFire());
 	}
 	
 	public static void toEntity(UserView dto, Account entity) {
@@ -26,7 +26,7 @@ public class UserViewConvertor {
 		if(dto.getBirthday() != null){
 			sqlDate = new java.sql.Date(dto.getBirthday().getTime());
 		}
-		entity.setPeronalInfo(PersonalInfo.getNew());
+		entity.setPeronalInfo(PersonalInfoImpl.getNew());
 		entity.getPeronalInfo().setBirthday(sqlDate);
 		entity.getPeronalInfo().setFirstName(dto.getFirstName());
 		entity.setAccountId(dto.getAccountId());
@@ -35,6 +35,6 @@ public class UserViewConvertor {
 		entity.getPeronalInfo().setSirName(dto.getSirName());
 		entity.getPeronalInfo().setPatronomic(dto.getPatronomic());
 		entity.setPasswordHash(dto.getPasswordHash());
-		entity.setIsDisable(dto.getIsDisabled());
+		entity.setIsActive(dto.getIsDisabled());
 	}
 }

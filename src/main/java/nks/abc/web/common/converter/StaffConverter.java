@@ -32,7 +32,7 @@ public class StaffConverter implements Converter {
 			return null;
 		}
 		try{
-			return staffService.getById(Long.parseLong(value));
+			return staffService.getAccountById(Long.parseLong(value));
 		}
 		catch(ServiceException e){
 			log.warn("Staff dto conversion error", e);

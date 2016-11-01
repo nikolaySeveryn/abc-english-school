@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import nks.abc.dao.base.BaseRepositoryImpl;
 import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
 import nks.abc.domain.user.Teacher;
+import nks.abc.domain.user.impl.TeacherImpl;
 
 @Repository
 public class TeacherRepository extends BaseRepositoryImpl<Teacher>{
@@ -14,7 +15,7 @@ public class TeacherRepository extends BaseRepositoryImpl<Teacher>{
 	private TeacherSpecificationFactory specificationFactory;
 	
 	public TeacherRepository() {
-		super(Teacher.class);
+		super(TeacherImpl.class);
 	}
 	
 	public TeacherSpecificationFactory specifications(){

@@ -2,20 +2,22 @@ package nks.abc.web.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.service.ServiceDisplayedErorr;
-import nks.abc.core.exception.service.ServiceException;
 import nks.abc.depricated.service.user.StaffService;
-import nks.abc.depricated.view.factory.UserViewFactory;
-import nks.abc.depricated.view.object.objects.user.StaffView;
+import nks.abc.domain.user.Account;
+import nks.abc.domain.user.Administrator;
+import nks.abc.domain.user.Teacher;
+import nks.abc.domain.user.factory.AccountFactory;
+import nks.abc.domain.user.factory.UserFactory;
 import nks.abc.web.common.enumeration.EditingMode;
 import nks.abc.web.common.message.MessageSeverity;
 import nks.abc.web.common.message.UIMessage;
@@ -31,6 +33,8 @@ import org.springframework.stereotype.Component;
 @SessionScoped
 public class StaffBean implements Serializable {
 	
+	private static final String LIST_PAGE = "staffList.xhtml";
+	private static final String EDIT_PAGE = "staffEdit.xhtml";
 	private static final long serialVersionUID = -5855175113160274311L;
 	private static final Logger log = Logger.getLogger(StaffBean.class);
 	private ErrorHandler errorHandler;
@@ -45,8 +49,12 @@ public class StaffBean implements Serializable {
 	private UIMessage message;
 	
 	private Map<Long,Boolean> checked = new HashMap<Long, Boolean>();
-	private StaffView edited = null;
+	
+	private Account editedAccount = null;
+	private Administrator editedAdmin = null;
+	private Teacher editedTeacher = null;
 	private EditingMode editMode = EditingMode.NONE;
+
 	
 	@Autowired
 	@Qualifier("webErrorHandler")
@@ -55,12 +63,25 @@ public class StaffBean implements Serializable {
 		this.errorHandler.loggerFor(this.getClass());
 	}
 	
-	public List<StaffView> getList() {
+	public List<Account> getAccountsList() {
 		try {
-			return staffService.getAllStaff();
+			List<Account> result = staffService.getAllStaffAccounts();
+			Collections.sort(result, new Comparator<Account>() {
+				@Override
+				public int compare(Account left, Account right) {
+					if(left.getAccountId() > right.getAccountId()){
+						return -1;
+					}
+					if(left.getAccountId() < right.getAccountId()){
+						return 1;
+					}
+					return 0;
+				}
+			});
+			return result;
 		} catch (Exception e) {
 			errorHandler.handle(e, "getting all staff");
-			return new ArrayList<StaffView>();
+			return new ArrayList<Account>();
 		}
 	}
 
@@ -82,13 +103,13 @@ public class StaffBean implements Serializable {
 		try {
 			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
 				if(en.getValue()){
-					staffService.disable(en.getKey(), userBean.getCurrentUserName());
+					staffService.fire(en.getKey(), userBean.getCurrentUserName());
 				}
 			}
 			checked.clear();
 			message.send(MessageSeverity.INFO, "Disabled");
 		} catch (Exception e) {
-			errorHandler.handle(e, "disable users");
+			errorHandler.handle(e, "Fired staff");
 		}
 	}
 	
@@ -96,46 +117,51 @@ public class StaffBean implements Serializable {
 		try {
 			for(Map.Entry<Long, Boolean> en : checked.entrySet()) {
 				if(en.getValue()){
-					staffService.enable(en.getKey());
+					staffService.rehire(en.getKey());
 				}
 			}
 			checked.clear();
 			message.send(MessageSeverity.INFO, "Activated");
 		} catch (Exception e) {
-			errorHandler.handle(e, "enable users");
+			errorHandler.handle(e, "Re hired staff");
 		}
 	}
 
 	public String add() {
 		try {
 			editMode = EditingMode.ADD;
-			edited = UserViewFactory.newStaff();
+			editedAccount = AccountFactory.createAccount();
+			editedTeacher = UserFactory.createTeacher();
+			editedAdmin = UserFactory.createAdministrator();
 		} catch (Exception e) {
 			errorHandler.handle(e, "start adding user");
 			return null;
 		}
-		return "staffEdit.xhtml";
+		return EDIT_PAGE;
 	}
 	
-	public String edit(StaffView edited) {
+	public String edit(Long accountId) {
 		try {
 			editMode = EditingMode.EDIT;
-			this.edited = edited;
+			this.editedAccount =  staffService.getAccountById(accountId);
+			this.editedTeacher = this.editedAccount.getTeacherData();
+			this.editedAdmin = this.editedAccount.getAdministratorData();
+			
 		} catch (Exception e) {
 			errorHandler.handle(e, "start editing user");
 			return null;
 		}
-		return "staffEdit.xhtml";
+		return EDIT_PAGE;
 	}
 	
 	public String save() {
 		String msg = new String();
 		try {
 			if (editMode.equals(EditingMode.EDIT)) {
-				staffService.update(edited, userBean.getCurrentUserName());
+				staffService.update(editedAccount, editedTeacher, editedAdmin, userBean.getCurrentUserName());
 				msg = "Updated";
 			} else if (editMode.equals(EditingMode.ADD)) {
-				staffService.add(edited);
+				staffService.add(editedAccount, editedTeacher, editedAdmin);
 				msg = "Added";
 			} else {
 				message.send(MessageSeverity.ERROR, "Error");
@@ -147,7 +173,7 @@ public class StaffBean implements Serializable {
 		}
 		
 		message.send(MessageSeverity.INFO, msg);
-		return "staffList.xhtml";
+		return LIST_PAGE;
 	}
 	
 	
@@ -163,12 +189,12 @@ public class StaffBean implements Serializable {
 		this.checked = checked;
 	}
 
-	public StaffView getEdited() {
-		return edited;
+	public Account getEdited() {
+		return editedAccount;
 	}
 
-	public void setEdited(StaffView edited) {
-		this.edited = edited;
+	public void setEdited(Account edited) {
+		this.editedAccount = edited;
 	}
 
 	public EditingMode getEditMode() {

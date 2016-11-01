@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<h:outputStylesheet library="default" name="css/main.css" />
+</h:head>
+<h:body>
+	<ui:composition>
+		<div class="sidebar">
+			<h:graphicImage value="/images/abc-logo-white.png" styleClass="logo" />
+			<h:form>
+				<p:menu>
+					<c:if test="#{userBean.currentUser.isTeacher}">
+						<p:menuitem value="Підручники"
+							styleClass="#{view.viewId eq '/teacher/book/booksList.xhtml' ? 'state-active' : ''}"
+							action="/teacher/book/booksList.xhtml?faces-redirect=true" />
+					</c:if>
+					<c:if test="#{userBean.currentUser.isAdministrator}">
+						<p:menuitem value="Групи"
+							styleClass="#{view.viewId eq '/administrator/group/main.xhtml' ? 'state-active' : ''}"
+							action="/administrator/group/main.xhtml?faces-redirect=true" />
+						<p:menuitem value="Персонал"
+							styleClass="#{view.viewId eq '/administrator/staff/staffList.xhtml' ? 'state-active' : ''}"
+							action="/administrator/staff/staffList.xhtml?faces-redirect=true" />
+					</c:if>
+				</p:menu>
+
+				<p:accordionPanel styleClass="userinfo"  widgetVar="userAccordion">
+					<p:tab title="#{userBean.currentUser.firstName} #{userBean.currentUser.sirName}" >
+						<p:menu>
+							<p:menuitem value="Вийти" actionListener="#{userBean.logout()}" oncomplete="window.location.reload()" />
+						</p:menu>
+					</p:tab>
+				</p:accordionPanel>
+			</h:form>
+		</div>
+	</ui:composition>
+</h:body>
+</html>

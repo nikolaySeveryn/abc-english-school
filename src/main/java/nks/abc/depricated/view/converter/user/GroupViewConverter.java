@@ -12,9 +12,9 @@ import nks.abc.depricated.view.converter.ConvertersHolder;
 import nks.abc.depricated.view.object.objects.user.GroupView;
 import nks.abc.depricated.view.object.objects.user.StaffView;
 import nks.abc.domain.user.Account;
-import nks.abc.domain.user.Group;
-import nks.abc.domain.user.Student;
-import nks.abc.domain.user.Teacher;
+import nks.abc.domain.user.impl.Group;
+import nks.abc.domain.user.impl.Student;
+import nks.abc.domain.user.impl.TeacherImpl;
 
 @Component
 public class GroupViewConverter extends Converter<Group,GroupView> {
@@ -25,35 +25,35 @@ public class GroupViewConverter extends Converter<Group,GroupView> {
 	@Override
 	public GroupView toView(Group bo) {
 		GroupView dto = new GroupView();
-		dto.setId(bo.getId());
-		dto.setLevel(bo.getLevel());
-		dto.setName(bo.getName());
-		dto.setTarif(bo.getFloatTarif());
-
-		ConvertersHolder relativeConverters = getRelativeConverters();
-		dto.setTeacher((StaffView) relativeConverters.pullConverter(AccountViewConverter.class).toView(bo.getTeacher().getAccountInfo()));
-		dto.setStudents(relativeConverters.pullConverter(StudentViewConverter.class).toView(bo.getStudents()));
+//		dto.setId(bo.getId());
+//		dto.setLevel(bo.getLevel());
+//		dto.setName(bo.getName());
+//		dto.setTarif(bo.getFloatTarif());
+//
+//		ConvertersHolder relativeConverters = getRelativeConverters();
+//		dto.setTeacher((StaffView) relativeConverters.pullConverter(AccountViewConverter.class).toView(bo.getTeacher().getAccountInfo()));
+//		dto.setStudents(relativeConverters.pullConverter(StudentViewConverter.class).toView(bo.getStudents()));
 		return dto;
 	}
 
 	@Override
 	public Group toDomain(GroupView dto) {
 		Group bo = new Group();
-		bo.setId(dto.getId());
-		bo.setLevel(dto.getLevel());
-		bo.setName(dto.getName());
-		bo.setFloatTarif(dto.getTarif());
-
-		ConvertersHolder relativeConverters = getRelativeConverters();
-		Account account = (Account) relativeConverters.pullConverter(AccountViewConverter.class).toDomain(dto.getTeacher());
-		if(account != null){
-			Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(account));
-			bo.setTeacher(teacher);
-		}
-		//TODO: why we need convert student?
-		List<Student> students = relativeConverters.pullConverter(StudentViewConverter.class).toDomain(dto.getStudents());
-		bo.setStudents(new HashSet<Student>(students));
-//		bo.setStudents(new HashSet<Student>((Collection<Student>) studentConverter.toDomain(dto.getStudents())));
+//		bo.setId(dto.getId());
+//		bo.setLevel(dto.getLevel());
+//		bo.setName(dto.getName());
+//		bo.setFloatTarif(dto.getTarif());
+//
+//		ConvertersHolder relativeConverters = getRelativeConverters();
+//		IAccount account = (IAccount) relativeConverters.pullConverter(AccountViewConverter.class).toDomain(dto.getTeacher());
+//		if(account != null){
+//			Teacher teacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(account));
+//			bo.setTeacher(teacher);
+//		}
+//		//TODO: why we need convert student?
+//		List<Student> students = relativeConverters.pullConverter(StudentViewConverter.class).toDomain(dto.getStudents());
+//		bo.setStudents(new HashSet<Student>(students));
+////		bo.setStudents(new HashSet<Student>((Collection<Student>) studentConverter.toDomain(dto.getStudents())));
 		return bo;
 	}
 }

@@ -11,5 +11,5 @@ public interface BaseHibernateRepository<T> {
 	List<T> query(HQLSpecification specification);
 	T uniqueQuery(CriterionSpecification specification);
 	T uniqueQuery(HQLSpecification specification);
-	List<T> getAll();
+	List<T> retrieveAll();
 }

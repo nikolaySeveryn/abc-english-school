@@ -8,12 +8,12 @@ import nks.abc.dao.base.interfaces.CriterionSpecification;
 @Component
 public class AccountSpecificationFactory {
 	
-	public CriterionSpecification byEmailAndDisable(String login, Boolean disable) {
-		return new ConjunctionSpecification(new EmailSpecification(login), new IsDisableSpecification(disable));
+	public CriterionSpecification byEmailAndIsActive(String login, Boolean disable) {
+		return new ConjunctionSpecification(new EmailSpecification(login), new IsActiveSpecification(disable));
 	}
 	
-	public CriterionSpecification byIdAndDisabled(Long id, Boolean disable){
-		return new ConjunctionSpecification(new IdSpecification(id), new IsDisableSpecification(disable));
+	public CriterionSpecification byIdAndIsActive(Long id, Boolean disable){
+		return new ConjunctionSpecification(new IdSpecification(id), new IsActiveSpecification(disable));
 	}
 	
 	public CriterionSpecification byId(Long id){
@@ -24,8 +24,8 @@ public class AccountSpecificationFactory {
 		return new EmailSpecification(login);
 	}
 	
-	public CriterionSpecification byIsDisable(Boolean isDeleted){
-		return new IsDisableSpecification(isDeleted);
+	public CriterionSpecification byIsActive(Boolean isDeleted){
+		return new IsActiveSpecification(isDeleted);
 	}
 	
 	@Override

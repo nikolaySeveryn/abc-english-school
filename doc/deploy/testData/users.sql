@@ -46,12 +46,12 @@ ALTER SEQUENCE abc.personal_info_id_seq RESTART WITH 8;
 --
 -- pass:"password"
 
-INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isdisable) VALUES (1, 'nkstestemail2@mail.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 1, false);
-INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isdisable) VALUES (2, 'nkstestemail3@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 2, false);
-INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isdisable) VALUES (3, 'nkstestemail4@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 3, false);
+INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isfired) VALUES (1, 'nkstestemail2@mail.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 1, false);
+INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isfired) VALUES (2, 'nkstestemail3@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 2, false);
+INSERT INTO abc.accountinfo (accountid, email, password, personal_info, isfired) VALUES (3, 'nkstestemail4@yandex.ru', 'X03MO1qnZdYdgyfeuILPmQ==', 3, false);
 
-INSERT INTO abc.accountinfo (accountid, email, isdisable, password, personal_info) VALUES (4, 'NksTestEmail1@gmail.com', false, 'Kyr3kp7wKjT5N3zz1OSJaQ==', 4);
-INSERT INTO abc.accountinfo (accountid, email, isdisable, password, personal_info) VALUES (5, 'nkstestemail5@yandex.ru', false, '3CS1V+BwoLuqdsRp0nj2pQ==', 6);
+INSERT INTO abc.accountinfo (accountid, email, isfired, password, personal_info) VALUES (4, 'NksTestEmail1@gmail.com', false, 'Kyr3kp7wKjT5N3zz1OSJaQ==', 4);
+INSERT INTO abc.accountinfo (accountid, email, isfired, password, personal_info) VALUES (5, 'nkstestemail5@yandex.ru', false, '3CS1V+BwoLuqdsRp0nj2pQ==', 6);
 
 ALTER SEQUENCE abc.account_id_seq RESTART WITH 6;
 
@@ -63,15 +63,23 @@ ALTER SEQUENCE abc.account_id_seq RESTART WITH 6;
 -- Data for Name: user; Type: TABLE DATA; Schema: abc; Owner: -
 --
 
-INSERT INTO "abc"."user" (id, account_info) VALUES (1, 1);
-INSERT INTO "abc"."user" (id, account_info) VALUES (2, 2);
-INSERT INTO "abc"."user" (id, account_info) VALUES (3, 3);
-INSERT INTO "abc"."user" (id, account_info) VALUES (4, 3);
-
-INSERT INTO "abc"."user" (id, account_info) VALUES (5, 4);
-INSERT INTO "abc"."user" (id, account_info) VALUES (6, 5);
+INSERT INTO "abc"."user" (userid, account_info) VALUES (1, 1);
+INSERT INTO "abc"."user" (userid, account_info) VALUES (2, 2);
+INSERT INTO "abc"."user" (userid, account_info) VALUES (3, 3);
+INSERT INTO "abc"."user" (userid, account_info) VALUES (4, 3);
+                          
+INSERT INTO "abc"."user" (userid, account_info) VALUES (5, 4);
+INSERT INTO "abc"."user" (userid, account_info) VALUES (6, 5);
 
 ALTER SEQUENCE abc.user_id_seq RESTART WITH 7;
+
+
+--Data for Name: staff; Type: TABLE DATA; Schema: abc; Owner: -
+
+INSERT INTO abc.staff (id) VALUES (1);
+INSERT INTO abc.staff (id) VALUES (2);
+INSERT INTO abc.staff (id) VALUES (3);
+INSERT INTO abc.staff (id) VALUES (4);
 
 
 --
