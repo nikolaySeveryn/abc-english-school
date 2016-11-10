@@ -22,11 +22,10 @@ import nks.abc.depricated.service.message.Email;
 import nks.abc.depricated.service.message.MailFactory;
 import nks.abc.depricated.service.message.MailService;
 import nks.abc.depricated.service.user.StaffServiceImpl;
-import nks.abc.depricated.view.converter.user.AccountViewConverter;
-import nks.abc.depricated.view.object.objects.user.StaffView;
+import nks.abc.domain.user.PasswordEncryptor;
 import nks.abc.domain.user.impl.AccountImpl;
 import nks.abc.domain.user.impl.AdministratorImpl;
-import nks.abc.domain.user.impl.PasswordEncryptor;
+import nks.abc.domain.user.impl.MD5PasswordEncryptor;
 import nks.abc.domain.user.impl.TeacherImpl;
 
 import org.junit.Before;
@@ -50,23 +49,19 @@ public class StaffServiceTest {
 	@Mock
 	private MailService mailSevice;
 	@Spy
-	private AccountViewConverter dtoConvertor = new AccountViewConverter();
-	@Spy
 	private AdministratorSpecificationFactory adminSpecifications = new AdministratorSpecificationFactory();
 	@Spy
 	private TeacherSpecificationFactory teacherSpecifications = new TeacherSpecificationFactory();
 	@Spy
 	private MailFactory mailFactory = new MailFactory();
 	@Spy
-	private PasswordEncryptor passwordEncriptor = new PasswordEncryptor();
+	private PasswordEncryptor passwordEncriptor = new MD5PasswordEncryptor();
 	@Spy
 	private ErrorHandler errorHandler = new ServiceErrorHandler();
 	
 	@InjectMocks
 	private StaffServiceImpl service = new StaffServiceImpl();
 	
-	private StaffView emptyEmployee;
-	private StaffView employee;
 	private String passHash;
 	
 	@Before
@@ -79,22 +74,22 @@ public class StaffServiceTest {
 	
 	@Before
 	public void init(){
-		emptyEmployee = new StaffView();
-		emptyEmployee.setIsAdministrator(false);
-		emptyEmployee.setIsTeacher(false);
-		employee = new StaffView();
-		
-		passHash = "X03MO1qnZdYdgyfeuILPmQ==";
-		employee.setBirthday(new Date());
-		employee.setEmail("email@mail.ma");
-		employee.setFirstName("fname");
-		employee.setPassword("password");
-		employee.setPasswordHash(passHash);
-		employee.setPatronomic("patronomic");
-		employee.setPhoneNum("12345654321");
-		employee.setSirName("sirname");
-		employee.setIsAdministrator(false);
-		employee.setIsTeacher(false);
+//		emptyEmployee = new StaffView();
+//		emptyEmployee.setIsAdministrator(false);
+//		emptyEmployee.setIsTeacher(false);
+//		employee = new StaffView();
+//		
+//		passHash = "X03MO1qnZdYdgyfeuILPmQ==";
+//		employee.setBirthday(new Date());
+//		employee.setEmail("email@mail.ma");
+//		employee.setFirstName("fname");
+//		employee.setPassword("password");
+//		employee.setPasswordHash(passHash);
+//		employee.setPatronomic("patronomic");
+//		employee.setPhoneNum("12345654321");
+//		employee.setSirName("sirname");
+//		employee.setIsAdministrator(false);
+//		employee.setIsTeacher(false);
 	}
 	
 	@Test

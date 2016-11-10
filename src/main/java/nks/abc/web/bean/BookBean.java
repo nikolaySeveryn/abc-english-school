@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.depricated.service.plan.BookService;
-import nks.abc.depricated.view.object.BookView;
+import nks.abc.domain.planing.Book;
+import nks.abc.domain.planing.factory.BookFactory;
 import nks.abc.web.common.enumeration.EditingMode;
 import nks.abc.web.common.message.MessageSeverity;
 import nks.abc.web.common.message.UIMessage;
@@ -33,14 +34,15 @@ public class BookBean implements Serializable {
 	private UIMessage message;
 	
 	private EditingMode mode = EditingMode.NONE;
-	private BookView book = new BookView.NullBookDTO();
+	private Book book;
 	
 	public void add () {
 		mode = EditingMode.ADD;
-		book = new BookView(null, new String(), new String());
+		book = BookFactory.createBook();
 	}
 	
-	public void edit(BookView book) {
+	public void edit(Book book) {
+		//TODO: load book via id
 		mode = EditingMode.EDIT;
 		this.book = book;
 	}
@@ -71,11 +73,10 @@ public class BookBean implements Serializable {
 
 	public void cancel(){
 		this.mode = EditingMode.NONE;
-		this.book = new BookView.NullBookDTO();
 		message.send(MessageSeverity.INFO, "Canceled");
 	}
 	
-	public void delete(BookView book) {
+	public void delete(Book book) {
 		try {
 			bookService.delete(book);
 			message.send(MessageSeverity.WARNING, "Deleted");
@@ -88,25 +89,25 @@ public class BookBean implements Serializable {
 		}	
 	}
 	
-	public List<BookView> getList() {
+	public List<Book> getList() {
 		try {
 			return bookService.getAll();
 		} catch (ServiceDisplayedErorr e) {
 			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
 			e.printStackTrace();
-			return new ArrayList<BookView>();
+			return new ArrayList<Book>();
 		} catch (ServiceException e) {
 			message.send(MessageSeverity.ERROR, "Error");
 			e.printStackTrace();
-			return new ArrayList<BookView>();
+			return new ArrayList<Book>();
 		}
 	}
 	
-	public BookView getBook() {
+	public Book getBook() {
 		return book;
 	}
 	
-	public void setBook(BookView book) {
+	public void setBook(Book book) {
 		this.book = book;
 	}
 

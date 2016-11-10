@@ -18,16 +18,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OrderBy;
 
+import nks.abc.domain.user.Group;
 import nks.abc.domain.user.Level;
 import nks.abc.domain.user.Teacher;
 
 @Entity
-public class Group {
+@Table(name="group")
+public class GroupImpl implements Group {
 	
 	private final static Integer MULTIPLIER = 100; 
 	
@@ -36,74 +41,92 @@ public class Group {
 	@SequenceGenerator(name="group_id_gen", allocationSize=1, sequenceName="group_id_seq")
 	private Long id;
 	@Column(nullable=false)
-	@NotNull
-	@Size(min=1)
 	private String name;
 	@Column(nullable=false)
 	@Enumerated(EnumType.STRING)
-	@NotNull
 	private Level level;
 	@Column(nullable=false)
-	@NotNull
 	private Integer tarif;
-	@ManyToOne(fetch=FetchType.LAZY, targetEntity=TeacherImpl.class)
+	@ManyToOne(fetch=FetchType.EAGER, targetEntity=TeacherImpl.class)
 	@JoinColumn(name="teacher")
 	private Teacher teacher;
-	@ManyToMany(fetch=FetchType.LAZY, mappedBy="groups")
-	private Set<Student> students = null;
+	@ManyToMany(fetch=FetchType.EAGER, mappedBy="groups", targetEntity=StudentImpl.class)
+	@Fetch(FetchMode.SELECT)
+	private Set<StudentImpl> students = null;
 	//TODO: plan
 	
+	@Override
 	public Double getFloatTarif(){
 		return (double)tarif / MULTIPLIER;
 	}
+	
+	@Override
+	public Boolean hasMembers(){
+		return students.size() > 0;
+	}
+	
+	@Override
 	public void setFloatTarif(Double tarif){
 		this.tarif = (int) (tarif * MULTIPLIER);
 	}
+	@Override
 	public Long getId() {
 		return id;
 	}
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
+	@Override
 	public String getName() {
 		return name;
 	}
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
 	public Level getLevel() {
 		return level;
 	}
+	@Override
 	public void setLevel(Level level) {
 		this.level = level;
 	}
+	@Override
 	public Integer getTarif() {
 		return tarif;
 	}
+	@Override
 	public void setTarif(Integer tarif) {
 		this.tarif = tarif;
 	}
+	@Override
 	public Teacher getTeacher() {
 		return teacher;
 	}
+	@Override
 	public void setTeacher(Teacher teacher) {
 		this.teacher = teacher;
 	}
 	
-	public Set<Student> getStudents() {
+	@Override
+	public Set<StudentImpl> getStudents() {
 		return students;
 	}
-	public List<Student>getSortedStudents(){
-		List<Student> studentsList = new ArrayList<Student>(students);
-		Collections.sort(studentsList, new Comparator<Student>() {
+	@Override
+	public List<StudentImpl>getSortedStudents(){
+		List<StudentImpl> studentsList = new ArrayList<StudentImpl>(students);
+		Collections.sort(studentsList, new Comparator<StudentImpl>() {
 			@Override
-			public int compare(Student student1, Student student2) {
+			public int compare(StudentImpl student1, StudentImpl student2) {
 				return student1.getUserId().compareTo(student2.getUserId());
 			}
 		});
 		return studentsList;
 	}
-	public void setStudents(Set<Student> students) {
+	@Override
+	public void setStudents(Set<StudentImpl> students) {
 		this.students = students;
 	}
 	@Override

@@ -5,7 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import nks.abc.dao.base.BaseRepositoryImpl;
 import nks.abc.dao.specification.user.group.GroupSpecificationFactory;
-import nks.abc.domain.user.impl.Group;
+import nks.abc.domain.user.Group;
+import nks.abc.domain.user.impl.GroupImpl;
 
 @Repository
 public class GroupRepository extends BaseRepositoryImpl<Group> {
@@ -14,7 +15,7 @@ public class GroupRepository extends BaseRepositoryImpl<Group> {
 	private GroupSpecificationFactory specificationFactory;
 
 	public GroupRepository() {
-		super(Group.class);
+		super(GroupImpl.class);
 	}
 	
 	public GroupSpecificationFactory specifications(){

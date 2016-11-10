@@ -5,8 +5,11 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class PasswordEncryptor{
+import nks.abc.domain.user.PasswordEncryptor;
+
+public class MD5PasswordEncryptor implements PasswordEncryptor{
 	
+	@Override
 	public String encrypt(String password){
 		byte[] bytesOfPassword = password.getBytes();
 		MessageDigest md=null;

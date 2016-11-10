@@ -1,9 +1,9 @@
 package nks.abc.depricated.service.user;
 
-import nks.abc.depricated.view.object.objects.user.StudentView;
+import nks.abc.domain.user.Student;
 
 public interface StudentService {
-	StudentView getById(Long id);
-	void save(StudentView student);
+	Student getById(Long id);
+	void save(Student student);
 	void delete(Long... ids);
 }

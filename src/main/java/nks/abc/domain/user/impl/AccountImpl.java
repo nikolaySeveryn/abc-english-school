@@ -41,6 +41,7 @@ import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
+import nks.abc.domain.user.PasswordEncryptor;
 import nks.abc.domain.user.PersonalInfo;
 import nks.abc.domain.user.Role;
 import nks.abc.domain.user.Teacher;
@@ -90,7 +91,7 @@ public class AccountImpl implements Account {
 	private AdminRepository adminRepository;
 
 	@Transient
-	private PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
+	private PasswordEncryptor passwordEncryptor = new MD5PasswordEncryptor();
 	
 	@Transient
 	private ErrorHandler errorHandler;
@@ -256,11 +257,9 @@ public class AccountImpl implements Account {
 
 	@Override
 	public String toString() {
-		return "AccountInfo [accountId=" + accountId 
-				+ ", passwordHash=" + passwordHash + ", peronalInfo="
-				+ peronalInfo + ", role=" + roles + ", isFired=" + active
-				 + ", email=" + email + "]";
+		return "AccountImpl [accountId=" + accountId + ", email=" + email + ", passwordHash=" + passwordHash + ", peronalInfo=" + peronalInfo + ", roles=" + roles + ", active=" + active + "]";
 	}
+
 	
 	
 }

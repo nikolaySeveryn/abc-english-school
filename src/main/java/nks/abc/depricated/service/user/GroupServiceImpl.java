@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.handler.ErrorHandler;
+import nks.abc.core.exception.service.RemoveDenidedException;
 import nks.abc.dao.newspecification.user.GroupSpecifications;
 import nks.abc.dao.repository.user.GroupRepository;
-import nks.abc.domain.user.impl.Group;
+import nks.abc.domain.user.Group;
+import nks.abc.domain.user.impl.GroupImpl;
 
 @Service
 @Transactional(readOnly = true)
@@ -80,11 +82,20 @@ public class GroupServiceImpl implements GroupService {
 	public void deleteGroups(Long... ids) {
 		try {
 			for (Long id : ids) {
-				groupDAO.delete(getById(id));
+				deleteGroup(id);
 			}
 		}
 		catch (Exception e) {
 			errorHandler.handle(e, "delete groups: " + Arrays.toString(ids));
 		}
+	}
+	
+	private void deleteGroup(Long id){
+		Group group = getById(id);
+		if(group.hasMembers()){
+			//TODO: stop to use exception as a normal behavior
+			throw new RemoveDenidedException("You can't delete not empty group");
+		}
+		groupDAO.delete(group);
 	}
 }

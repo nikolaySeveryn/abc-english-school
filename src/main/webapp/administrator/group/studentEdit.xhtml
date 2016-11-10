@@ -12,6 +12,7 @@
 <h:body>
 	<ui:composition template="/include/layout.xhtml">
 		<ui:define name="content">
+			<h1>Редагування даних про студента</h1>
 			<h:form id="student_edit_form">
 				<p:messages />
 				<p:tabView>
@@ -19,35 +20,46 @@
 						<p:panelGrid columns="3">
 							<p:outputLabel value="Прізвище" for="sirname" />
 							<p:inputText id="sirname"
-								value="#{studentBean.editedStudent.sirName}" />
+								value="#{studentBean.editedStudent.personalInfo.sirName}" />
 							<p:message for="sirname" />
 
 							<p:outputLabel value="Ім’я" for="fistname" />
 							<p:inputText id="fistname"
-								value="#{studentBean.editedStudent.firstName}" />
+								value="#{studentBean.editedStudent.personalInfo.firstName}" />
 							<p:message for="fistname" />
 
 							<p:outputLabel value="По батькові" for="patronomic" />
 							<p:inputText id="patronomic"
-								value="#{studentBean.editedStudent.patronomic}" />
+								value="#{studentBean.editedStudent.personalInfo.patronomic}" />
 							<p:message for="patronomic" />
 
 							<p:outputLabel value="Телефон" for="phone" />
-							<p:inputText id="phone"
-								value="#{studentBean.editedStudent.phoneNum}" />
+							<p:inputMask mask="+380(99)9999999" id="phone" value="#{studentBean.editedStudent.personalInfo.phoneNum}">
+								<f:validator validatorId="uniqueColumnValidator" />
+								<f:attribute name="entity" value="#{studentBean.editedStudent.personalInfo}" />
+								<f:attribute name="field" value="phoneNum" />
+								<f:attribute name="idField" value="id" />
+							</p:inputMask> 
 							<p:message for="phone" />
 
 
 							<c:if test="#{studentBean.isNewStudent}">
 								<p:outputLabel value="Email" for="email" />
-								<p:inputText id="email" value="#{studentBean.editedStudent.email}" required="true" autocomplete="false" />
+								<p:inputText id="email"
+									value="#{studentBean.editedStudent.accountInfo.email}"
+									required="true" autocomplete="false">
+									<f:validator validatorId="uniqueColumnValidator" />
+									<f:attribute name="entity" value="#{studentBean.editedStudent.accountInfo}" />
+									<f:attribute name="field" value="email" />
+								</p:inputText>
 								<p:message for="email" />
 							</c:if>
 
 							<p:outputLabel for="birthday" value="День народження" />
 							<p:calendar id="birthday"
-								value="#{studentBean.editedStudent.birthday}" pattern="dd-MM-yyyy"
-								mask="true" navigator="true" yearRange="c-100:c" />
+								value="#{studentBean.editedStudent.personalInfo.birthdayUtilDate}"
+								pattern="dd-MM-yyyy" mask="true" navigator="true"
+								yearRange="c-100:c" />
 							<p:message for="birthday" />
 
 						</p:panelGrid>
@@ -56,22 +68,22 @@
 						<p:panelGrid columns="3">
 							<p:outputLabel value="Прізвище" for="parnet_sirname" />
 							<p:inputText id="parnet_sirname"
-								value="#{studentBean.editedStudent.parent.sirName}" />
+								value="#{studentBean.editedStudent.parent.personalInfo.sirName}" />
 							<p:message for="parnet_sirname" />
 
 							<p:outputLabel value="Ім’я" for="parnet_fistname" />
 							<p:inputText id="parnet_fistname"
-								value="#{studentBean.editedStudent.parent.firstName}" />
+								value="#{studentBean.editedStudent.parent.personalInfo.firstName}" />
 							<p:message for="parnet_fistname" />
 
 							<p:outputLabel value="По батькові" for="parnet_patronomic" />
 							<p:inputText id="parnet_patronomic"
-								value="#{studentBean.editedStudent.parent.patronomic}" />
+								value="#{studentBean.editedStudent.parent.personalInfo.patronomic}" />
 							<p:message for="parnet_patronomic" />
 
 							<p:outputLabel value="Телефон" for="parnet_phone" />
 							<p:inputText id="parnet_phone"
-								value="#{studentBean.editedStudent.parent.phoneNum}" />
+								value="#{studentBean.editedStudent.parent.personalInfo.phoneNum}" />
 							<p:message for="parnet_phone" />
 
 							<p:outputLabel value="Email" for="parnet_email" />
@@ -81,7 +93,7 @@
 
 							<p:outputLabel for="parnet_birthday" value="День народження" />
 							<p:calendar id="parnet_birthday"
-								value="#{studentBean.editedStudent.parent.birthday}"
+								value="#{studentBean.editedStudent.parent.personalInfo.birthday}"
 								pattern="dd-MM-yyyy" mask="true" navigator="true"
 								yearRange="c-100:c" />
 							<p:message for="parnet_birthday" />
@@ -91,7 +103,7 @@
 						<p:panelGrid columns="3">
 							<p:outputLabel value="Групи" for="groups" />
 							<p:autoComplete id="groups"
-								value="#{studentBean.editedStudent.groups}"
+								value="#{studentBean.editedStudent.groupsList}"
 								completeMethod="#{studentBean.complateGroup}" var="group"
 								itemLabel="#{group.name}" itemValue="#{group}"
 								converter="#{groupConverter}" multiple="true" required="true" />
@@ -99,8 +111,8 @@
 
 							<p:outputLabel for="discount" value="Знижка" />
 							<pe:inputNumber id="discount"
-								value="#{studentBean.editedStudent.discount}" symbol="%" decimalPlaces="0"
-								symbolPosition="s" emptyValue="zero" />
+								value="#{studentBean.editedStudent.discount}" symbol="%"
+								decimalPlaces="0" symbolPosition="s" emptyValue="zero" />
 							<p:message for="discount" />
 
 							<c:if test="not #{studentBean.isNewStudent}">
@@ -116,9 +128,10 @@
 				</p:tabView>
 
 
-				<p:commandButton action="#{studentBean.saveStudent()}" validateClient="true"
-					update="student_edit_form" value="Зберегти" icon="ui-icon-disk" />
-				<p:commandButton action="#{studentBean.cancel()}" value="Відмінити" 
+				<p:commandButton action="#{studentBean.saveStudent()}"
+					validateClient="true" update="student_edit_form" value="Зберегти"
+					icon="ui-icon-disk" />
+				<p:commandButton action="#{studentBean.cancel()}" value="Відмінити"
 					icon="ui-icon-cancel" immediate="true" />
 			</h:form>
 		</ui:define>

@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nks.abc.depricated.service.user.StaffService;
-import nks.abc.depricated.view.object.objects.user.StaffView;
+import nks.abc.domain.user.User;
+import nks.abc.domain.user.factory.UserFactory;
+import nks.abc.domain.user.impl.AdministratorImpl;
 
 import java.io.Serializable;
 
@@ -27,15 +29,15 @@ public class UserBean implements Serializable {
 		getExternalContext().invalidateSession();
 	}
 
-	public StaffView getCurrentUser() {
+	public User getCurrentUser() {
 //		return userService.getStaffByEmail(getCurrentUserName());
-		StaffView staff = new StaffView();
-		staff.setEmail("nkstestemail1@gmail.com");
-		staff.setFirstName("Test");
-		staff.setSirName("User");
-		staff.setIsAdministrator(true);
-		staff.setIsTeacher(true);
-		return staff;
+		User user = UserFactory.createAdministrator();
+		user.getAccountInfo().setEmail("nkstestemail1@gmail.com");
+		user.getPersonalInfo().setSirName("Test");
+		user.getPersonalInfo().setFirstName("User");
+		user.getAccountInfo().setIsAdministrator(true);
+		user.getAccountInfo().setIsTeacher(true);
+		return user;
 	}
 
 	private ExternalContext getExternalContext() {

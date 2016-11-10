@@ -83,7 +83,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseH
 		}
 		catch (HibernateException he){
 			log.error("hibernate exception" , he);
-			throw new RepositoryException("Error on getting all data", he);
+			throw new RepositoryException("Error on executing unique query", he);
 		}
 	}
 

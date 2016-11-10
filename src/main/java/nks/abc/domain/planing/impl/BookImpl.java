@@ -1,4 +1,4 @@
-package nks.abc.domain;
+package nks.abc.domain.planing.impl;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,10 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import nks.abc.domain.planing.Book;
+
 
 @Entity
 @Table(name="BOOK")
-public class Book {
+public class BookImpl implements Book {
 	
 	@Id
 	@Column(name="ID")
@@ -26,21 +28,27 @@ public class Book {
 	private String author;
 	
 	
+	@Override
 	public Integer getId() {
 		return id;
 	}
+	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	@Override
 	public String getName() {
 		return name;
 	}
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
+	@Override
 	public String getAuthor() {
 		return author;
 	}
+	@Override
 	public void setAuthor(String author) {
 		this.author = author;
 	}
@@ -64,7 +72,7 @@ public class Book {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Book other = (Book) obj;
+		BookImpl other = (BookImpl) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

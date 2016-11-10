@@ -14,11 +14,8 @@ import nks.abc.dao.newspecification.user.StudentSpecifications;
 import nks.abc.dao.repository.user.StudentRepository;
 import nks.abc.depricated.service.message.MailFactory;
 import nks.abc.depricated.service.message.MailService;
-import nks.abc.depricated.view.converter.user.GroupViewConverter;
-import nks.abc.depricated.view.converter.user.StudentViewConverter;
-import nks.abc.depricated.view.object.objects.user.StudentView;
 import nks.abc.domain.user.Account;
-import nks.abc.domain.user.impl.Student;
+import nks.abc.domain.user.Student;
 
 @Service
 @Transactional(readOnly=true)
@@ -28,8 +25,7 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Autowired
 	private StudentRepository studentRepository;
-	@Autowired
-	private StudentViewConverter studentConverter;
+	
 	@Autowired
 	private MailService mailer;
 	@Autowired
@@ -46,10 +42,8 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void save(StudentView studentDTO) {
-		studentConverter.setRelativeConvertersPattern(new GroupViewConverter());
-		Student student = studentConverter.toDomain(studentDTO);
-		try{
+	public void save(Student student) {
+		try {
 			if(student.isNew()){
 				log.info("Insert new student: " + student);
 				Account account = student.getAccountInfo();
@@ -68,17 +62,14 @@ public class StudentServiceImpl implements StudentService {
 			}
 		}
 		catch(Exception e){
-			errorHandler.handle(e, "save student: " + studentDTO);
+			errorHandler.handle(e, "save student: " + student);
 		}
 	}
 
 	@Override
-	public StudentView getById(Long id) {
+	public Student getById(Long id) {
 		try{
-			System.out.println("error handler: " + this.errorHandler);
-			Student student = getStudentDomainById(id);
-			studentConverter.setRelativeConvertersPattern(new GroupViewConverter());
-			return studentConverter.toView(student);
+			return getStudentById(id);
 		}
 		catch(Exception e) {
 			errorHandler.handle(e, "get student by id=" + id);
@@ -90,8 +81,8 @@ public class StudentServiceImpl implements StudentService {
 	@Transactional(readOnly=false)
 	public void delete(Long ...  ids) {
 		try{
-			for(Long id: ids){
-				studentRepository.delete(getStudentDomainById(id));
+			for(Long id: ids) {
+				studentRepository.delete(getStudentById(id));
 			}
 		}
 		catch(Exception e) {
@@ -99,7 +90,7 @@ public class StudentServiceImpl implements StudentService {
 		}
 	}
 
-	private Student getStudentDomainById(Long id) {
+	private Student getStudentById(Long id) {
 		return studentRepository.uniqueQuery(StudentSpecifications.byId(id));
 	}
 }

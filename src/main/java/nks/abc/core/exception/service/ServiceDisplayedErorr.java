@@ -1,12 +1,11 @@
 package nks.abc.core.exception.service;
 
-public class ServiceDisplayedErorr extends ServiceException{
+public class ServiceDisplayedErorr extends ServiceException {
 	
 	private String displayedText;
 
 	public ServiceDisplayedErorr(String displayedText) {
-		super();
-		this.displayedText = displayedText;
+		this(displayedText,displayedText);
 	}
 
 	public ServiceDisplayedErorr(String displayedText, String message, Throwable cause) {
@@ -20,8 +19,7 @@ public class ServiceDisplayedErorr extends ServiceException{
 	}
 
 	public ServiceDisplayedErorr(String displayedText, Throwable cause) {
-		super(cause);
-		this.displayedText = displayedText;
+		this(displayedText, displayedText, cause);
 	}
 	
 	public String getDisplayedText() {

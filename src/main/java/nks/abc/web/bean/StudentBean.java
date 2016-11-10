@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
@@ -12,12 +13,12 @@ import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.depricated.service.user.GroupService;
 import nks.abc.depricated.service.user.StaffService;
 import nks.abc.depricated.service.user.StudentService;
-import nks.abc.depricated.view.factory.UserViewFactory;
-import nks.abc.depricated.view.object.objects.user.GroupView;
-import nks.abc.depricated.view.object.objects.user.StaffView;
-import nks.abc.depricated.view.object.objects.user.StudentView;
+import nks.abc.domain.user.Group;
 import nks.abc.domain.user.Level;
-import nks.abc.domain.user.impl.Group;
+import nks.abc.domain.user.Student;
+import nks.abc.domain.user.Teacher;
+import nks.abc.domain.user.factory.UserFactory;
+import nks.abc.domain.user.impl.GroupImpl;
 import nks.abc.web.common.enumeration.EditingMode;
 
 import org.apache.log4j.Logger;
@@ -50,7 +51,7 @@ public class StudentBean implements Serializable {
 	private Map<Long,Boolean> checkedStudents = new HashMap<Long,Boolean>();
 	private Group editedGroup;
 	private Group viewedGroup;
-	private StudentView editedStudent;
+	private Student editedStudent;
 	private EditingMode groupMode = EditingMode.NONE;
 	private EditingMode studentMode = EditingMode.NONE;
 
@@ -72,17 +73,17 @@ public class StudentBean implements Serializable {
 	}
 
 	public String addGroup() {
-		editedGroup = new Group();
+		editedGroup = new GroupImpl();
 		groupMode = EditingMode.ADD;
 		return GROUP_EDIT_PAGE;
 	}
 
 	public String addStudent() {
-		editedStudent = UserViewFactory.newStudent();
+		editedStudent = UserFactory.createStudent();
 		if (viewedGroup != null) {
-//			List<Group> groups = editedStudent.getGroups();
-//			groups.add(viewedGroup);
-//			editedStudent.setGroups(groups);
+			Set<Group> groups = editedStudent.getGroups();
+			groups.add(viewedGroup);
+			editedStudent.setGroups(groups);
 		}
 		studentMode = EditingMode.ADD;
 		return STUDENT_EDIT_PAGE;
@@ -94,15 +95,13 @@ public class StudentBean implements Serializable {
 	}
 
 	public String editGroup(Group group) {
-		System.out.println("edit group");
 		editedGroup = group;
 		groupMode = EditingMode.EDIT;
 		return GROUP_EDIT_PAGE;
 	}
 
-	public String editStudent(StudentView student) {
-		System.out.println("edit student");
-		editedStudent = studentService.getById(student.getId()); // reload student to get groups
+	public String editStudent(Long studentId) {
+		editedStudent = studentService.getById(studentId);
 		studentMode = EditingMode.EDIT;
 		return STUDENT_EDIT_PAGE;
 	}
@@ -150,6 +149,7 @@ public class StudentBean implements Serializable {
 		if (deletingCount > 0) {
 			groupService.deleteGroups(idsToDelete.toArray(new Long[deletingCount]));
 		}
+		checkedGroups.clear();
 	}
 
 	public void deleteStudent() {
@@ -175,26 +175,28 @@ public class StudentBean implements Serializable {
 		return Level.values();
 	}
 
-	public List<StaffView> complateTeacher(String query) {
+	public List<Teacher> complateTeacher(String query) {
 		query = query.trim();
-		List<StaffView> complate = new ArrayList<StaffView>();
-//		for (StaffView teacher : staffService.getAllTeachers()) {
-//			String name = teacher.getFirstName() + " " + teacher.getSirName() + " " + teacher.getPatronomic();
-//			if (name.contains(query)) {
-//				complate.add(teacher);
-//			}
-//		}
+		List<Teacher> complate = new ArrayList<Teacher>();
+		for (Teacher teacher : staffService.getAllTeachers()) {
+			String name = teacher.getAccountInfo().getPeronalInfo().getFirstName() + " " 
+						+ teacher.getAccountInfo().getPeronalInfo().getSirName() + " "
+						+ teacher.getAccountInfo().getPeronalInfo().getPatronomic();
+			if (name.contains(query)) {
+				complate.add(teacher);
+			}
+		}
 		return complate;
 	}
 
-	public List<GroupView> complateGroup(String query) {
+	public List<Group> complateGroup(String query) {
 		query = query.trim();
-		List<GroupView> complate = new ArrayList<GroupView>();
-//		for (GroupView group : groupService.getGroups()) {
-//			if (group.getName().contains(query)) {
-//				complate.add(group);
-//			}
-//		}
+		List<Group> complate = new ArrayList<Group>();
+		for (Group group : groupService.getGroups()) {
+			if (group.getName().contains(query)) {
+				complate.add(group);
+			}
+		}
 		return complate;
 	}
 
@@ -219,10 +221,10 @@ public class StudentBean implements Serializable {
 	public Group getViewed() {
 		return viewedGroup;
 	}
-	public StudentView getEditedStudent() {
+	public Student getEditedStudent() {
 		return editedStudent;
 	}
-	public void setEditedStudent(StudentView editedStudent) {
+	public void setEditedStudent(Student editedStudent) {
 		this.editedStudent = editedStudent;
 	}
 

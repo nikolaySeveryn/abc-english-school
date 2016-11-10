@@ -3,12 +3,8 @@ package nks.abc.depricated.service.plan;
 import java.util.List;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.repository.RepositoryException;
-import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.repository.BookRepository;
-import nks.abc.depricated.view.converter.BookViewConverter;
-import nks.abc.depricated.view.object.BookView;
-import nks.abc.domain.Book;
+import nks.abc.domain.planing.Book;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,34 +30,31 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void add(BookView bookView) {
-		Book bookEntity = BookViewConverter.toEntity(bookView);
+	public void add(Book book) {
 		try{
-			bookDAO.insert(bookEntity);
+			bookDAO.insert(book);
 		}
 		catch (Exception e){
-			errorHandler.handle(e, "add book: " + bookView); 
+			errorHandler.handle(e, "add book: " + book); 
 		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(BookView bookView) {
-		Book bookEntity = BookViewConverter.toEntity(bookView);
+	public void update(Book book) {
 		try{
-			bookDAO.update(bookEntity);
+			bookDAO.update(book);
 		}
 		catch (Exception e){
-			errorHandler.handle(e, "update book: " + bookView);
+			errorHandler.handle(e, "update book: " + book);
 		}
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(BookView book) {
-		Book bookEntity = BookViewConverter.toEntity(book);
+	public void delete(Book book) {
 		try{
-			bookDAO.delete(bookEntity);
+			bookDAO.delete(book);
 		}
 		catch (Exception e){
 			errorHandler.handle(e, "delete book:" + book);
@@ -69,14 +62,14 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public List<BookView> getAll() {
-		List<Book> all = null;
+	public List<Book> getAll() {
+		List<Book> books = null;
 		try{
-			all = bookDAO.retrieveAll();
+			books = bookDAO.retrieveAll();
 		}
 		catch (Exception e){
 			errorHandler.handle(e, "get all books");
 		}
-		return BookViewConverter.toView(all);
+		return books;
 	}
 }

@@ -1,7 +1,5 @@
 package nks.abc.domain.user.impl;
 
-import java.util.HashSet;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +17,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import nks.abc.domain.user.Account;
+import nks.abc.domain.user.PersonalInfo;
 import nks.abc.domain.user.User;
 
 @Entity
@@ -32,23 +31,32 @@ public abstract class UserImpl implements User {
 	private Long userId;
 	
 	
-	@ManyToOne(fetch=FetchType.EAGER, targetEntity=AccountImpl.class)
+	@ManyToOne(fetch=FetchType.EAGER, targetEntity=AccountImpl.class, cascade=CascadeType.ALL)
 	@JoinColumn(name="account_info", nullable=false)
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	private Account accountInfo;
 	
-	//TODO: move to factory
-	public static Student newStudent() {
-		Student instance = new Student();
-		instance.setGroups(new HashSet<Group>());
-		instance.setAccountInfo(new AccountImpl());
-		instance.getAccountInfo().setIsStudent(true);
-		return instance;
+	private final static String DEFAULT_FULLNAME_SEPARATOR = " ";
+	
+	@Override
+	public String getFullName(){
+		return getFullName(DEFAULT_FULLNAME_SEPARATOR);
+	}
+	
+	@Override
+	public String getFullName(String separator){
+		PersonalInfo person = getPersonalInfo();
+		return person.getSirName() + separator + person.getFirstName() + separator + person.getPatronomic();
 	}
 	
 	@Override
 	public void updatePassword(String password) {
 		accountInfo.updatePassword(password);
+	}
+	
+	@Override
+	public PersonalInfo getPersonalInfo(){
+		return getAccountInfo().getPeronalInfo();
 	}
 	
 	@Override
@@ -80,9 +88,7 @@ public abstract class UserImpl implements User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + userId + ", accountInfo=" + accountInfo
-				+ ", super =" + super.toString() + "]";
+		return "UserImpl [userId=" + userId + ", accountInfo=" + accountInfo + "]";
 	}
-	
-	
+
 }

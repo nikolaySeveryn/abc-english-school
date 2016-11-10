@@ -28,7 +28,7 @@ public class AccountSpecifications {
 	
 	public static HibernateSpecification active(Boolean is) {
 		EqualSpecification specification = EqualsSpecificationWithAlias();
-		specification.setCriteria("active", ! is);
+		specification.setCriteria("active", is);
 		return specification;
 	}
 	

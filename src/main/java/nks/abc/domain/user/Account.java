@@ -1,8 +1,6 @@
 package nks.abc.domain.user;
 
-import nks.abc.domain.user.impl.AccountImpl;
 import nks.abc.domain.validation.annotation.Email;
-import nks.abc.domain.validation.annotation.Unique;
 
 public interface Account {
 

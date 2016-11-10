@@ -8,39 +8,38 @@
 <h:head>
 </h:head>
 <h:body>
-	<h2>Учні</h2>
-			<h:form id="student_list_form">
-				<p:toolbar>
-					<f:facet name="left">
-						<p:commandButton action="#{studentBean.addStudent()}"
-							icon="ui-icon-plusthick" />
-						<p:commandButton actionListener="#{studentBean.deleteStudent()}"
-							update=":growl student_table" icon="ui-icon-trash">
-							<p:confirm header="Confirmation"
-								message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
-						</p:commandButton>
-					</f:facet>
-				</p:toolbar>
-				
-				<p:dataTable id="student_table" var="student" rendered="#{studentBean.viewed ne null}"
-					value="#{studentBean.viewed.students}" emptyMessage="Пусто" 
-					styleClass="data-table" resizableColumns="true">
-					<p:column width="20">
-						<p:selectBooleanCheckbox
-							value="#{studentBean.checkedStudents[student.id]}" />
-					</p:column>
-					<p:column headerText="Група">
-						<h:outputText
-							value="#{student.sirName} #{student.firstName} #{student.patronomic}" />
-					</p:column>
-					<p:column width="40">
-						<p:commandButton action="#{studentBean.editStudent(student)}"
-							icon="ui-icon-pencil" />
-					</p:column>
-				</p:dataTable>
-			</h:form>
-			<ui:insert name="confirm">
-				<ui:include src="/include/confirmDialog.xhtml" />
-			</ui:insert>
+	<h:form id="student_list_form">
+		<p:toolbar>
+			<f:facet name="left">
+				<p:commandButton action="#{studentBean.addStudent()}"
+					icon="ui-icon-plusthick" />
+				<p:commandButton actionListener="#{studentBean.deleteStudent()}"
+					update=":growl student_table" icon="ui-icon-trash">
+					<p:confirm header="Confirmation"
+						message="ви дійсно хочете видалити?" icon="ui-icon-alert" />
+				</p:commandButton>
+			</f:facet>
+		</p:toolbar>
+
+		<p:dataTable id="student_table" var="student"
+			rendered="#{studentBean.viewed ne null}"
+			value="#{studentBean.viewed.sortedStudents}" emptyMessage="Пусто"
+			styleClass="data-table" resizableColumns="true">
+			<p:column width="20">
+				<p:selectBooleanCheckbox
+					value="#{studentBean.checkedStudents[student.userId]}" />
+			</p:column>
+			<p:column headerText="Студент">
+				<h:outputText value="#{student.fullName}" />
+			</p:column>
+			<p:column width="40">
+				<p:commandButton action="#{studentBean.editStudent(student.userId)}"
+					icon="ui-icon-pencil" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+	<ui:insert name="confirm">
+		<ui:include src="/include/confirmDialog.xhtml" />
+	</ui:insert>
 </h:body>
 </html>

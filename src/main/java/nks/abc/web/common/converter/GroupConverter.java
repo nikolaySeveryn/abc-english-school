@@ -8,7 +8,7 @@ import javax.faces.convert.ConverterException;
 
 import nks.abc.core.exception.service.ServiceException;
 import nks.abc.depricated.service.user.GroupService;
-import nks.abc.depricated.view.object.objects.user.GroupView;
+import nks.abc.domain.user.Group;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +51,10 @@ public class GroupConverter implements Converter{
 		if(object == null){
 			return null;
 		}
-		if(!(object instanceof GroupView)){
-			throw new ConverterException("Conversion error: is not instance of groupDTO");
+		if(!(object instanceof Group)){
+			throw new ConverterException("Conversion error: is not instance of Group");
 		}
-		return ((GroupView) object).getId().toString();
+		return ((Group) object).getId().toString();
 	}
 
 

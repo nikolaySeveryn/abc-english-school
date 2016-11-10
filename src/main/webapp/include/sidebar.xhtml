@@ -14,12 +14,12 @@
 			<h:graphicImage value="/images/abc-logo-white.png" styleClass="logo" />
 			<h:form>
 				<p:menu>
-					<c:if test="#{userBean.currentUser.isTeacher}">
+					<c:if test="#{userBean.currentUser.accountInfo.isTeacher}">
 						<p:menuitem value="Підручники"
 							styleClass="#{view.viewId eq '/teacher/book/booksList.xhtml' ? 'state-active' : ''}"
 							action="/teacher/book/booksList.xhtml?faces-redirect=true" />
 					</c:if>
-					<c:if test="#{userBean.currentUser.isAdministrator}">
+					<c:if test="#{userBean.currentUser.accountInfo.isAdministrator}">
 						<p:menuitem value="Групи"
 							styleClass="#{view.viewId eq '/administrator/group/main.xhtml' ? 'state-active' : ''}"
 							action="/administrator/group/main.xhtml?faces-redirect=true" />
@@ -30,7 +30,7 @@
 				</p:menu>
 
 				<p:accordionPanel styleClass="userinfo"  widgetVar="userAccordion">
-					<p:tab title="#{userBean.currentUser.firstName} #{userBean.currentUser.sirName}" >
+					<p:tab title="#{userBean.currentUser.fullName}" >
 						<p:menu>
 							<p:menuitem value="Вийти" actionListener="#{userBean.logout()}" oncomplete="window.location.reload()" />
 						</p:menu>

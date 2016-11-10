@@ -1,56 +1,41 @@
 package nks.abc.depricated.service.user;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.core.exception.service.NoCurrentUserException;
 import nks.abc.core.exception.service.NoIdException;
 import nks.abc.core.exception.service.NoUserLoginException;
 import nks.abc.core.exception.service.RightsDeprivingException;
 import nks.abc.core.exception.service.SendMailException;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
-import nks.abc.core.exception.service.ServiceException;
 import nks.abc.dao.base.interfaces.CriterionSpecification;
 import nks.abc.dao.newspecification.user.AccountSpecifications;
 import nks.abc.dao.newspecification.user.UserSpecifications;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
+import nks.abc.dao.repository.user.UserRepositoty;
 import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
 import nks.abc.depricated.service.message.MailFactory;
 import nks.abc.depricated.service.message.MailService;
-//import nks.abc.depricated.view.converter.user.AccountViewConverter;
-import nks.abc.depricated.view.object.objects.user.StaffView;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
-import nks.abc.domain.user.PersonalInfo;
 import nks.abc.domain.user.Staff;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.User;
-import nks.abc.domain.user.factory.AccountFactory;
 import nks.abc.domain.user.factory.UserFactory;
-import nks.abc.domain.user.impl.AccountImpl;
-import nks.abc.domain.user.impl.AdministratorImpl;
 import nks.abc.domain.user.impl.StaffImpl;
-import nks.abc.domain.user.impl.TeacherImpl;
-import nks.abc.domain.user.impl.UserImpl;
 
 @Service("staffService")
 @Transactional(readOnly=true)
@@ -64,6 +49,8 @@ public class StaffServiceImpl implements StaffService {
 	private TeacherRepository teacherDAO;
 	@Autowired
 	private AccountRepository accountDAO;
+	@Autowired
+	private UserRepositoty userDAO;
 	@Autowired
 	private MailService mailer;
 	@Autowired
@@ -226,22 +213,29 @@ public class StaffServiceImpl implements StaffService {
 	}
 	
 	@Override
-	public List<StaffImpl> getAllTeachers() {
-//		List<Teacher> teachers = null;
-//		try{
-//			teachers = teacherDAO.query(AccountSpecifications.active(true));
-//		}
-//		catch(Exception e){
-//			errorHandler.handle(e, "get all teachers");
-//		}
-//		List<StaffView> dtos = new ArrayList<StaffView>();
-//		for(Teacher teacher: teachers){
-//			dtos.add(dtoConvertor.toView(teacher.getAccountInfo()));
-//		}
-//		return dtos;
-		return null;
+	public List<Teacher> getAllTeachers() {
+		List<Teacher> teachers = null;
+		try{
+			teachers = teacherDAO.query(AccountSpecifications.active());
+		}
+		catch(Exception e){
+			errorHandler.handle(e, "get all teachers");
+		}
+		return teachers;
 	}
 
+	@Override
+	public Staff getStaffById(Long id) {
+		Staff  entity = null;
+		try{
+			entity = (Staff) userDAO.uniqueQuery(UserSpecifications.ById(id));
+		}
+		catch(Exception e){
+			errorHandler.handle(e, "get staff by id");
+		}
+		return entity;
+	}
+	
 	@Override
 	public Staff getStaffByEmail(String email) {
 //		Account entity = null;
@@ -309,6 +303,8 @@ public class StaffServiceImpl implements StaffService {
 			}
 		}
 	}
+
+
 
 
 }

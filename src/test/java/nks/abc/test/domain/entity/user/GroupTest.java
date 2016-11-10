@@ -4,11 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import nks.abc.domain.user.impl.Group;
+import nks.abc.domain.user.Group;
+import nks.abc.domain.user.impl.GroupImpl;
 
 public class GroupTest {
 	
-	private Group group = new Group();
+	private Group group = new GroupImpl();
 	private static final double delta = 0.0000000000001;
 
 	@Test
