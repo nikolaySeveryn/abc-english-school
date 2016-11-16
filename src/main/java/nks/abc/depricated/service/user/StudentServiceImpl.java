@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.service.SendMailException;
-import nks.abc.dao.newspecification.user.StudentSpecifications;
 import nks.abc.dao.repository.user.StudentRepository;
+import nks.abc.dao.specification.factory.user.StudentSpecificationFactory;
 import nks.abc.depricated.service.message.MailFactory;
 import nks.abc.depricated.service.message.MailService;
 import nks.abc.domain.user.Account;
@@ -46,7 +46,7 @@ public class StudentServiceImpl implements StudentService {
 		try {
 			if(student.isNew()){
 				log.info("Insert new student: " + student);
-				Account account = student.getAccountInfo();
+				Account account = student.getAccount();
 				String password = account.updatePasswordToRandom();
 				studentRepository.insert(student);
 				try {
@@ -91,6 +91,6 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	private Student getStudentById(Long id) {
-		return studentRepository.uniqueQuery(StudentSpecifications.byId(id));
+		return studentRepository.uniqueQuery(StudentSpecificationFactory.buildFactory().byId(id));
 	}
 }

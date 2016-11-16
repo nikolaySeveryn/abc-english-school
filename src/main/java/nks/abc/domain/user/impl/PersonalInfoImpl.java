@@ -20,6 +20,8 @@ import nks.abc.domain.user.PersonalInfo;
 @ManagedBean
 public class PersonalInfoImpl implements PersonalInfo {
 	
+	private final static String DEFAULT_FULLNAME_SEPARATOR = " ";
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="personal_info_id_gen")
 	@SequenceGenerator(name="personal_info_id_gen", allocationSize=1, sequenceName="personal_info_id_seq")
@@ -46,8 +48,13 @@ public class PersonalInfoImpl implements PersonalInfo {
 	}
 	
 	@Override
-	public String makeFullName(){
-		return sirName + " " + firstName + " " + patronomic;
+	public String getFullName(){
+		return getFullName(DEFAULT_FULLNAME_SEPARATOR);
+	}
+	
+	@Override
+	public String getFullName(String separator){
+		return sirName + separator + firstName + separator + patronomic;
 	}
 
 	@Override

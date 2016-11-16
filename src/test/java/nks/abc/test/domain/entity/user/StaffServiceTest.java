@@ -15,9 +15,6 @@ import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
-import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
-import nks.abc.dao.specification.user.administrator.AdministratorSpecificationFactory;
-import nks.abc.dao.specification.user.teacher.TeacherSpecificationFactory;
 import nks.abc.depricated.service.message.Email;
 import nks.abc.depricated.service.message.MailFactory;
 import nks.abc.depricated.service.message.MailService;
@@ -49,10 +46,6 @@ public class StaffServiceTest {
 	@Mock
 	private MailService mailSevice;
 	@Spy
-	private AdministratorSpecificationFactory adminSpecifications = new AdministratorSpecificationFactory();
-	@Spy
-	private TeacherSpecificationFactory teacherSpecifications = new TeacherSpecificationFactory();
-	@Spy
 	private MailFactory mailFactory = new MailFactory();
 	@Spy
 	private PasswordEncryptor passwordEncriptor = new MD5PasswordEncryptor();
@@ -66,9 +59,9 @@ public class StaffServiceTest {
 	
 	@Before
 	public void initMocks(){
-		when(adminRepository.specifications()).thenReturn(new AdministratorSpecificationFactory());
-		when(teacherRepository.specifications()).thenReturn(new TeacherSpecificationFactory());
-		when(accountRepository.specifications()).thenReturn(new AccountSpecificationFactory());
+//		when(adminRepository.specifications()).thenReturn(new AdministratorSpecificationFactory());
+//		when(teacherRepository.specifications()).thenReturn(new TeacherSpecificationFactory());
+//		when(accountRepository.specifications()).thenReturn(new AccountSpecificationFactory());
 		
 	}
 	

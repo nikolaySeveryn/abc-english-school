@@ -3,7 +3,7 @@ package nks.abc.depricated.service.plan;
 import java.util.List;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.dao.repository.BookRepository;
+import nks.abc.dao.repository.planing.BookRepository;
 import nks.abc.domain.planing.Book;
 
 import org.springframework.beans.factory.annotation.Autowired;

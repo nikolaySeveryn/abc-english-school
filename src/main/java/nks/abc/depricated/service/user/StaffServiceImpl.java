@@ -19,14 +19,13 @@ import nks.abc.core.exception.service.NoUserLoginException;
 import nks.abc.core.exception.service.RightsDeprivingException;
 import nks.abc.core.exception.service.SendMailException;
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
-import nks.abc.dao.base.interfaces.CriterionSpecification;
-import nks.abc.dao.newspecification.user.AccountSpecifications;
-import nks.abc.dao.newspecification.user.UserSpecifications;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.repository.user.UserRepositoty;
-import nks.abc.dao.specification.user.account.AccountSpecificationFactory;
+import nks.abc.dao.specification.chunks.Specification;
+import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
+import nks.abc.dao.specification.factory.user.UserSpecificationFactory;
 import nks.abc.depricated.service.message.MailFactory;
 import nks.abc.depricated.service.message.MailService;
 import nks.abc.domain.user.Account;
@@ -78,13 +77,13 @@ public class StaffServiceImpl implements StaffService {
 			accountDAO.insert(account);
 		
 			if (account.getIsAdministrator()) {
-				admin.setAccountInfo(account);
+				admin.setAccount(account);
 				
 				log.info("adding admin: " + admin);
 				adminDAO.insert(admin);
 			}
 			if(account.getIsTeacher()) {
-				teacher.setAccountInfo(account);
+				teacher.setAccount(account);
 				
 				log.info("adding teacher: " + teacher);
 				teacherDAO.insert(teacher);
@@ -109,15 +108,20 @@ public class StaffServiceImpl implements StaffService {
 		accountDAO.update(account);
 		
 		//TODO: what be if will be changed relations between teacher/admin and account during update above???
-		Teacher oldTeacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(account));
-		Administrator oldAdmin = adminDAO.uniqueQuery(adminDAO.specifications().byAccount(account));
+//		Teacher oldTeacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(account));
+//		Administrator oldAdmin = adminDAO.uniqueQuery(adminDAO.specifications().byAccount(account));
+		
+		UserSpecificationFactory factory = UserSpecificationFactory.buildFactory();
+		Teacher oldTeacher = teacherDAO.uniqueQuery(factory.byAccount(account));
+		Administrator oldAdmin = adminDAO.uniqueQuery(factory.byAccount(account));
+		
 		try{
 			//TODO: make  more readable
 			if(oldTeacher == null && account.getIsTeacher()) {
 				oldTeacher = UserFactory.createTeacher();
 			}
 			if (oldTeacher != null){
-				oldTeacher.setAccountInfo(account);
+				oldTeacher.setAccount(account);
 				log.info("updating teacher: " + account);
 				teacherDAO.update(oldTeacher);
 			}
@@ -126,7 +130,7 @@ public class StaffServiceImpl implements StaffService {
 				oldAdmin = UserFactory.createAdministrator();
 			}
 			if(oldAdmin != null){
-				oldAdmin.setAccountInfo(account);
+				oldAdmin.setAccount(account);
 				log.info("updating administrator: " + oldAdmin);
 				adminDAO.update(oldAdmin);
 			}
@@ -185,7 +189,7 @@ public class StaffServiceImpl implements StaffService {
 	public Account getAccountById(Long id) {
 		Account account = null;
 		try{
-			account = accountDAO.uniqueQuery(AccountSpecifications.byId(id));
+			account = accountDAO.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(id));
 		}
 		catch(Exception e){
 			errorHandler.handle(e);
@@ -203,7 +207,7 @@ public class StaffServiceImpl implements StaffService {
 			users.addAll(teacherDAO.retrieveAll());
 			users.addAll(adminDAO.retrieveAll());
 			for(User user : users) {
-				accounts.add(user.getAccountInfo());
+				accounts.add(user.getAccount());
 			}
 		}
 		catch (Exception e){
@@ -216,7 +220,7 @@ public class StaffServiceImpl implements StaffService {
 	public List<Teacher> getAllTeachers() {
 		List<Teacher> teachers = null;
 		try{
-			teachers = teacherDAO.query(AccountSpecifications.active());
+			teachers = teacherDAO.query(AccountSpecificationFactory.buildFactory().active());
 		}
 		catch(Exception e){
 			errorHandler.handle(e, "get all teachers");
@@ -228,7 +232,7 @@ public class StaffServiceImpl implements StaffService {
 	public Staff getStaffById(Long id) {
 		Staff  entity = null;
 		try{
-			entity = (Staff) userDAO.uniqueQuery(UserSpecifications.ById(id));
+			entity = (Staff) userDAO.uniqueQuery(UserSpecificationFactory.buildFactory().byId(id));
 		}
 		catch(Exception e){
 			errorHandler.handle(e, "get staff by id");
@@ -254,7 +258,9 @@ public class StaffServiceImpl implements StaffService {
 	private class GuardClauses{
 
 		private void delete(Long id, String currentUserEmail) {
-			Account currentUser = accountDAO.uniqueQuery(accountDAO.specifications().byEmailAndIsActive(currentUserEmail, true));
+//			Account currentUser = accountDAO.uniqueQuery(accountDAO.specifications().byEmailAndIsActive(currentUserEmail, true));
+			AccountSpecificationFactory specification = AccountSpecificationFactory.buildFactory();
+			Account currentUser = accountDAO.uniqueQuery(specification.byEmail(currentUserEmail).and(specification.active()));
 			
 			if(currentUser == null) {
 				throw new NoCurrentUserException("No current user. Username: " + currentUserEmail);
@@ -270,7 +276,11 @@ public class StaffServiceImpl implements StaffService {
 				throw new NoCurrentUserException("Current user login is empty");
 			}
 			System.out.println("Current user email: " + currentUserEmail);
-			CriterionSpecification specification = accountDAO.specifications().byEmailAndIsActive(currentUserEmail,true);
+			
+//			CriterionSpecification specification = accountDAO.specifications().byEmailAndIsActive(currentUserEmail,true);
+			
+			AccountSpecificationFactory specificationFactory = AccountSpecificationFactory.buildFactory();
+			Specification specification = specificationFactory.byEmail(currentUserEmail).and(specificationFactory.active());
 			Account currentUser = accountDAO.uniqueQuery(specification);
 			System.out.println("Current user: " + currentUser);
 			Long accountId = account.getAccountId();
@@ -294,8 +304,9 @@ public class StaffServiceImpl implements StaffService {
 			if(login == null || login.length() < 1) {
 				throw new NoUserLoginException("Email is empty");
 			}
-			AccountSpecificationFactory specificationFactory = accountDAO.specifications();
-			if(accountDAO.uniqueQuery(specificationFactory.byEmail(login)) != null) {
+//			AccountSpecificationFactory specificationFactory = accountDAO.specifications();
+			AccountSpecificationFactory specification = AccountSpecificationFactory.buildFactory();
+			if(accountDAO.uniqueQuery(specification.byEmail(login)) != null) {
 				throw new ServiceDisplayedErorr("User with such login already exist!");
 			}
 			if(!account.getIsAdministrator() && !account.getIsTeacher()){

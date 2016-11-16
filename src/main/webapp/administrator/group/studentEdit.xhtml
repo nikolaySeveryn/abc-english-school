@@ -46,10 +46,10 @@
 							<c:if test="#{studentBean.isNewStudent}">
 								<p:outputLabel value="Email" for="email" />
 								<p:inputText id="email"
-									value="#{studentBean.editedStudent.accountInfo.email}"
+									value="#{studentBean.editedStudent.account.email}"
 									required="true" autocomplete="false">
 									<f:validator validatorId="uniqueColumnValidator" />
-									<f:attribute name="entity" value="#{studentBean.editedStudent.accountInfo}" />
+									<f:attribute name="entity" value="#{studentBean.editedStudent.account}" />
 									<f:attribute name="field" value="email" />
 								</p:inputText>
 								<p:message for="email" />

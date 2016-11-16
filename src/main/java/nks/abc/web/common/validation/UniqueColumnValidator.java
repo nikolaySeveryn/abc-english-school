@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import nks.abc.dao.base.interfaces.UniqueChecker;
+import nks.abc.dao.base.UniqueChecker;
 
 @FacesValidator("uniqueColumnValidator")
 @Component

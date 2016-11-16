@@ -5,7 +5,8 @@ import javax.validation.constraints.Pattern;
 
 public interface PersonalInfo {
 
-	String makeFullName();
+	String getFullName();
+	String getFullName(final String separator);
 	
 	Long getId();
 	void setId(Long id);

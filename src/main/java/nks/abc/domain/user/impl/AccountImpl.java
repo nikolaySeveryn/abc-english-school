@@ -26,26 +26,21 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.validator.constraints.Email;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.dao.newspecification.user.AccountSpecifications;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
+import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
 import nks.abc.domain.user.PasswordEncryptor;
 import nks.abc.domain.user.PersonalInfo;
 import nks.abc.domain.user.Role;
 import nks.abc.domain.user.Teacher;
-import nks.abc.domain.validation.annotation.Unique;
 
 @Entity
 @Table(name="accountinfo")
@@ -112,7 +107,7 @@ public class AccountImpl implements Account {
 		}
 		Teacher teacherData = null;
 		try {
-			 teacherData = teacherRepository.uniqueQuery(AccountSpecifications.byId(accountId));
+			 teacherData = teacherRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
 		}
 		catch(Exception e){
 			errorHandler.handle(e);
@@ -128,7 +123,7 @@ public class AccountImpl implements Account {
 		}
 		Administrator adminData = null;
 		try{
-			adminData = adminRepository.uniqueQuery(AccountSpecifications.byId(accountId));
+			adminData = adminRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
 		}
 		catch(Exception e){
 			errorHandler.handle(e);
@@ -202,7 +197,7 @@ public class AccountImpl implements Account {
 	
 	@Override
 	public String getFullName() {
-		return peronalInfo.makeFullName();
+		return peronalInfo.getFullName();
 	}
 	
 	/*
@@ -260,7 +255,6 @@ public class AccountImpl implements Account {
 		return "AccountImpl [accountId=" + accountId + ", email=" + email + ", passwordHash=" + passwordHash + ", peronalInfo=" + peronalInfo + ", roles=" + roles + ", active=" + active + "]";
 	}
 
-	
 	
 }
 

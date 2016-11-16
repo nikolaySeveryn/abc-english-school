@@ -38,7 +38,7 @@
 					<p:autoComplete id="teacher"
 						value="#{studentBean.editedGroup.teacher}" dropdown="true"
 						completeMethod="#{studentBean.complateTeacher}" var="teacher"
-						itemLabel="#{teacher.accountInfo.peronalInfo.sirName} #{teacher.accountInfo.peronalInfo.firstName} #{teacher.accountInfo.peronalInfo.patronomic}"
+						itemLabel="#{teacher.fullName}"
 						itemValue="#{teacher}" converter="#{staffConverter}" />
 					<p:message for="teacher" />
 

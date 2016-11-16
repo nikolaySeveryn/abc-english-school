@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.dao.base.interfaces.UniqueChecker;
+import nks.abc.dao.base.UniqueChecker;
 import nks.abc.domain.validation.annotation.Unique;
 
 @Component

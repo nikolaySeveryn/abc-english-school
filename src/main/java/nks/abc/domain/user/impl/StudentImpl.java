@@ -89,6 +89,6 @@ public class StudentImpl extends UserImpl implements Student {
 	}
 	@Override
 	public Long getAccountId() {
-		return getAccountInfo().getAccountId();
+		return getAccount().getAccountId();
 	}
 }

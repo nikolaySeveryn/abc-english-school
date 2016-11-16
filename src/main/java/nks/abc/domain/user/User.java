@@ -8,8 +8,8 @@ public interface User {
 	Boolean isNew();
 	Long getUserId();
 	void setUserId(Long id);
-	Account getAccountInfo();
-	void setAccountInfo(Account accountInfo);
+	Account getAccount();
+	void setAccount(Account accountInfo);
 	Long getAccountId();
 	PersonalInfo getPersonalInfo();
 }

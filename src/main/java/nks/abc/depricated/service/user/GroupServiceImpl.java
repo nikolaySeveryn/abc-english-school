@@ -12,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.core.exception.service.RemoveDenidedException;
-import nks.abc.dao.newspecification.user.GroupSpecifications;
 import nks.abc.dao.repository.user.GroupRepository;
+import nks.abc.dao.specification.factory.user.GroupSpecificationFactory;
 import nks.abc.domain.user.Group;
-import nks.abc.domain.user.impl.GroupImpl;
 
 @Service
 @Transactional(readOnly = true)
@@ -68,7 +67,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public Group getById(Long id) {
 		try {
-			Group group = groupDAO.uniqueQuery(GroupSpecifications.byId(id));
+			Group group = groupDAO.uniqueQuery(GroupSpecificationFactory.buildFactory().byId(id));
 			return group;
 		}
 		catch (Exception e) {

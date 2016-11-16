@@ -32,11 +32,11 @@ public class UserBean implements Serializable {
 	public User getCurrentUser() {
 //		return userService.getStaffByEmail(getCurrentUserName());
 		User user = UserFactory.createAdministrator();
-		user.getAccountInfo().setEmail("nkstestemail1@gmail.com");
+		user.getAccount().setEmail("nkstestemail1@gmail.com");
 		user.getPersonalInfo().setSirName("Test");
 		user.getPersonalInfo().setFirstName("User");
-		user.getAccountInfo().setIsAdministrator(true);
-		user.getAccountInfo().setIsTeacher(true);
+		user.getAccount().setIsAdministrator(true);
+		user.getAccount().setIsTeacher(true);
 		return user;
 	}
 

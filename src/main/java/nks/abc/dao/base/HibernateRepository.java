@@ -24,7 +24,7 @@ public abstract class HibernateRepository {
 		return sessionFactory.getCurrentSession();
 	}
 
-	protected Criteria getCriteria() {
+	protected Criteria createCriteria() {
 		return getSession().createCriteria(domainClass).addOrder(Order.asc("id"));
 	}
 

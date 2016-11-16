@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.repository.RepositoryException;
-import nks.abc.dao.base.interfaces.UniqueChecker;
+import nks.abc.dao.base.UniqueChecker;
 
 @Repository
 @Transactional(readOnly=true)

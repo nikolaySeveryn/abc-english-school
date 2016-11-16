@@ -34,29 +34,27 @@ public abstract class UserImpl implements User {
 	@ManyToOne(fetch=FetchType.EAGER, targetEntity=AccountImpl.class, cascade=CascadeType.ALL)
 	@JoinColumn(name="account_info", nullable=false)
 	@OnDelete(action=OnDeleteAction.CASCADE)
-	private Account accountInfo;
+	private Account account;
 	
-	private final static String DEFAULT_FULLNAME_SEPARATOR = " ";
 	
 	@Override
 	public String getFullName(){
-		return getFullName(DEFAULT_FULLNAME_SEPARATOR);
+		return getPersonalInfo().getFullName();
 	}
 	
 	@Override
 	public String getFullName(String separator){
-		PersonalInfo person = getPersonalInfo();
-		return person.getSirName() + separator + person.getFirstName() + separator + person.getPatronomic();
+		return getPersonalInfo().getFullName(separator);
 	}
 	
 	@Override
 	public void updatePassword(String password) {
-		accountInfo.updatePassword(password);
+		account.updatePassword(password);
 	}
 	
 	@Override
 	public PersonalInfo getPersonalInfo(){
-		return getAccountInfo().getPeronalInfo();
+		return getAccount().getPeronalInfo();
 	}
 	
 	@Override
@@ -74,21 +72,21 @@ public abstract class UserImpl implements User {
 	}
 	
 	@Override
-	public Account getAccountInfo() {
-		return accountInfo;
+	public Account getAccount() {
+		return account;
 	}
 	@Override
-	public void setAccountInfo(Account accountInfo) {
-		this.accountInfo = accountInfo;
+	public void setAccount(Account accountInfo) {
+		this.account = accountInfo;
 	}
 	@Override
 	public Long getAccountId() {
-		return getAccountInfo().getAccountId();
+		return getAccount().getAccountId();
 	}
 
 	@Override
 	public String toString() {
-		return "UserImpl [userId=" + userId + ", accountInfo=" + accountInfo + "]";
+		return "UserImpl [userId=" + userId + ", accountInfo=" + account + "]";
 	}
 
 }

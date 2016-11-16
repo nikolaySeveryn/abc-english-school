@@ -20,16 +20,16 @@ public class UserFactory {
 	}
 	public static Administrator createAdministrator(){
 		Administrator instatnce = new AdministratorImpl();
-		instatnce.setAccountInfo(AccountFactory.createAccount());
+		instatnce.setAccount(AccountFactory.createAccount());
 		return instatnce;
 	}
 
 	public static Student createStudent() {
 		Student instance = new StudentImpl();
 		instance.setGroups(new HashSet<GroupImpl>());
-		instance.setAccountInfo(AccountFactory.createAccount());
+		instance.setAccount(AccountFactory.createAccount());
 		instance.setParent(createParent());
-		instance.getAccountInfo().setIsStudent(true);
+		instance.getAccount().setIsStudent(true);
 		return instance;
 	}
 	

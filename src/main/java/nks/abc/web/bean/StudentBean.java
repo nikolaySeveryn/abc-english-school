@@ -179,9 +179,9 @@ public class StudentBean implements Serializable {
 		query = query.trim();
 		List<Teacher> complate = new ArrayList<Teacher>();
 		for (Teacher teacher : staffService.getAllTeachers()) {
-			String name = teacher.getAccountInfo().getPeronalInfo().getFirstName() + " " 
-						+ teacher.getAccountInfo().getPeronalInfo().getSirName() + " "
-						+ teacher.getAccountInfo().getPeronalInfo().getPatronomic();
+			String name = teacher.getAccount().getPeronalInfo().getFirstName() + " " 
+						+ teacher.getAccount().getPeronalInfo().getSirName() + " "
+						+ teacher.getAccount().getPeronalInfo().getPatronomic();
 			if (name.contains(query)) {
 				complate.add(teacher);
 			}
