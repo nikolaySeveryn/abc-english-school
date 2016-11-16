@@ -1,4 +1,4 @@
-package nks.abc.depricated.service.user;
+package nks.abc.domain.user.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,21 +26,21 @@ import nks.abc.dao.repository.user.UserRepositoty;
 import nks.abc.dao.specification.chunks.Specification;
 import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
 import nks.abc.dao.specification.factory.user.UserSpecificationFactory;
-import nks.abc.depricated.service.message.MailFactory;
-import nks.abc.depricated.service.message.MailService;
+import nks.abc.domain.message.MailFactory;
+import nks.abc.domain.message.MailService;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
+import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.Staff;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.User;
 import nks.abc.domain.user.factory.UserFactory;
-import nks.abc.domain.user.impl.StaffImpl;
 
 @Service("staffService")
 @Transactional(readOnly=true)
-public class StaffServiceImpl implements StaffService {
+public class HumanResourcesImpl implements HumanResources {
 	
-	private static final Logger log = Logger.getLogger(StaffServiceImpl.class);
+	private static final Logger log = Logger.getLogger(HumanResourcesImpl.class);
 	
 	@Autowired
 	private AdminRepository adminDAO;

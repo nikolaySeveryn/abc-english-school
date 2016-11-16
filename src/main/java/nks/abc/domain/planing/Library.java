@@ -1,10 +1,8 @@
-package nks.abc.depricated.service.plan;
+package nks.abc.domain.planing;
 
 import java.util.List;
 
-import nks.abc.domain.planing.Book;
-
-public interface BookService {
+public interface Library {
 	
 	public void add(Book book);
 	public void update(Book book);

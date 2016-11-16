@@ -3,7 +3,7 @@ package nks.abc.dao.specification.factory.user;
 import nks.abc.dao.specification.chunks.factory.AliasChunksFactory;
 import nks.abc.dao.specification.chunks.factory.SpecificationChunksFactory;
 import nks.abc.dao.specification.factory.CommonSpecificationFactory;
-import nks.abc.domain.user.impl.GroupImpl;
+import nks.abc.domain.school.impl.GroupImpl;
 
 
 public class GroupSpecificationFactory extends CommonSpecificationFactory {

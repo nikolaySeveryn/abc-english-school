@@ -2,12 +2,12 @@ package nks.abc.domain.user.factory;
 
 import java.util.HashSet;
 
+import nks.abc.domain.school.impl.GroupImpl;
 import nks.abc.domain.user.Administrator;
 import nks.abc.domain.user.Parent;
 import nks.abc.domain.user.Student;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.impl.AdministratorImpl;
-import nks.abc.domain.user.impl.GroupImpl;
 import nks.abc.domain.user.impl.ParentImpl;
 import nks.abc.domain.user.impl.PersonalInfoImpl;
 import nks.abc.domain.user.impl.StudentImpl;

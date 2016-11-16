@@ -1,4 +1,4 @@
-package nks.abc.domain.user.impl;
+package nks.abc.domain.school.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,9 +26,11 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OrderBy;
 
-import nks.abc.domain.user.Group;
-import nks.abc.domain.user.Level;
+import nks.abc.domain.school.Group;
+import nks.abc.domain.school.Level;
 import nks.abc.domain.user.Teacher;
+import nks.abc.domain.user.impl.StudentImpl;
+import nks.abc.domain.user.impl.TeacherImpl;
 
 @Entity
 @Table(name="group")

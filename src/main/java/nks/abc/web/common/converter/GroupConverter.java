@@ -7,8 +7,8 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.depricated.service.user.GroupService;
-import nks.abc.domain.user.Group;
+import nks.abc.domain.school.Group;
+import nks.abc.domain.school.School;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class GroupConverter implements Converter{
 	private static final Logger log = Logger.getLogger(GroupConverter.class); 
 	
 	@Autowired
-	private GroupService groupSerice;
+	private School groupSerice;
 
 	@Override
 	public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
@@ -30,7 +30,7 @@ public class GroupConverter implements Converter{
 			return null;
 		}
 		try{
-			return groupSerice.getById(Long.parseLong(value));
+			return groupSerice.findGroupById(Long.parseLong(value));
 		}
 		catch(ServiceException e){
 			log.warn("Staff dto conversion error", e);

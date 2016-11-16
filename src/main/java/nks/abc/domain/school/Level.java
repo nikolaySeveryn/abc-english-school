@@ -1,4 +1,4 @@
-package nks.abc.domain.user;
+package nks.abc.domain.school;
 
 public enum Level {
 	

@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import nks.abc.domain.user.Group;
-import nks.abc.domain.user.impl.GroupImpl;
+import nks.abc.domain.school.Group;
+import nks.abc.domain.school.impl.GroupImpl;
 
 public class GroupTest {
 	

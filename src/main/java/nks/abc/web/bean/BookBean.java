@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.depricated.service.plan.BookService;
 import nks.abc.domain.planing.Book;
+import nks.abc.domain.planing.Library;
 import nks.abc.domain.planing.factory.BookFactory;
 import nks.abc.web.common.enumeration.EditingMode;
 import nks.abc.web.common.message.MessageSeverity;
@@ -28,7 +28,7 @@ public class BookBean implements Serializable {
 	private static final long serialVersionUID = -1472298095198746868L;
 
 	@Autowired
-	private BookService bookService;
+	private Library bookService;
 	
 	@Autowired
 	private UIMessage message;

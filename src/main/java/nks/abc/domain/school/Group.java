@@ -1,4 +1,4 @@
-package nks.abc.domain.user;
+package nks.abc.domain.school;
 
 import java.util.List;
 import java.util.Set;
@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.impl.StudentImpl;
 
 public interface Group {

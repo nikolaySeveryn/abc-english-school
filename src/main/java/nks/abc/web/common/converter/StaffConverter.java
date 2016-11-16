@@ -7,7 +7,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
 import nks.abc.core.exception.service.ServiceException;
-import nks.abc.depricated.service.user.StaffService;
+import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.Staff;
 
 import org.apache.log4j.Logger;
@@ -22,7 +22,7 @@ public class StaffConverter implements Converter {
 	private static final Logger log = Logger.getLogger(StaffConverter.class);
 	
 	@Autowired
-	private StaffService staffService;
+	private HumanResources staffService;
 
 	@Override
 	public Object getAsObject(FacesContext fc, UIComponent uic, String value) {

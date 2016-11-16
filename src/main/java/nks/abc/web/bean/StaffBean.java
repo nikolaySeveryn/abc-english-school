@@ -12,9 +12,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.depricated.service.user.StaffService;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
+import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.factory.AccountFactory;
 import nks.abc.domain.user.factory.UserFactory;
@@ -40,7 +40,7 @@ public class StaffBean implements Serializable {
 	private ErrorHandler errorHandler;
 	
 	@Autowired
-	private StaffService staffService;
+	private HumanResources staffService;
 	
 	@Autowired
 	private UserBean userBean;

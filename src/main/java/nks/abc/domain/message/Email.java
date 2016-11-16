@@ -1,4 +1,4 @@
-package nks.abc.depricated.service.message;
+package nks.abc.domain.message;
 
 
 public class Email {

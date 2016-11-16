@@ -8,7 +8,7 @@ import javax.faces.context.FacesContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import nks.abc.depricated.service.user.StaffService;
+import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.User;
 import nks.abc.domain.user.factory.UserFactory;
 import nks.abc.domain.user.impl.AdministratorImpl;
@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class UserBean implements Serializable {
 	
 	@Autowired
-	StaffService userService;
+	HumanResources userService;
 
 	private static final long serialVersionUID = 919819109293109878L;
 

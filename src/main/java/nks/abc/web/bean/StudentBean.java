@@ -10,15 +10,14 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.depricated.service.user.GroupService;
-import nks.abc.depricated.service.user.StaffService;
-import nks.abc.depricated.service.user.StudentService;
-import nks.abc.domain.user.Group;
-import nks.abc.domain.user.Level;
+import nks.abc.domain.school.Group;
+import nks.abc.domain.school.Level;
+import nks.abc.domain.school.School;
+import nks.abc.domain.school.impl.GroupImpl;
+import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.Student;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.factory.UserFactory;
-import nks.abc.domain.user.impl.GroupImpl;
 import nks.abc.web.common.enumeration.EditingMode;
 
 import org.apache.log4j.Logger;
@@ -41,11 +40,9 @@ public class StudentBean implements Serializable {
 	private ErrorHandler errorHandler;
 
 	@Autowired
-	private GroupService groupService;
+	private School school;
 	@Autowired
-	private StaffService staffService;
-	@Autowired
-	private StudentService studentService;
+	private HumanResources staffService;
 
 	private Map<Long,Boolean> checkedGroups = new HashMap<Long,Boolean>();
 	private Map<Long,Boolean> checkedStudents = new HashMap<Long,Boolean>();
@@ -64,7 +61,7 @@ public class StudentBean implements Serializable {
 
 	public List<Group> getGroupList() {
 		try {
-			return groupService.getGroups();
+			return school.getGroups();
 		}
 		catch (Exception e) {
 			errorHandler.handle(e);
@@ -101,14 +98,14 @@ public class StudentBean implements Serializable {
 	}
 
 	public String editStudent(Long studentId) {
-		editedStudent = studentService.getById(studentId);
+		editedStudent = school.findStudentById(studentId);
 		studentMode = EditingMode.EDIT;
 		return STUDENT_EDIT_PAGE;
 	}
 
 	public String saveGroup() {
 		try {
-			groupService.saveGroup(editedGroup);
+			school.saveGroup(editedGroup);
 			groupMode = EditingMode.NONE;
 			return MAIN_PAGE;
 		}
@@ -120,7 +117,7 @@ public class StudentBean implements Serializable {
 
 	public String saveStudent() {
 		try {
-			studentService.save(editedStudent);
+			school.saveStudent(editedStudent);
 			studentMode = EditingMode.NONE;
 			updateStudentsList();
 			return MAIN_PAGE;
@@ -133,7 +130,7 @@ public class StudentBean implements Serializable {
 
 	private void updateStudentsList() {
 		if (viewedGroup != null) {
-			viewedGroup = groupService.getById(viewedGroup.getId());
+			viewedGroup = school.findGroupById(viewedGroup.getId());
 		}
 	}
 
@@ -147,7 +144,7 @@ public class StudentBean implements Serializable {
 		List<Long> idsToDelete = seekSelectedItems(checkedGroups);
 		int deletingCount = idsToDelete.size();
 		if (deletingCount > 0) {
-			groupService.deleteGroups(idsToDelete.toArray(new Long[deletingCount]));
+			school.deleteGroups(idsToDelete.toArray(new Long[deletingCount]));
 		}
 		checkedGroups.clear();
 	}
@@ -156,7 +153,7 @@ public class StudentBean implements Serializable {
 		List<Long> idsToDelete = seekSelectedItems(checkedStudents);
 		int deletingCount = idsToDelete.size();
 		if (deletingCount > 0) {
-			studentService.delete(idsToDelete.toArray(new Long[deletingCount]));
+			school.deleteStudents(idsToDelete.toArray(new Long[deletingCount]));
 			updateStudentsList();
 		}
 	}
@@ -179,9 +176,7 @@ public class StudentBean implements Serializable {
 		query = query.trim();
 		List<Teacher> complate = new ArrayList<Teacher>();
 		for (Teacher teacher : staffService.getAllTeachers()) {
-			String name = teacher.getAccount().getPeronalInfo().getFirstName() + " " 
-						+ teacher.getAccount().getPeronalInfo().getSirName() + " "
-						+ teacher.getAccount().getPeronalInfo().getPatronomic();
+			String name = teacher.getFullName(); 
 			if (name.contains(query)) {
 				complate.add(teacher);
 			}
@@ -192,7 +187,7 @@ public class StudentBean implements Serializable {
 	public List<Group> complateGroup(String query) {
 		query = query.trim();
 		List<Group> complate = new ArrayList<Group>();
-		for (Group group : groupService.getGroups()) {
+		for (Group group : school.getGroups()) {
 			if (group.getName().contains(query)) {
 				complate.add(group);
 			}

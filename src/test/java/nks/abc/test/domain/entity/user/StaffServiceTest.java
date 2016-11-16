@@ -15,13 +15,13 @@ import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
-import nks.abc.depricated.service.message.Email;
-import nks.abc.depricated.service.message.MailFactory;
-import nks.abc.depricated.service.message.MailService;
-import nks.abc.depricated.service.user.StaffServiceImpl;
+import nks.abc.domain.message.Email;
+import nks.abc.domain.message.MailFactory;
+import nks.abc.domain.message.MailService;
 import nks.abc.domain.user.PasswordEncryptor;
 import nks.abc.domain.user.impl.AccountImpl;
 import nks.abc.domain.user.impl.AdministratorImpl;
+import nks.abc.domain.user.impl.HumanResourcesImpl;
 import nks.abc.domain.user.impl.MD5PasswordEncryptor;
 import nks.abc.domain.user.impl.TeacherImpl;
 
@@ -53,7 +53,7 @@ public class StaffServiceTest {
 	private ErrorHandler errorHandler = new ServiceErrorHandler();
 	
 	@InjectMocks
-	private StaffServiceImpl service = new StaffServiceImpl();
+	private HumanResourcesImpl service = new HumanResourcesImpl();
 	
 	private String passHash;
 	

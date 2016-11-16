@@ -21,7 +21,8 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import nks.abc.domain.user.Group;
+import nks.abc.domain.school.Group;
+import nks.abc.domain.school.impl.GroupImpl;
 import nks.abc.domain.user.Parent;
 import nks.abc.domain.user.Student;
 

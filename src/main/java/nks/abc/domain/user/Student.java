@@ -3,6 +3,8 @@ package nks.abc.domain.user;
 import java.util.List;
 import java.util.Set;
 
+import nks.abc.domain.school.Group;
+
 public interface Student extends User{
 
 	Long getAccountId();

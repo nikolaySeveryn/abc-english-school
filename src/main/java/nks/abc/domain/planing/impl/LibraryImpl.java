@@ -1,10 +1,11 @@
-package nks.abc.depricated.service.plan;
+package nks.abc.domain.planing.impl;
 
 import java.util.List;
 
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.dao.repository.planing.BookRepository;
 import nks.abc.domain.planing.Book;
+import nks.abc.domain.planing.Library;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Service("bookService")
+@Service
 @Transactional(readOnly=true)
-public class BookServiceImpl implements BookService {
+public class LibraryImpl implements Library {
 	
 	@Autowired
 	private BookRepository bookDAO;

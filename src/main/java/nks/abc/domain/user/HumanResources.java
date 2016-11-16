@@ -1,17 +1,13 @@
-package nks.abc.depricated.service.user;
+package nks.abc.domain.user;
 
 import java.util.List;
 
-import nks.abc.domain.user.Account;
-import nks.abc.domain.user.Administrator;
-import nks.abc.domain.user.Staff;
-import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.impl.AccountImpl;
 import nks.abc.domain.user.impl.AdministratorImpl;
 import nks.abc.domain.user.impl.TeacherImpl;
 
 
-public interface StaffService {
+public interface HumanResources {
 	
 	public void add(Account account, Teacher teacher, Administrator admin);
 	public List<Account> getAllStaffAccounts();

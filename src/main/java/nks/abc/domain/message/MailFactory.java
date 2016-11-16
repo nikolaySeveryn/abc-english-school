@@ -1,9 +1,10 @@
-package nks.abc.depricated.service.message;
+package nks.abc.domain.message;
 
 import org.springframework.stereotype.Component;
 
 @Component
 public class MailFactory {
+	//TODO:move to some xml
 	
 	public Email newStaff(String emailAddress, String password) {
 		Email email = new Email();
