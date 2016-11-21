@@ -1,5 +1,6 @@
 package nks.abc.dao.specification.chunks;
 
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;

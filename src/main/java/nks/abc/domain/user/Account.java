@@ -4,15 +4,20 @@ import nks.abc.domain.validation.annotation.Email;
 
 public interface Account {
 
-	Teacher getTeacherData();
-	Administrator getAdministratorData();
+	User getUser();
 	void updatePassword(String password);
 	String updatePasswordToRandom();
+	@Deprecated
 	boolean getIsAdministrator();
+	@Deprecated
 	boolean getIsTeacher();
+	@Deprecated
 	boolean getIsStudent();
+	@Deprecated
 	void setIsAdministrator(boolean is);
+	@Deprecated
 	void setIsTeacher(boolean is);
+	@Deprecated
 	void setIsStudent(boolean is);
 	String getFullName();
 

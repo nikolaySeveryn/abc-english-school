@@ -12,4 +12,7 @@ public interface User {
 	void setAccount(Account accountInfo);
 	Long getAccountId();
 	PersonalInfo getPersonalInfo();
+	boolean isTeacher();
+	boolean isAdministrator();
+	boolean isStudent();
 }

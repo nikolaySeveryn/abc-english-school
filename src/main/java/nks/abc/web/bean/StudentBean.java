@@ -216,6 +216,9 @@ public class StudentBean implements Serializable {
 	public Group getViewed() {
 		return viewedGroup;
 	}
+	public List<Student> getStudents() {
+		return viewedGroup.getStudents();
+	}
 	public Student getEditedStudent() {
 		return editedStudent;
 	}

@@ -19,24 +19,34 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.OrderBy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.dao.repository.user.StudentRepository;
+import nks.abc.dao.specification.chunks.Specification;
+import nks.abc.dao.specification.factory.user.GroupSpecificationFactory;
 import nks.abc.domain.school.Group;
 import nks.abc.domain.school.Level;
+import nks.abc.domain.user.Student;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.impl.StudentImpl;
 import nks.abc.domain.user.impl.TeacherImpl;
 
 @Entity
 @Table(name="group")
+@Configurable
 public class GroupImpl implements Group {
 	
-	private final static Integer MULTIPLIER = 100; 
+	private final static Integer MULTIPLIER = 100;
+	
+	@Autowired
+	@Transient
+	private StudentRepository studentRepository;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="group_id_gen")
@@ -52,9 +62,6 @@ public class GroupImpl implements Group {
 	@ManyToOne(fetch=FetchType.EAGER, targetEntity=TeacherImpl.class)
 	@JoinColumn(name="teacher")
 	private Teacher teacher;
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="groups", targetEntity=StudentImpl.class)
-	@Fetch(FetchMode.SELECT)
-	private Set<StudentImpl> students = null;
 	//TODO: plan
 	
 	@Override
@@ -64,7 +71,7 @@ public class GroupImpl implements Group {
 	
 	@Override
 	public Boolean hasMembers(){
-		return students.size() > 0;
+		return getStudents().size() > 0;
 	}
 	
 	@Override
@@ -113,29 +120,26 @@ public class GroupImpl implements Group {
 	}
 	
 	@Override
-	public Set<StudentImpl> getStudents() {
+	@Transactional(readOnly=true)
+	public List<Student> getStudents() {
+		List<Student> students = new ArrayList<Student>();
+		try{
+			Specification specification = GroupSpecificationFactory.buildFactory("groups").byId(getId());
+			students = studentRepository.query(specification);
+		}
+		catch (Exception e){
+			//TODO:hadle exception
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		
 		return students;
 	}
-	@Override
-	public List<StudentImpl>getSortedStudents(){
-		List<StudentImpl> studentsList = new ArrayList<StudentImpl>(students);
-		Collections.sort(studentsList, new Comparator<StudentImpl>() {
-			@Override
-			public int compare(StudentImpl student1, StudentImpl student2) {
-				return student1.getUserId().compareTo(student2.getUserId());
-			}
-		});
-		return studentsList;
-	}
-	@Override
-	public void setStudents(Set<StudentImpl> students) {
-		this.students = students;
-	}
+
 	@Override
 	public String toString() {
 		return "Group [id=" + id + ", name=" + name + ", level=" + level
-				+ ", tarif=" + tarif + ", teacher=" + teacher + ", students="
-				+ students + "]";
+				+ ", tarif=" + tarif + ", teacher=" + teacher + "]";
 	}
 	
 	

@@ -9,16 +9,23 @@ import nks.abc.domain.school.impl.GroupImpl;
 public class GroupSpecificationFactory extends CommonSpecificationFactory {
 	
 	public static final GroupSpecificationFactory buildFactory(){
-		return new GroupSpecificationFactory();
+		return new GroupSpecificationFactory("group");
 	}
+	
+	public static final GroupSpecificationFactory buildFactory(String relativeField){
+		return new GroupSpecificationFactory(relativeField);
+	}
+	
+	private final String relativeField;
 
-	public GroupSpecificationFactory() {
+	public GroupSpecificationFactory(String relativeField) {
 		super("id");
+		this.relativeField = relativeField;
 	}
 
 	@Override
 	protected SpecificationChunksFactory getChunksFactory() {
-		return new AliasChunksFactory("group", GroupImpl.class);
+		return new AliasChunksFactory(relativeField, GroupImpl.class);
 	}
 
 }

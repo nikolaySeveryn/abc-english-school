@@ -92,4 +92,16 @@ public class StudentImpl extends UserImpl implements Student {
 	public Long getAccountId() {
 		return getAccount().getAccountId();
 	}
+	@Override
+	public boolean isTeacher() {
+		return false;
+	}
+	@Override
+	public boolean isAdministrator() {
+		return false;
+	}
+	@Override
+	public boolean isStudent() {
+		return true;
+	}
 }

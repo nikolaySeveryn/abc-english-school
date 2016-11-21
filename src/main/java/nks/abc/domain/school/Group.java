@@ -6,8 +6,8 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import nks.abc.domain.user.Student;
 import nks.abc.domain.user.Teacher;
-import nks.abc.domain.user.impl.StudentImpl;
 
 public interface Group {
 
@@ -35,8 +35,6 @@ public interface Group {
 	Teacher getTeacher();
 	void setTeacher(Teacher teacher);
 
-	Set<StudentImpl> getStudents();
-	List<StudentImpl> getSortedStudents();
-	void setStudents(Set<StudentImpl> students);
+	List<Student> getStudents();
 
 }

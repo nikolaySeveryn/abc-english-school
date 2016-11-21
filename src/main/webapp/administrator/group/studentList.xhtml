@@ -23,7 +23,7 @@
 
 		<p:dataTable id="student_table" var="student"
 			rendered="#{studentBean.viewed ne null}"
-			value="#{studentBean.viewed.sortedStudents}" emptyMessage="Пусто"
+			value="#{studentBean.students}" emptyMessage="Пусто"
 			styleClass="data-table" resizableColumns="true">
 			<p:column width="20">
 				<p:selectBooleanCheckbox

@@ -9,6 +9,8 @@ import nks.abc.dao.specification.chunks.Specification;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -30,8 +32,8 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseR
 			getSession().save(entity);
 		}
 		catch (HibernateException he){
-			log.error("hibernate exception" , he);
-			throw new RepositoryException("Error on insert", he);
+			log.error("hibernate exception on insert entity:" + entity , he);
+			throw new RepositoryException("Hibernate exception on insert", he);
 		}
 	}
 
@@ -43,7 +45,7 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseR
 			getSession().update(merged);
 		}
 		catch (HibernateException he) {
-			log.error("hibernate exception" , he);
+			log.error("Hibernate exception on updating entity:" + entity , he);
 			throw new RepositoryException("Error on update", he);
 		}
 	}
@@ -51,12 +53,24 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseR
 	@Override
 	public void delete(T entity) {
 		log.info("delete entity [" + domainClass.getName() +"]: \n" + entity);
-		getSession().delete(entity);
+		try{
+			getSession().delete(entity);
+		}
+		catch(HibernateException he){
+			log.error("Hibernate exception on deleting entity:" + entity, he);
+			throw new RepositoryException("Hibernate exception on deleting", he);
+		}
 	}
 	
 	@Override
 	public List<T> retrieveAll() {
-		return createCriteria().list();
+		try{
+			return createCriteria().list();
+		}
+		catch(HibernateException he){
+			log.error("Hibernate exception on retrieving all rows", he);
+			throw new RepositoryException("Hibernate exception on retrieving all rows", he);
+		}
 	}
 	
 	
@@ -66,11 +80,12 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseR
 		try{
 			Criteria criteria = createCriteria();
 			addAliasesToCriteria(specification, criteria);
-			return criteria.add(specification.toCriterion(domainClass)).list();
+			criteria.add(specification.toCriterion(domainClass));
+			return criteria.list();
 		}
 		catch (HibernateException he){
-			log.error("hibernate exception" , he);
-			throw new RepositoryException("Error on getting all data", he);
+			log.error("hibernate exception on query:" + specification , he);
+			throw new RepositoryException("Error on running query", he);
 		}
 	}
 	
@@ -79,12 +94,13 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseR
 		try{
 			Criteria criteria = createCriteria();
 			addAliasesToCriteria(specification, criteria);
-			return (T) criteria.add(specification.toCriterion(domainClass))
-					.setMaxResults(MAX_RESULT_OF_UNIQUE_QUERY).uniqueResult();
+			criteria.add(specification.toCriterion(domainClass))
+					.setMaxResults(MAX_RESULT_OF_UNIQUE_QUERY);
+			return (T)criteria.uniqueResult();
 		}
 		catch (HibernateException he){
-			log.error("hibernate exception" , he);
-			throw new RepositoryException("Error on executing unique query", he);
+			log.error("hibernate exception on unique query:" + specification , he);
+			throw new RepositoryException("Error on running unique query", he);
 		}
 	}
 
@@ -95,4 +111,5 @@ public class BaseRepositoryImpl <T> extends HibernateRepository implements BaseR
 			}
 		}
 	}
+
 }

@@ -1,17 +1,13 @@
 package nks.abc.domain.user.impl;
 
-
-
 import javax.annotation.ManagedBean;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import nks.abc.domain.user.PersonalInfo;
 
@@ -30,6 +26,7 @@ public class PersonalInfoImpl implements PersonalInfo {
 	private String sirName;
 	private String patronomic;
 	private java.sql.Date birthday;
+	@Column(unique=true)
 	private String phoneNum=null;
 	
 	

@@ -34,6 +34,9 @@
 			<p:column headerText="Рівень">
 				<h:outputText value="#{group.level.label}" />
 			</p:column>
+			<p:column headerText="Викладач">
+				<h:outputText value="#{group.teacher.fullName}" />
+			</p:column>
 			<p:column width="68">
 				<p:commandButton action="#{studentBean.editGroup(group)}"
 					icon="ui-icon-pencil" />

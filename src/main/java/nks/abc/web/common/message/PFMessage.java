@@ -10,8 +10,13 @@ public class PFMessage implements UIMessage {
 
 	@Override
 	public void send(MessageSeverity severity, String msg) {
-		
 		FacesMessage message = new FacesMessage(toPrimeSeverity(severity), msg,  null);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	@Override
+	public void send(MessageSeverity severity, String msg, String detail) {
+		FacesMessage message = new FacesMessage(toPrimeSeverity(severity), msg,  detail);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 	
@@ -32,5 +37,4 @@ public class PFMessage implements UIMessage {
 		
 		throw new IllegalArgumentException("Unknown message severity");
 	}
-
 }

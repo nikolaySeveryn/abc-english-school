@@ -9,23 +9,19 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.service.NoCurrentUserException;
-import nks.abc.core.exception.service.NoIdException;
-import nks.abc.core.exception.service.NoUserLoginException;
-import nks.abc.core.exception.service.RightsDeprivingException;
 import nks.abc.core.exception.service.SendMailException;
-import nks.abc.core.exception.service.ServiceDisplayedErorr;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdminRepository;
+import nks.abc.dao.repository.user.StaffRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.repository.user.UserRepositoty;
-import nks.abc.dao.specification.chunks.Specification;
 import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
 import nks.abc.dao.specification.factory.user.UserSpecificationFactory;
+import nks.abc.domain.errors.ErrorsSet;
 import nks.abc.domain.message.MailFactory;
 import nks.abc.domain.message.MailService;
 import nks.abc.domain.user.Account;
@@ -34,28 +30,29 @@ import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.Staff;
 import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.User;
-import nks.abc.domain.user.factory.UserFactory;
 
-@Service("staffService")
+@Component
 @Transactional(readOnly=true)
 public class HumanResourcesImpl implements HumanResources {
 	
 	private static final Logger log = Logger.getLogger(HumanResourcesImpl.class);
 	
 	@Autowired
-	private AdminRepository adminDAO;
+	private AdminRepository adminRepository;
 	@Autowired
-	private TeacherRepository teacherDAO;
+	private TeacherRepository teacherRepository;
 	@Autowired
-	private AccountRepository accountDAO;
+	private AccountRepository accountRepository;
 	@Autowired
-	private UserRepositoty userDAO;
+	private StaffRepository staffRepository;
+	@Autowired
+	private UserRepositoty userRepository;
 	@Autowired
 	private MailService mailer;
 	@Autowired
 	private MailFactory mailFactory;
 	
-	private GuardClauses guardClauses = new GuardClauses();
+	private Guard guard = new Guard();
 	
 	private ErrorHandler errorHandler;
 	
@@ -68,100 +65,115 @@ public class HumanResourcesImpl implements HumanResources {
 	
 	@Override
 	@Transactional(readOnly=false)
-	public void add(Account account, Teacher teacher, Administrator admin) {
-		guardClauses.add(account, teacher, admin);
-
+	public void hireTeacher(Teacher teacher) {
 		try {
+			if(teacher == null || teacher.getAccount() == null){
+				throw new IllegalArgumentException();
+			}
+			Account account = teacher.getAccount();
 			String password = account.updatePasswordToRandom();
-			log.info("adding account: " + account);
-			accountDAO.insert(account);
-		
-			if (account.getIsAdministrator()) {
-				admin.setAccount(account);
-				
-				log.info("adding admin: " + admin);
-				adminDAO.insert(admin);
-			}
-			if(account.getIsTeacher()) {
-				teacher.setAccount(account);
-				
-				log.info("adding teacher: " + teacher);
-				teacherDAO.insert(teacher);
-			}
-			try{
-				mailer.sendEmail(mailFactory.newStaff(account.getEmail(), password));
-			}
-			catch (SendMailException e){
-				log.warn("Email with password wasn't sent to user " + account.getEmail());
-			}
+			log.info("adding teacher: " + teacher);
+			teacherRepository.insert(teacher);
+			sendWelcomeEmail(account, password);
 		} catch (Exception e) {
-			errorHandler.handle(e, "add staff: " + account);
+			errorHandler.handle(e, "add staff: " + teacher);
 		}
 		
 	}
 
 	@Override
 	@Transactional(readOnly=false)
-	public void update(Account account, Teacher teacher, Administrator admin, String currentUserLogin) {
-		guardClauses.update(account, teacher, admin, currentUserLogin);
-		
-		accountDAO.update(account);
-		
-		//TODO: what be if will be changed relations between teacher/admin and account during update above???
-//		Teacher oldTeacher = teacherDAO.uniqueQuery(teacherDAO.specifications().byAccount(account));
-//		Administrator oldAdmin = adminDAO.uniqueQuery(adminDAO.specifications().byAccount(account));
-		
-		UserSpecificationFactory factory = UserSpecificationFactory.buildFactory();
-		Teacher oldTeacher = teacherDAO.uniqueQuery(factory.byAccount(account));
-		Administrator oldAdmin = adminDAO.uniqueQuery(factory.byAccount(account));
-		
-		try{
-			//TODO: make  more readable
-			if(oldTeacher == null && account.getIsTeacher()) {
-				oldTeacher = UserFactory.createTeacher();
+	public void hireAdministrator(Administrator admin) {
+		try {
+			if(admin == null || admin.getAccount() == null){
+				throw new IllegalArgumentException();
 			}
-			if (oldTeacher != null){
-				oldTeacher.setAccount(account);
-				log.info("updating teacher: " + account);
-				teacherDAO.update(oldTeacher);
-			}
+			Account account = admin.getAccount();
+			String password = account.updatePasswordToRandom();
+			log.info("adding administrator: " + admin);
+			adminRepository.insert(admin);
+			sendWelcomeEmail(account, password);
+		} catch (Exception e) {
+			errorHandler.handle(e, "add staff: " + admin);
+		}
 			
-			if(oldAdmin == null && account.getIsAdministrator()) {
-				oldAdmin = UserFactory.createAdministrator();
-			}
-			if(oldAdmin != null){
-				oldAdmin.setAccount(account);
-				log.info("updating administrator: " + oldAdmin);
-				adminDAO.update(oldAdmin);
-			}
+	}
+
+	public void sendWelcomeEmail(Account account, String password) {
+		try{
+			mailer.sendEmail(mailFactory.newStaff(account.getEmail(), password));
+		}
+		catch (SendMailException e){
+			log.warn("Email with password wasn't sent to user " + account.getEmail());
+		}
+	}
+	
+	
+
+	@Override
+	public ErrorsSet<Staff> checkPosibilityOfUpdate(Staff staff, String currentUsername) {
+		return guard.updateCheck(staff, currentUsername);
+	}
+
+	@Override
+	@Transactional(readOnly=false)
+	public void updateStaff(Staff staff, String currentUserEmail) {
+		ErrorsSet<Staff> errors = guard.updateCheck(staff, currentUserEmail);
+		if(errors.hasErrors()){
+			//TODO: make specific exception
+			log.warn("Got user error:" + errors.toString());
+			throw new RuntimeException("User error:" + errors.toString());
+		}
+		try{
+			System.out.println("Update staff:" + staff);
+			userRepository.update(staff);
 		}
 		catch (Exception e) {
-			errorHandler.handle(e, "update staff: " + account);
+			errorHandler.handle(e, "update staff: " + staff);
 		}
 	}
 
+	private Staff getStaffByAccountId(Long accountId) {
+		return staffRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
+	}
+
+	@Override
+	public ErrorsSet<Staff> checkDeletePosibility(Long accountId, String currentUserEmail) {
+		return guard.deleteCheck(accountId, currentUserEmail);
+	}
+
+
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Long id, String currentUserEmail) {
-		guardClauses.delete(id, currentUserEmail);
+	public void delete(Long accountId, String currentUserEmail) {
 		try{
-			//TODO:related entities
-			Account deletedUser = getAccountById(id);
-			accountDAO.delete(deletedUser);
+			ErrorsSet<Staff> errors = guard.deleteCheck(accountId, currentUserEmail);
+			if(errors.hasErrors()){
+				//TODO: make specific exception
+				log.warn("Got user error:" + errors.toString());
+				throw new RuntimeException("User error:" +errors.toString());
+			}
+			log.info("Deleting user:" + getStaffByAccountId(accountId));
+			userRepository.delete(getStaffByAccountId(accountId));
 		}
 		catch (Exception e){
-			errorHandler.handle(e, "delete user id=" + id);
+			errorHandler.handle(e, "delete user id=" + accountId);
 		}
+	}
+	
+	@Override
+	public ErrorsSet<Staff> checkFirePosibility(Long accountId, String currentUserEmail) {
+		return guard.deleteCheck(accountId, currentUserEmail);
 	}
 	
 	@Override
 	@Transactional(readOnly=false)
 	public void fire(Long id, String currentUserEmail) {
-		guardClauses.delete(id, currentUserEmail);
+		guard.deleteCheck(id, currentUserEmail);
 		try{
 			Account disabledUser = getAccountById(id);
 			disabledUser.setIsActive(false);
-			accountDAO.update(disabledUser);
+			accountRepository.update(disabledUser);
 			log.info("disable user: " + disabledUser);
 		}
 		catch (Exception e){
@@ -175,7 +187,7 @@ public class HumanResourcesImpl implements HumanResources {
 		try{
 			Account activatedUser = getAccountById(id);
 			activatedUser.setIsActive(true);
-			accountDAO.update(activatedUser);
+			accountRepository.update(activatedUser);
 			log.info("enable user: " + activatedUser);
 		}
 		catch (Exception e){
@@ -189,7 +201,7 @@ public class HumanResourcesImpl implements HumanResources {
 	public Account getAccountById(Long id) {
 		Account account = null;
 		try{
-			account = accountDAO.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(id));
+			account = accountRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(id));
 		}
 		catch(Exception e){
 			errorHandler.handle(e);
@@ -204,8 +216,8 @@ public class HumanResourcesImpl implements HumanResources {
 		Set<Account>accounts = new HashSet<Account>();
 		try{
 			//TODO: get staff via staff repository
-			users.addAll(teacherDAO.retrieveAll());
-			users.addAll(adminDAO.retrieveAll());
+			users.addAll(teacherRepository.retrieveAll());
+			users.addAll(adminRepository.retrieveAll());
 			for(User user : users) {
 				accounts.add(user.getAccount());
 			}
@@ -220,7 +232,7 @@ public class HumanResourcesImpl implements HumanResources {
 	public List<Teacher> getAllTeachers() {
 		List<Teacher> teachers = null;
 		try{
-			teachers = teacherDAO.query(AccountSpecificationFactory.buildFactory().active());
+			teachers = teacherRepository.query(AccountSpecificationFactory.buildFactory().active());
 		}
 		catch(Exception e){
 			errorHandler.handle(e, "get all teachers");
@@ -232,7 +244,7 @@ public class HumanResourcesImpl implements HumanResources {
 	public Staff getStaffById(Long id) {
 		Staff  entity = null;
 		try{
-			entity = (Staff) userDAO.uniqueQuery(UserSpecificationFactory.buildFactory().byId(id));
+			entity = (Staff) userRepository.uniqueQuery(UserSpecificationFactory.buildFactory().byId(id));
 		}
 		catch(Exception e){
 			errorHandler.handle(e, "get staff by id");
@@ -251,71 +263,68 @@ public class HumanResourcesImpl implements HumanResources {
 //			errorHandler.handle(e, "get staff by email");
 //		}
 //		return dtoConvertor.toView(entity);
-		return new StaffImpl();
+		return new TeacherImpl();
 	}
 	
 	
-	private class GuardClauses{
+	private class Guard{
 
-		private void delete(Long id, String currentUserEmail) {
-//			Account currentUser = accountDAO.uniqueQuery(accountDAO.specifications().byEmailAndIsActive(currentUserEmail, true));
-			AccountSpecificationFactory specification = AccountSpecificationFactory.buildFactory();
-			Account currentUser = accountDAO.uniqueQuery(specification.byEmail(currentUserEmail).and(specification.active()));
-			
-			if(currentUser == null) {
-				throw new NoCurrentUserException("No current user. Username: " + currentUserEmail);
+		private ErrorsSet<Staff> deleteCheck(Long accountId, String currentUserEmail) {
+			try{
+				AccountSpecificationFactory specification = AccountSpecificationFactory.buildFactory();
+				Account currentUser = accountRepository.uniqueQuery(specification.byEmail(currentUserEmail).and(specification.active()));
+				Staff staff = getStaffByAccountId(accountId);
+				ErrorsSet<Staff> errors = new ErrorsSet<Staff>(staff);
+				
+				if(staff == null){
+					throw new IllegalArgumentException("Employee not found. Account id: " + accountId);
+				}
+				if(currentUser == null) {
+					throw new IllegalArgumentException("Current user not found. Username: " + currentUserEmail);
+				}
+				
+				if(currentUser.getAccountId().equals(accountId)){
+					errors.addError("You can't fire yourself");
+				}
+				if(staff.isTeacher()) {
+					Teacher teacher = (Teacher) staff;
+					if(teacher.countOfGroup() > 0){
+						errors.addError("You can't fire teacher which have at least one group");
+					}
+				}
+				return errors;
 			}
-			if(currentUser.getAccountId().equals(id)){
-				throw new RightsDeprivingException("You're trying to remove yourself. Nice try :)");
+			catch (Exception e) {
+				errorHandler.handle(e, "checking delete posibility: Deleted id:" + accountId + ";Current username:" + currentUserEmail);
+				throw new RuntimeException();
 			}
 		}
 
-		private void update(Account account, Teacher teacher, Administrator admin, String currentUserEmail) {
-			//TODO: check teacher and administrator
-			if(currentUserEmail == null || currentUserEmail.length() < 3) {
-				throw new NoCurrentUserException("Current user login is empty");
+		private ErrorsSet<Staff> updateCheck(Staff staff, String currentUsername) {
+			if(currentUsername == null) {
+				throw new IllegalArgumentException("Current username is null");
 			}
-			System.out.println("Current user email: " + currentUserEmail);
-			
-//			CriterionSpecification specification = accountDAO.specifications().byEmailAndIsActive(currentUserEmail,true);
-			
-			AccountSpecificationFactory specificationFactory = AccountSpecificationFactory.buildFactory();
-			Specification specification = specificationFactory.byEmail(currentUserEmail).and(specificationFactory.active());
-			Account currentUser = accountDAO.uniqueQuery(specification);
-			System.out.println("Current user: " + currentUser);
-			Long accountId = account.getAccountId();
-			if(accountId == null){
-				throw new NoIdException("Trying to update account without id");
+			if(staff == null){
+				throw new IllegalArgumentException("Updating staff entity is null");
 			}
-			
+			AccountSpecificationFactory accountSpecification = AccountSpecificationFactory.buildFactory();
+			Account currentUser = accountRepository.uniqueQuery(accountSpecification.byEmail(currentUsername).and(accountSpecification.active()));
 			if(currentUser == null){
-				throw new NoCurrentUserException();
+				throw new IllegalArgumentException("Can't find curent user by email:" + currentUsername);
 			}
+			
+			if(staff.getAccountId() == null || staff.getUserId() == null) {
+				throw new IllegalArgumentException("Staff identifire is null");
+			}
+			ErrorsSet<Staff> errors = new ErrorsSet<Staff>(staff);
 			// restrict removing admin rights for yourself
 			// expects that change user can only administrator!!!
-			if(accountId.equals(currentUser.getAccountId()) && !account.getIsAdministrator()){
-				throw new RightsDeprivingException("You can't deprive administrator rights yourself");
+			//TODO: should forbid to deprive rights to staff module by myself
+			if(staff.getAccountId().equals(currentUser.getAccountId()) && false /*!staff.isAdministrator()*/) {
+				errors.addError("You can't deprive rightes by yourself");
 			}
-		}
-
-		private void add(Account account, Teacher teacher, Administrator admin) {
-			//TODO: check what of this are checked by domain annotation
-			String login = account.getEmail();
-			if(login == null || login.length() < 1) {
-				throw new NoUserLoginException("Email is empty");
-			}
-//			AccountSpecificationFactory specificationFactory = accountDAO.specifications();
-			AccountSpecificationFactory specification = AccountSpecificationFactory.buildFactory();
-			if(accountDAO.uniqueQuery(specification.byEmail(login)) != null) {
-				throw new ServiceDisplayedErorr("User with such login already exist!");
-			}
-			if(!account.getIsAdministrator() && !account.getIsTeacher()){
-				throw new ServiceDisplayedErorr("The Employee can't be neither a teacher nor an administrator");
-			}
+			return errors;
 		}
 	}
-
-
-
 
 }

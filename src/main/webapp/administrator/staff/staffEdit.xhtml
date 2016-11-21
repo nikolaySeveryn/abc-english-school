@@ -10,7 +10,12 @@
 <h:body>
 	<ui:composition template="/include/layout.xhtml">
 		<ui:define name="content">
-			<h1>Редагування користувача</h1>
+			<c:if test="#{staffBean.isNew}">
+				<h1>Новий користувач</h1>
+			</c:if>
+			<c:if test="#{not staffBean.isNew}">
+				<h1>Редагування користувача</h1>
+			</c:if>
 			<h:form id="staffEditForm">
 				<p:messages />
 				<p:panelGrid columns="3">
@@ -46,6 +51,14 @@
 							<f:attribute name="field" value="email" />
 						</p:inputText>
 						<p:message for="email" />
+						
+						
+						<p:selectOneRadio value="#{staffBean.role}">
+							<f:selectItem itemValue="TEACHER" itemLabel="Викладач"/>
+							<f:selectItem itemValue="ADMINISTRATOR" itemLabel="Адміністратор"/>
+						</p:selectOneRadio>
+						<p:outputLabel value="&#160;" />
+						<p:outputLabel value="&#160;" />
 					</c:if>
 					
 					<p:outputLabel for="birthday" value="День народження" />
@@ -54,12 +67,8 @@
 					<p:message for="birthday" />
 					
 					
-					<p:outputLabel for="isTeacher" value="Викладач" />
-					<p:selectBooleanCheckbox id="isTeacher" value="#{staffBean.edited.isTeacher}" />
-					<p:outputLabel value="&#160;" />
-					<p:outputLabel for="isAdministrator" value="Адміністратор" />
-					<p:selectBooleanCheckbox id="isAdministrator" value="#{staffBean.edited.isAdministrator}" />
-					<p:outputLabel value="&#160;" />
+					
+					
 				</p:panelGrid>
 				<p:commandButton action="#{staffBean.save()}"
 					validateClient="true" 

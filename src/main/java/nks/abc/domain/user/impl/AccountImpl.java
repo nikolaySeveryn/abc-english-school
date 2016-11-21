@@ -34,13 +34,16 @@ import org.springframework.transaction.annotation.Transactional;
 import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.TeacherRepository;
+import nks.abc.dao.repository.user.UserRepositoty;
 import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
 import nks.abc.domain.user.PasswordEncryptor;
 import nks.abc.domain.user.PersonalInfo;
 import nks.abc.domain.user.Role;
+import nks.abc.domain.user.Staff;
 import nks.abc.domain.user.Teacher;
+import nks.abc.domain.user.User;
 
 @Entity
 @Table(name="accountinfo")
@@ -79,12 +82,8 @@ public class AccountImpl implements Account {
 	
 	@Autowired
 	@Transient
-	private TeacherRepository teacherRepository;
+	private UserRepositoty userRepository;
 	
-	@Autowired
-	@Transient
-	private AdminRepository adminRepository;
-
 	@Transient
 	private PasswordEncryptor passwordEncryptor = new MD5PasswordEncryptor();
 	
@@ -100,36 +99,15 @@ public class AccountImpl implements Account {
 	
 	@Override
 	@Transactional(readOnly=true)
-	public Teacher getTeacherData(){
-		System.out.println("teacher repo: " + teacherRepository);
-		if(!roles.contains(Role.TEACHER)){
-			return null;
-		}
-		Teacher teacherData = null;
+	public User getUser(){
+		User staff = null;
 		try {
-			 teacherData = teacherRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
+			staff = userRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
 		}
 		catch(Exception e){
 			errorHandler.handle(e);
 		}
-		return teacherData;
-	}
-	
-	@Override
-	@Transactional(readOnly=true)
-	public Administrator getAdministratorData() {
-		if(!roles.contains(Role.ADMINISTRATOR)){
-			return null;
-		}
-		Administrator adminData = null;
-		try{
-			adminData = adminRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
-		}
-		catch(Exception e){
-			errorHandler.handle(e);
-		}
-		
-		return adminData;
+		return staff;
 	}
 	
 	@Override

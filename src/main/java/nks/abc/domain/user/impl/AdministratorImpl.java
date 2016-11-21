@@ -14,4 +14,14 @@ import nks.abc.domain.user.Administrator;
 @PrimaryKeyJoinColumn(name="id")
 @OnDelete(action=OnDeleteAction.CASCADE)
 public class AdministratorImpl extends StaffImpl implements Administrator{
+
+	@Override
+	public boolean isTeacher() {
+		return false;
+	}
+
+	@Override
+	public boolean isAdministrator() {
+		return true;
+	}
 }

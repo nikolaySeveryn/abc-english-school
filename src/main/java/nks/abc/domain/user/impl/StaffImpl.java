@@ -13,6 +13,11 @@ import nks.abc.domain.user.Staff;
 @Table(name="staff")
 @PrimaryKeyJoinColumn(name="id")
 @OnDelete(action=OnDeleteAction.CASCADE)
-public class StaffImpl extends UserImpl implements Staff {
+public abstract class StaffImpl extends UserImpl implements Staff {
+
+	@Override
+	public boolean isStudent() {
+		return false;
+	}
 
 }
