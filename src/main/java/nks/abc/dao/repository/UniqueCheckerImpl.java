@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.core.exception.repository.RepositoryException;
+import nks.abc.dao.base.RepositoryException;
 import nks.abc.dao.base.UniqueChecker;
 
 @Repository

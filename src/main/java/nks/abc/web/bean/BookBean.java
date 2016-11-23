@@ -6,15 +6,15 @@ import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import nks.abc.core.exception.service.ServiceDisplayedErorr;
-import nks.abc.core.exception.service.ServiceException;
+import nks.abc.domain.exception.DomainException;
 import nks.abc.domain.planing.Book;
 import nks.abc.domain.planing.Library;
 import nks.abc.domain.planing.factory.BookFactory;
-import nks.abc.web.common.enumeration.EditingMode;
+import nks.abc.web.common.enumeration.BeanState;
 import nks.abc.web.common.message.MessageSeverity;
 import nks.abc.web.common.message.UIMessage;
 
@@ -25,7 +25,9 @@ import java.io.Serializable;
 @SessionScoped
 public class BookBean implements Serializable {
 	
-	private static final long serialVersionUID = -1472298095198746868L;
+	private static final long serialVersionUID = 2690374037612901707L;
+
+	private static final Logger log = Logger.getLogger(BookBean.class);
 
 	@Autowired
 	private Library bookService;
@@ -33,46 +35,44 @@ public class BookBean implements Serializable {
 	@Autowired
 	private UIMessage message;
 	
-	private EditingMode mode = EditingMode.NONE;
+	private BeanState state = BeanState.LIST;
 	private Book book;
 	
 	public void add () {
-		mode = EditingMode.ADD;
+		state = BeanState.ADD;
 		book = BookFactory.createBook();
 	}
 	
 	public void edit(Book book) {
 		//TODO: load book via id
-		mode = EditingMode.EDIT;
+		state = BeanState.EDIT;
 		this.book = book;
 	}
 	
 	public void save() {
 		try {
-			if(mode.equals(EditingMode.ADD)){
+			if(state.equals(BeanState.ADD)){
 				System.out.println("save adding");
 				bookService.add(book);
 				message.send(MessageSeverity.INFO, "Added");
 			}
-			else if(mode.equals(EditingMode.EDIT)){
+			else if(state.equals(BeanState.EDIT)){
 				System.out.println("save editing");
 				bookService.update(book);
 				message.send(MessageSeverity.INFO, "Updated");
 			}
 			else {
-				message.send(MessageSeverity.ERROR, "Error");
+				log.error("undefined bean state");
+				message.sendError();
 			}
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			e.printStackTrace();
+		} catch (Exception e) {
+			log.error("error on book saving", e);
+			message.sendError();
 		}
 	}
 
 	public void cancel(){
-		this.mode = EditingMode.NONE;
+		this.state = BeanState.LIST;
 		message.send(MessageSeverity.INFO, "Canceled");
 	}
 	
@@ -80,27 +80,21 @@ public class BookBean implements Serializable {
 		try {
 			bookService.delete(book);
 			message.send(MessageSeverity.WARNING, "Deleted");
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			e.printStackTrace();
+		} catch (Exception e) {
+			log.error("erro on book deleting", e);
+			message.sendError();
 		}	
 	}
 	
 	public List<Book> getList() {
+		List<Book>books = new ArrayList<Book>();
 		try {
-			return bookService.getAll();
-		} catch (ServiceDisplayedErorr e) {
-			message.send(MessageSeverity.ERROR,  "Error: " + e.getDisplayedText());
-			e.printStackTrace();
-			return new ArrayList<Book>();
-		} catch (ServiceException e) {
-			message.send(MessageSeverity.ERROR, "Error");
-			e.printStackTrace();
-			return new ArrayList<Book>();
+			books = bookService.getAll();
+		} catch (Exception e) {
+			log.error("erro on getting all books");
+			message.sendError();
 		}
+		return books;
 	}
 	
 	public Book getBook() {
@@ -111,12 +105,12 @@ public class BookBean implements Serializable {
 		this.book = book;
 	}
 
-	public EditingMode getMode() {
-		return mode;
+	public BeanState getMode() {
+		return state;
 	}
 
-	public void setMode(EditingMode mode) {
-		this.mode = mode;
+	public void setMode(BeanState mode) {
+		this.state = mode;
 	}
 	
 }

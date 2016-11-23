@@ -1,22 +1,20 @@
 package nks.abc.domain.school.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.service.RemoveDenidedException;
-import nks.abc.core.exception.service.SendMailException;
+import nks.abc.dao.base.RepositoryException;
 import nks.abc.dao.repository.user.GroupRepository;
 import nks.abc.dao.repository.user.StudentRepository;
 import nks.abc.dao.specification.factory.user.GroupSpecificationFactory;
 import nks.abc.dao.specification.factory.user.StudentSpecificationFactory;
+import nks.abc.domain.errors.DisregardOfValidationException;
+import nks.abc.domain.errors.ErrorsSet;
+import nks.abc.domain.exception.CrudException;
 import nks.abc.domain.message.MailFactory;
 import nks.abc.domain.message.MailService;
 import nks.abc.domain.school.Group;
@@ -39,25 +37,15 @@ public class SchoolImpl implements School {
 	@Autowired
 	private MailFactory mailFactory;
 
-	private ErrorHandler errorHandler;
-	
-	@Autowired
-	@Qualifier("serviceErrorHandler")
-	public void setErrorHandler(ErrorHandler errorHandler){
-		this.errorHandler = errorHandler;
-		this.errorHandler.loggerFor(this.getClass());
-	}
-
 	@Override
-	public List<Group> getGroups() {
-		List<Group> groups = new ArrayList<Group>();
+	public List<Group> getAllGroups() {
 		try {
-			 groups = groupDAO.retrieveAll();
+			 return groupDAO.retrieveAll();
 		}
-		catch (Exception e) {
-			errorHandler.handle(e, "get all groups");
+		catch (RepositoryException e) {
+			log.error("error on retrieve all groups", e);
+			throw new CrudException("error on retrieve all groups", e);
 		}
-		return groups;
 	}
 
 	@Override
@@ -65,16 +53,17 @@ public class SchoolImpl implements School {
 	public void saveGroup(Group group) {
 		try {
 			if (group.getId() != null && group.getId() > 0L) {
-				log.info("updating group: " + group);
 				groupDAO.update(group);
+				log.info("group has been updated: " + group);
 			}
 			else {
-				log.info("inserting group: " + group);
 				groupDAO.insert(group);
+				log.info("group has been added: " + group);
 			}
 		}
-		catch (Exception e) {
-			errorHandler.handle(e, "save group: " + group);
+		catch (RepositoryException e) {
+			log.error("error on saving group:" + group, e);
+			throw new CrudException("error on saving group", e);
 		}
 	}
 
@@ -84,33 +73,45 @@ public class SchoolImpl implements School {
 			Group group = groupDAO.uniqueQuery(GroupSpecificationFactory.buildFactory().byId(id));
 			return group;
 		}
-		catch (Exception e) {
-			errorHandler.handle(e, "get group by id = " + id);
-			return null;
+		catch (RepositoryException e) {
+			log.error("error on getting group by id:" + id, e);
+			throw new CrudException("error on getting group by id", e);
 		}
+	}
+	
+	
+
+	@Override
+	public ErrorsSet<Group> checkGroupDelete(Long id) {
+		Group group = findGroupById(id);
+		if(group == null){
+			throw new IllegalArgumentException("Group you're trying to delete doesn't exist");
+		}
+		ErrorsSet<Group>errors = new ErrorsSet<Group>(group);
+		if(group.hasMembers()){
+			errors.addError("You can't delete group with have a mamber");
+		}
+		return errors;
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteGroups(Long... ids) {
+	public void deleteGroup(Long id) {
 		try {
-			for (Long id : ids) {
-				deleteGroup(id);
+			ErrorsSet<Group> errors = checkGroupDelete(id);
+			if(errors.hasErrors()){
+				log.error("Got user errors:" + errors.toString());
+				throw new DisregardOfValidationException(errors);
 			}
+			Group group = findGroupById(id);
+			groupDAO.delete(group);
 		}
-		catch (Exception e) {
-			errorHandler.handle(e, "delete groups: " + Arrays.toString(ids));
+		catch (RepositoryException e) {
+			log.error("Error on deleting group id:" + id, e);
+			throw new CrudException("Error on group deleting", e);
 		}
 	}
 	
-	private void deleteGroup(Long id){
-		Group group = findGroupById(id);
-		if(group.hasMembers()){
-			//TODO: stop to use exception as a normal behavior
-			throw new RemoveDenidedException("You can't delete not empty group");
-		}
-		groupDAO.delete(group);
-	}
 	
 	@Override
 	@Transactional(readOnly=false)
@@ -121,20 +122,16 @@ public class SchoolImpl implements School {
 				Account account = student.getAccount();
 				String password = account.updatePasswordToRandom();
 				studentRepository.insert(student);
-				try {
-					mailer.sendEmail(mailFactory.newStudent(account.getEmail(), password));
-				}
-				catch (SendMailException e) {
-					log.warn("Email with password wasn't sent to student + " + account.getFullName() + " - " + account.getEmail());
-				}
+				mailer.sendEmail(mailFactory.newStudent(account.getEmail(), password));
 			}
 			else {
-				log.info("Update student: " + student);
 				studentRepository.update(student);
+				log.info("student has been updated: " + student);
 			}
 		}
-		catch(Exception e){
-			errorHandler.handle(e, "save student: " + student);
+		catch(RepositoryException e){
+			log.error("error on saving student:" + student, e);
+			throw new CrudException("error on saving student", e);
 		}
 	}
 	
@@ -143,9 +140,9 @@ public class SchoolImpl implements School {
 		try{
 			return studentRepository.uniqueQuery(StudentSpecificationFactory.buildFactory().byId(id));
 		}
-		catch(Exception e) {
-			errorHandler.handle(e, "get student by id=" + id);
-			return null;
+		catch(RepositoryException e) {
+			log.error("error on getting student by id:" + id, e);
+			throw new CrudException("error on getting student by id", e);
 		}
 	}
 	
@@ -157,8 +154,9 @@ public class SchoolImpl implements School {
 				studentRepository.delete(findStudentById(id));
 			}
 		}
-		catch(Exception e) {
-			errorHandler.handle(e, "delete students: " + Arrays.toString(ids));
+		catch(RepositoryException e) {
+			log.error("error on deleting surdnets count:" + ids.length  ,e);
+			throw new CrudException("error on students deleting",e);
 		}
 	}
 }

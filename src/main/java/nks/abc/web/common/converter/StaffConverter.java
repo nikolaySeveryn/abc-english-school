@@ -6,7 +6,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
-import nks.abc.core.exception.service.ServiceException;
+import nks.abc.domain.exception.DomainException;
 import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.Staff;
 
@@ -32,7 +32,7 @@ public class StaffConverter implements Converter {
 		try{
 			return staffService.getStaffById(Long.parseLong(value));
 		}
-		catch(ServiceException e){
+		catch(DomainException e){
 			log.warn("Staff dto conversion error", e);
 			throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Staff conversion error", "Not valid employee"));
 		}

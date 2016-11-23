@@ -29,7 +29,6 @@ public class UserFactory {
 		instance.setGroups(new HashSet<GroupImpl>());
 		instance.setAccount(AccountFactory.createAccount());
 		instance.setParent(createParent());
-		instance.getAccount().setIsStudent(true);
 		return instance;
 	}
 	

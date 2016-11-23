@@ -30,7 +30,7 @@ public class UserBean implements Serializable {
 	}
 
 	public User getCurrentUser() {
-//		return userService.getStaffByEmail(getCurrentUserName());
+//		return userService.getActiveStaffByEmail(getCurrentUserName());
 		User user = UserFactory.createAdministrator();
 		user.getAccount().setEmail("nkstestemail1@gmail.com");
 		user.getPersonalInfo().setSirName("Test");

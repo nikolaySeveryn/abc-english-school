@@ -45,18 +45,11 @@ public abstract class ActionPerformer <E,P> {
 		}
 	}
 	
-	public void doAction(P param) throws ActionException {
-		try {
-			seekErrors(param);
-			if (! currenErrors.hasErrors()) {
-				mainAction(param);
-				successes.add(currenErrors.getEntity());
-			}
-		}
-		catch (Exception e) {
-			log.error("Unexpected excerption on doing action", e);
-			sendMessage(MessageSeverity.ERROR, "Something went wrong!", null);
-			throw new ActionException(e);
+	public void doAction(P param) {
+		seekErrors(param);
+		if (! currenErrors.hasErrors()) {
+			mainAction(param);
+			successes.add(currenErrors.getEntity());
 		}
 	}
 	

@@ -1,7 +1,7 @@
 package nks.abc.web.common.enumeration;
 
-public enum EditingMode{
-	NONE,
+public enum BeanState{
+	LIST,
 	ADD,
 	EDIT
 }

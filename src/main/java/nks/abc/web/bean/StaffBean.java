@@ -7,13 +7,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
-import nks.abc.core.exception.handler.ErrorHandler;
 import nks.abc.domain.errors.ErrorsSet;
 import nks.abc.domain.user.Account;
 import nks.abc.domain.user.Administrator;
@@ -23,15 +20,13 @@ import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.User;
 import nks.abc.domain.user.factory.AccountFactory;
 import nks.abc.domain.user.factory.UserFactory;
-import nks.abc.web.common.ActionException;
 import nks.abc.web.common.ActionPerformer;
-import nks.abc.web.common.enumeration.EditingMode;
+import nks.abc.web.common.enumeration.BeanState;
 import nks.abc.web.common.message.MessageSeverity;
 import nks.abc.web.common.message.UIMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,37 +34,28 @@ import org.springframework.stereotype.Component;
 @SessionScoped
 public class StaffBean implements Serializable {
 
+	private static final long serialVersionUID = 1742023794919379167L;
+	
 	private static final String LIST_PAGE = "staffList.xhtml";
 	private static final String EDIT_PAGE = "staffEdit.xhtml";
 	private static final Logger log = Logger.getLogger(StaffBean.class);
-	private ErrorHandler errorHandler;
 
 	@Autowired
 	private HumanResources hr;
-
 	@Autowired
 	private UserBean userBean;
-
 	@Autowired
 	private UIMessage uiAlert;
 
 	private Map<Long,Boolean> checked = new HashMap<Long,Boolean>();
-
 	private Account editedAccount = null;
 	private Administrator editedAdmin = null;
 	private Teacher editedTeacher = null;
-	private EditingMode editMode = EditingMode.NONE;
+	private BeanState state = BeanState.LIST;
 	private StaffRole role;
 
 	public enum StaffRole {
 		TEACHER, ADMINISTRATOR
-	}
-
-	@Autowired
-	@Qualifier("webErrorHandler")
-	public void setErrorHandler(ErrorHandler errorHandler) {
-		this.errorHandler = errorHandler;
-		this.errorHandler.loggerFor(this.getClass());
 	}
 
 	public List<Account> getAccountsList() {
@@ -91,7 +77,8 @@ public class StaffBean implements Serializable {
 			return result;
 		}
 		catch (Exception e) {
-			errorHandler.handle(e, "getting all staff");
+			log.error("error on getting account list", e);
+			uiAlert.sendError();
 			return new ArrayList<Account>();
 		}
 	}
@@ -105,7 +92,7 @@ public class StaffBean implements Serializable {
 			}
 			@Override
 			protected void mainAction(Long id) {
-				hr.delete(id, userBean.getCurrentUserName());
+				hr.deleteStaff(id, userBean.getCurrentUserName());
 			}
 			@Override
 			protected String getName(Staff entity) {
@@ -123,7 +110,10 @@ public class StaffBean implements Serializable {
 				}
 			}
 		}
-		catch (ActionException e) {}
+		catch (Exception e) {
+			log.error("error on staff deleting");
+			uiAlert.sendError();
+		}
 		finally {
 			remover.showResults();
 			checked.clear();
@@ -156,7 +146,10 @@ public class StaffBean implements Serializable {
 				}
 			}
 		}
-		catch (ActionException e) {}
+		catch (Exception e) {
+			log.error("error on firing staff");
+			uiAlert.sendError();
+		}
 		finally {
 			disabler.showResults();
 			checked.clear();
@@ -170,31 +163,28 @@ public class StaffBean implements Serializable {
 					hr.rehire(en.getKey());
 				}
 			}
-			checked.clear();
 			uiAlert.send(MessageSeverity.INFO, "Activated");
 		}
 		catch (Exception e) {
-			errorHandler.handle(e, "Re hired staff");
+			log.error("error on staff rehireing");
+			uiAlert.sendError();
+		}
+		finally {
+			checked.clear();
 		}
 	}
 
 	public String add() {
-		try {
-			editMode = EditingMode.ADD;
-			editedAccount = AccountFactory.createAccount();
-			editedTeacher = UserFactory.createTeacher();
-			editedAdmin = UserFactory.createAdministrator();
-		}
-		catch (Exception e) {
-			errorHandler.handle(e, "start adding user");
-			return null;
-		}
+		state = BeanState.ADD;
+		editedAccount = AccountFactory.createAccount();
+		editedTeacher = UserFactory.createTeacher();
+		editedAdmin = UserFactory.createAdministrator();
 		return EDIT_PAGE;
 	}
 
 	public String edit(Long accountId) {
 		try {
-			editMode = EditingMode.EDIT;
+			state = BeanState.EDIT;
 			this.editedAccount = hr.getAccountById(accountId);
 			User user = this.editedAccount.getUser();
 			if (user.isAdministrator()) {
@@ -207,7 +197,9 @@ public class StaffBean implements Serializable {
 			}
 		}
 		catch (Exception e) {
-			errorHandler.handle(e, "start editing user");
+			log.error("error on trying edit staff account id:" + accountId, e);
+			uiAlert.sendError();
+			state = BeanState.LIST;
 			return null;
 		}
 		return EDIT_PAGE;
@@ -224,17 +216,18 @@ public class StaffBean implements Serializable {
 				msg = saveTeacher();
 			}
 			else {
-				uiAlert.send(MessageSeverity.ERROR, "Something went wrong!");
 				log.error("Error on saving staff: role");
+				uiAlert.sendError();
 				return null;
 			}
 		}
 		catch (Exception e) {
-			errorHandler.handle(e, "save user");
+			log.error("error on staff saving");
+			uiAlert.sendError();
 			return null;
 		}
 		finally {
-			editMode = EditingMode.NONE;
+			state = BeanState.LIST;
 			role = null;
 		}
 
@@ -244,12 +237,12 @@ public class StaffBean implements Serializable {
 	//TODO: refactor this shit
 	private String saveTeacher() {
 		String msg = null;
-		if (editMode.equals(EditingMode.EDIT)) {
+		if (state.equals(BeanState.EDIT)) {
 			editedTeacher.setAccount(editedAccount);
 			hr.updateStaff(editedTeacher, userBean.getCurrentUserName());
 			msg = "Updated";
 		}
-		else if (editMode.equals(EditingMode.ADD)) {
+		else if (state.equals(BeanState.ADD)) {
 			editedTeacher.setAccount(editedAccount);
 			hr.hireTeacher(editedTeacher);
 			msg = "Added";
@@ -259,12 +252,12 @@ public class StaffBean implements Serializable {
 
 	private String saveAdmin() {
 		String msg = null;
-		if (editMode.equals(EditingMode.EDIT)) {
+		if (state.equals(BeanState.EDIT)) {
 			editedAdmin.setAccount(editedAccount);
 			hr.updateStaff(editedAdmin, userBean.getCurrentUserName());
 			msg = "Updated";
 		}
-		else if (editMode.equals(EditingMode.ADD)) {
+		else if (state.equals(BeanState.ADD)) {
 			editedAdmin.setAccount(editedAccount);
 			hr.hireAdministrator(editedAdmin);
 			msg = "Added";
@@ -292,8 +285,8 @@ public class StaffBean implements Serializable {
 		this.editedAccount = edited;
 	}
 
-	public EditingMode getEditMode() {
-		return editMode;
+	public BeanState getEditMode() {
+		return state;
 	}
 
 	public StaffRole getRole() {
@@ -304,12 +297,12 @@ public class StaffBean implements Serializable {
 		this.role = role;
 	}
 
-	public void setEditMode(EditingMode editMode) {
-		this.editMode = editMode;
+	public void setEditMode(BeanState editMode) {
+		this.state = editMode;
 	}
 
 	public Boolean getIsNew() {
-		if (getEditMode().equals(EditingMode.ADD)) {
+		if (getEditMode().equals(BeanState.ADD)) {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;

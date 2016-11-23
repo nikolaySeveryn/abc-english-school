@@ -2,7 +2,7 @@ package nks.abc.domain.message;
 
 import org.springframework.stereotype.Service;
 
-import nks.abc.core.exception.service.SendMailException;
+import nks.abc.domain.exception.SendMailException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +28,8 @@ public class SpringMailer implements MailService {
 		message.setTo(email.getRecipient());
 		message.setSubject(email.getSubject());
 		message.setText(email.getBody());
-		try{
-			mailSender.send(message);
-			log.info("Sent email:\n" + email);
-		}
-		catch (MailException me){
-			log.warn("Email was not sent:\n" + email);
-			throw new SendMailException(me);
-		}
+		mailSender.send(message);
+		log.info("Sent email:\n" + email);
 	}
 
 }

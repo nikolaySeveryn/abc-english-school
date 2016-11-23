@@ -2,14 +2,15 @@ package nks.abc.domain.school;
 
 import java.util.List;
 
-import nks.abc.domain.school.impl.GroupImpl;
+import nks.abc.domain.errors.ErrorsSet;
 import nks.abc.domain.user.Student;
 
 public interface School {
-	List<Group> getGroups();
+	List<Group> getAllGroups();
 	void saveGroup(Group group);
 	Group findGroupById(Long id);
-	void deleteGroups(Long... ids);
+	ErrorsSet<Group>checkGroupDelete(Long id);
+	void deleteGroup(Long id);
 	Student findStudentById(Long id);
 	void saveStudent(Student student);
 	void deleteStudents(Long... ids);

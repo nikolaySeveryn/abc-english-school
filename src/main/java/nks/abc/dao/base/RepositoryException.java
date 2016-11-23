@@ -1,4 +1,4 @@
-package nks.abc.core.exception.repository;
+package nks.abc.dao.base;
 
 public class RepositoryException extends RuntimeException{
 

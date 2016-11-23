@@ -1,7 +1,6 @@
-package nks.abc.core.exception.service;
+package nks.abc.domain.exception;
 
-
-public class SendMailException extends ServiceException {
+public class SendMailException extends DomainException {
 
 	private static final long serialVersionUID = 2371028013592741312L;
 

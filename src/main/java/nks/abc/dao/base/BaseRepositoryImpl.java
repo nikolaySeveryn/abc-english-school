@@ -2,7 +2,6 @@ package nks.abc.dao.base;
 
 import java.util.List;
 
-import nks.abc.core.exception.repository.RepositoryException;
 import nks.abc.dao.specification.chunks.HibernateAlias;
 import nks.abc.dao.specification.chunks.Specification;
 

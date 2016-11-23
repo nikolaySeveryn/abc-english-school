@@ -12,13 +12,13 @@ public interface HumanResources {
 	public List<Account> getAllStaffAccounts();
 	public List<Teacher> getAllTeachers();
 	public ErrorsSet<Staff> checkDeletePosibility(Long id, String currentUserEmail);
-	public void delete(Long id, String currentUserEmail);
+	public void deleteStaff(Long id, String currentUsername);
 	public ErrorsSet<Staff> checkFirePosibility(Long id, String currentUserEmail);
 	public void fire(Long id, String currentUserEmail);
 	public void rehire(Long id);
 	public ErrorsSet<Staff>checkPosibilityOfUpdate(Staff staff, String currentUsername);
 	public void updateStaff(Staff staff, String currentUserEmail);
-	public Staff getStaffByEmail(String login);
+	public Staff getActiveStaffByEmail(String login);
 	public Account getAccountById(Long id);
 	public Staff getStaffById(Long id);
 }

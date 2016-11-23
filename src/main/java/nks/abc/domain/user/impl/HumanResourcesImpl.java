@@ -8,12 +8,10 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.core.exception.service.SendMailException;
+import nks.abc.dao.base.RepositoryException;
 import nks.abc.dao.repository.user.AccountRepository;
 import nks.abc.dao.repository.user.AdminRepository;
 import nks.abc.dao.repository.user.StaffRepository;
@@ -21,7 +19,11 @@ import nks.abc.dao.repository.user.TeacherRepository;
 import nks.abc.dao.repository.user.UserRepositoty;
 import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
 import nks.abc.dao.specification.factory.user.UserSpecificationFactory;
+import nks.abc.domain.errors.DisregardOfValidationException;
 import nks.abc.domain.errors.ErrorsSet;
+import nks.abc.domain.exception.CrudException;
+import nks.abc.domain.exception.SendMailException;
+import nks.abc.domain.exception.VerificationException;
 import nks.abc.domain.message.MailFactory;
 import nks.abc.domain.message.MailService;
 import nks.abc.domain.user.Account;
@@ -54,14 +56,6 @@ public class HumanResourcesImpl implements HumanResources {
 	
 	private Guard guard = new Guard();
 	
-	private ErrorHandler errorHandler;
-	
-	@Autowired
-	@Qualifier("serviceErrorHandler")
-	public void setErrorHandler(ErrorHandler errorHandler){
-		this.errorHandler = errorHandler;
-		this.errorHandler.loggerFor(this.getClass());
-	}
 	
 	@Override
 	@Transactional(readOnly=false)
@@ -75,10 +69,10 @@ public class HumanResourcesImpl implements HumanResources {
 			log.info("adding teacher: " + teacher);
 			teacherRepository.insert(teacher);
 			sendWelcomeEmail(account, password);
-		} catch (Exception e) {
-			errorHandler.handle(e, "add staff: " + teacher);
+		} catch (RepositoryException e) {
+			log.error("error on hiring teacher:" + teacher, e);
+			throw new CrudException	("error on hiring teacher", e);
 		}
-		
 	}
 
 	@Override
@@ -93,8 +87,9 @@ public class HumanResourcesImpl implements HumanResources {
 			log.info("adding administrator: " + admin);
 			adminRepository.insert(admin);
 			sendWelcomeEmail(account, password);
-		} catch (Exception e) {
-			errorHandler.handle(e, "add staff: " + admin);
+		} catch (RepositoryException e) {
+			log.error("error on hiring administrator:" + admin, e);
+			throw new CrudException("error on hiring administrator", e);
 		}
 			
 	}
@@ -104,7 +99,7 @@ public class HumanResourcesImpl implements HumanResources {
 			mailer.sendEmail(mailFactory.newStaff(account.getEmail(), password));
 		}
 		catch (SendMailException e){
-			log.warn("Email with password wasn't sent to user " + account.getEmail());
+			log.error("Email with password wasn't sent to user " + account.getEmail());
 		}
 	}
 	
@@ -120,16 +115,16 @@ public class HumanResourcesImpl implements HumanResources {
 	public void updateStaff(Staff staff, String currentUserEmail) {
 		ErrorsSet<Staff> errors = guard.updateCheck(staff, currentUserEmail);
 		if(errors.hasErrors()){
-			//TODO: make specific exception
-			log.warn("Got user error:" + errors.toString());
-			throw new RuntimeException("User error:" + errors.toString());
+			log.error("Got user error:" + errors.toString());
+			throw new DisregardOfValidationException(errors);
 		}
 		try{
-			System.out.println("Update staff:" + staff);
 			userRepository.update(staff);
+			System.out.println("Employee has been updated:" + staff);
 		}
-		catch (Exception e) {
-			errorHandler.handle(e, "update staff: " + staff);
+		catch (RepositoryException e) {
+			log.error("error on updating staff:" + staff, e);
+			throw new CrudException("error on updating staff", e);
 		}
 	}
 
@@ -145,19 +140,19 @@ public class HumanResourcesImpl implements HumanResources {
 
 	@Override
 	@Transactional(readOnly=false)
-	public void delete(Long accountId, String currentUserEmail) {
+	public void deleteStaff(Long accountId, String currentUsername) {
 		try{
-			ErrorsSet<Staff> errors = guard.deleteCheck(accountId, currentUserEmail);
-			if(errors.hasErrors()){
-				//TODO: make specific exception
+			ErrorsSet<Staff> errors = guard.deleteCheck(accountId, currentUsername);
+			if(errors.hasErrors()) {
 				log.warn("Got user error:" + errors.toString());
-				throw new RuntimeException("User error:" +errors.toString());
+				throw new DisregardOfValidationException(errors);
 			}
 			log.info("Deleting user:" + getStaffByAccountId(accountId));
 			userRepository.delete(getStaffByAccountId(accountId));
 		}
-		catch (Exception e){
-			errorHandler.handle(e, "delete user id=" + accountId);
+		catch (RepositoryException e){
+			log.error("Error on staff deleting staff account id:" + accountId + "current username:" + currentUsername, e);
+			throw new CrudException("Error on staff deleting", e);
 		}
 	}
 	
@@ -169,15 +164,20 @@ public class HumanResourcesImpl implements HumanResources {
 	@Override
 	@Transactional(readOnly=false)
 	public void fire(Long id, String currentUserEmail) {
-		guard.deleteCheck(id, currentUserEmail);
+		ErrorsSet<Staff>errors = guard.deleteCheck(id, currentUserEmail);
+		if(errors.hasErrors()){
+			log.error("Got user errors on fireing staff: " + errors.toString());
+			throw new DisregardOfValidationException(errors);
+		}
 		try{
 			Account disabledUser = getAccountById(id);
 			disabledUser.setIsActive(false);
 			accountRepository.update(disabledUser);
 			log.info("disable user: " + disabledUser);
 		}
-		catch (Exception e){
-			errorHandler.handle(e, "disable staff id=" + id); 
+		catch (RepositoryException e) {
+			log.error("error on disable staff account id:" + id + "; current username:" + currentUserEmail, e);
+			throw new CrudException("error on disable staff", e);
 		}
 	}
 
@@ -188,10 +188,11 @@ public class HumanResourcesImpl implements HumanResources {
 			Account activatedUser = getAccountById(id);
 			activatedUser.setIsActive(true);
 			accountRepository.update(activatedUser);
-			log.info("enable user: " + activatedUser);
+			log.info("user has been activated: " + activatedUser);
 		}
-		catch (Exception e){
-			errorHandler.handle(e, "disable staff id=" + id); 
+		catch (RepositoryException e) {
+			log.error("Error on rehiring user id: " + id, e);
+			throw new CrudException("Error on rehiring user", e);
 		}
 	};
 	
@@ -203,8 +204,9 @@ public class HumanResourcesImpl implements HumanResources {
 		try{
 			account = accountRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(id));
 		}
-		catch(Exception e){
-			errorHandler.handle(e);
+		catch(RepositoryException e){
+			log.error("error on getting account by id:" + id, e);
+			throw new CrudException("error on getting account by id", e);
 		}
 		return account;
 	}
@@ -222,48 +224,45 @@ public class HumanResourcesImpl implements HumanResources {
 				accounts.add(user.getAccount());
 			}
 		}
-		catch (Exception e){
-			errorHandler.handle(e, "get all staff");
+		catch (RepositoryException e){
+			log.error("error on getting staff accounts", e);
+			throw new CrudException("error on getting staff accounts", e);
 		}
 		return new ArrayList<Account>(accounts);
 	}
 	
 	@Override
 	public List<Teacher> getAllTeachers() {
-		List<Teacher> teachers = null;
 		try{
-			teachers = teacherRepository.query(AccountSpecificationFactory.buildFactory().active());
+			return teacherRepository.query(AccountSpecificationFactory.buildFactory().active());
 		}
-		catch(Exception e){
-			errorHandler.handle(e, "get all teachers");
+		catch(RepositoryException e){
+			log.error("error on getting all teachers", e);
+			throw new CrudException("error on getting all teachers", e);
 		}
-		return teachers;
 	}
 
 	@Override
 	public Staff getStaffById(Long id) {
-		Staff  entity = null;
 		try{
-			entity = (Staff) userRepository.uniqueQuery(UserSpecificationFactory.buildFactory().byId(id));
+			return (Staff) userRepository.uniqueQuery(UserSpecificationFactory.buildFactory().byId(id));
 		}
-		catch(Exception e){
-			errorHandler.handle(e, "get staff by id");
+		catch(RepositoryException e) {
+			log.error("error on getting staff by id:" + id, e);
+			throw new CrudException("error on getting staff by id".trim(), e);
 		}
-		return entity;
 	}
 	
 	@Override
-	public Staff getStaffByEmail(String email) {
-//		Account entity = null;
-//		try{
-//			entity = accountDAO.uniqueQuery(AccountSpecifications.byEmail(email).and(AccountSpecifications.active()));
-//			
-//		}
-//		catch (Exception e){
-//			errorHandler.handle(e, "get staff by email");
-//		}
-//		return dtoConvertor.toView(entity);
-		return new TeacherImpl();
+	public Staff getActiveStaffByEmail(String email) {
+		try{
+			AccountSpecificationFactory specification = AccountSpecificationFactory.buildFactory();
+			return staffRepository.uniqueQuery(specification.byEmail(email).and(specification.active()));
+		}
+		catch (RepositoryException e){
+			log.error("error on getting staff by email: " + email, e);
+			throw new CrudException("error on getting staff by email", e);
+		}
 	}
 	
 	
@@ -288,15 +287,15 @@ public class HumanResourcesImpl implements HumanResources {
 				}
 				if(staff.isTeacher()) {
 					Teacher teacher = (Teacher) staff;
-					if(teacher.countOfGroup() > 0){
+					if(teacher.countOfGroup() > 0) {
 						errors.addError("You can't fire teacher which have at least one group");
 					}
 				}
 				return errors;
 			}
-			catch (Exception e) {
-				errorHandler.handle(e, "checking delete posibility: Deleted id:" + accountId + ";Current username:" + currentUserEmail);
-				throw new RuntimeException();
+			catch (RepositoryException e) {
+				log.error("Error on check posibility of delleting staff: account id:" + accountId + "; current username:" + currentUserEmail , e);
+				throw new VerificationException("Error on deleting check", e);
 			}
 		}
 

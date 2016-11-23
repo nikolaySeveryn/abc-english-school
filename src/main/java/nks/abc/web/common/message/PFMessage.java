@@ -19,6 +19,11 @@ public class PFMessage implements UIMessage {
 		FacesMessage message = new FacesMessage(toPrimeSeverity(severity), msg,  detail);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
+
+	@Override
+	public void sendError() {
+		send(MessageSeverity.FATAL_ERROR, "Something went wrong. Pleas check logs for details");
+	}
 	
 	private FacesMessage.Severity toPrimeSeverity(MessageSeverity severity){
 		
@@ -37,4 +42,5 @@ public class PFMessage implements UIMessage {
 		
 		throw new IllegalArgumentException("Unknown message severity");
 	}
+
 }

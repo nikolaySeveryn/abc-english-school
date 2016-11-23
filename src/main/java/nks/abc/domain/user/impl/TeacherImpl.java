@@ -13,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import nks.abc.core.exception.repository.RepositoryException;
+import nks.abc.dao.base.RepositoryException;
 import nks.abc.dao.repository.user.GroupRepository;
 import nks.abc.dao.specification.chunks.Specification;
 import nks.abc.dao.specification.factory.user.TeacherSpecificationFactory;

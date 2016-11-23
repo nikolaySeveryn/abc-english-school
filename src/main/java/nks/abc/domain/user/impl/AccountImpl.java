@@ -24,25 +24,21 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Pattern;
 
+import org.apache.log4j.Logger;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
-import nks.abc.core.exception.handler.ErrorHandler;
-import nks.abc.dao.repository.user.AdminRepository;
-import nks.abc.dao.repository.user.TeacherRepository;
+import nks.abc.dao.base.RepositoryException;
 import nks.abc.dao.repository.user.UserRepositoty;
 import nks.abc.dao.specification.factory.user.AccountSpecificationFactory;
+import nks.abc.domain.exception.CrudException;
 import nks.abc.domain.user.Account;
-import nks.abc.domain.user.Administrator;
 import nks.abc.domain.user.PasswordEncryptor;
 import nks.abc.domain.user.PersonalInfo;
 import nks.abc.domain.user.Role;
-import nks.abc.domain.user.Staff;
-import nks.abc.domain.user.Teacher;
 import nks.abc.domain.user.User;
 
 @Entity
@@ -52,6 +48,8 @@ public class AccountImpl implements Account {
 	
 	private static final int MAX_PASS_LENGTH = 15;
 	private static final int MIN_PASS_LENGTH = 6;
+	
+	private static final Logger log = Logger.getLogger(AccountImpl.class);
 	
 	
 	@Id
@@ -87,25 +85,17 @@ public class AccountImpl implements Account {
 	@Transient
 	private PasswordEncryptor passwordEncryptor = new MD5PasswordEncryptor();
 	
-	@Transient
-	private ErrorHandler errorHandler;
-	
-	@Autowired
-	@Qualifier("serviceErrorHandler")
-	public void setErrorHandler(ErrorHandler errorHandler){
-		this.errorHandler = errorHandler;
-		this.errorHandler.loggerFor(this.getClass());
-	}
 	
 	@Override
 	@Transactional(readOnly=true)
 	public User getUser(){
 		User staff = null;
 		try {
-			staff = userRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(accountId));
+			staff = userRepository.uniqueQuery(AccountSpecificationFactory.buildFactory().byId(getAccountId()));
 		}
-		catch(Exception e){
-			errorHandler.handle(e);
+		catch(RepositoryException e){
+			log.error("error on getting user by account id: " + getAccountId(), e);
+			throw new CrudException("error on getting user by account", e);
 		}
 		return staff;
 	}
