@@ -8,8 +8,6 @@ import nks.abc.dao.specification.chunks.Specification;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.Projection;
-import org.hibernate.criterion.Projections;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 

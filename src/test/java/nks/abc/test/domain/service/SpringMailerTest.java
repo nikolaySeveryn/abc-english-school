@@ -2,13 +2,10 @@ package nks.abc.test.domain.service;
 
 import static org.junit.Assert.*;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.support.PropertiesBeanDefinitionReader;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;

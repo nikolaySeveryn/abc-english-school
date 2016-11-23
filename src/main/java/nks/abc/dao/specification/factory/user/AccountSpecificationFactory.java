@@ -5,7 +5,6 @@ import nks.abc.dao.specification.chunks.Specification;
 import nks.abc.dao.specification.chunks.factory.AliasChunksFactory;
 import nks.abc.dao.specification.chunks.factory.SpecificationChunksFactory;
 import nks.abc.dao.specification.factory.CommonSpecificationFactory;
-import nks.abc.domain.planing.impl.BookImpl;
 import nks.abc.domain.user.impl.AccountImpl;
 
 public class AccountSpecificationFactory extends CommonSpecificationFactory{

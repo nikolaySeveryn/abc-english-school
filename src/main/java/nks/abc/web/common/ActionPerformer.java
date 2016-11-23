@@ -8,12 +8,9 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import nks.abc.domain.errors.ErrorsSet;
 import nks.abc.web.common.message.MessageSeverity;
-import nks.abc.web.common.message.UIMessage;
 
 public abstract class ActionPerformer <E,P> {
 	

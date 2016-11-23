@@ -1,10 +1,7 @@
 package nks.abc.domain.school.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,32 +12,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.apache.log4j.Logger;
+import org.hibernate.id.IdentityGenerator.GetGeneratedKeysDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
+import nks.abc.dao.base.RepositoryException;
 import nks.abc.dao.repository.user.StudentRepository;
 import nks.abc.dao.specification.chunks.Specification;
 import nks.abc.dao.specification.factory.user.GroupSpecificationFactory;
+import nks.abc.domain.exception.CrudException;
 import nks.abc.domain.school.Group;
 import nks.abc.domain.school.Level;
 import nks.abc.domain.user.Student;
 import nks.abc.domain.user.Teacher;
-import nks.abc.domain.user.impl.StudentImpl;
 import nks.abc.domain.user.impl.TeacherImpl;
 
 @Entity
 @Table(name="group")
 @Configurable
 public class GroupImpl implements Group {
+	
+	private static final Logger log = Logger.getLogger(GroupImpl.class);
 	
 	private final static Integer MULTIPLIER = 100;
 	
@@ -63,6 +62,21 @@ public class GroupImpl implements Group {
 	@JoinColumn(name="teacher")
 	private Teacher teacher;
 	//TODO: plan
+	
+	@Override
+	@Transactional(readOnly=true)
+	public List<Student> getStudents() {
+		List<Student> students = new ArrayList<Student>();
+		try{
+			Specification specification = GroupSpecificationFactory.buildFactory("groups").byId(getId());
+			students = studentRepository.query(specification);
+		}
+		catch (RepositoryException e){
+			log.error("error on getting groups students. Groyp id:" + getId(), e);
+			throw new CrudException("error on getting groups students", e);
+		}
+		return students;
+	}
 	
 	@Override
 	public Double getFloatTarif(){
@@ -119,22 +133,6 @@ public class GroupImpl implements Group {
 		this.teacher = teacher;
 	}
 	
-	@Override
-	@Transactional(readOnly=true)
-	public List<Student> getStudents() {
-		List<Student> students = new ArrayList<Student>();
-		try{
-			Specification specification = GroupSpecificationFactory.buildFactory("groups").byId(getId());
-			students = studentRepository.query(specification);
-		}
-		catch (Exception e){
-			//TODO:hadle exception
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		
-		return students;
-	}
 
 	@Override
 	public String toString() {

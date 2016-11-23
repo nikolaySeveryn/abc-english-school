@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import nks.abc.domain.user.HumanResources;
 import nks.abc.domain.user.User;
 import nks.abc.domain.user.factory.UserFactory;
-import nks.abc.domain.user.impl.AdministratorImpl;
 
 import java.io.Serializable;
 

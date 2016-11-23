@@ -1,7 +1,6 @@
 package nks.abc.domain.school;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

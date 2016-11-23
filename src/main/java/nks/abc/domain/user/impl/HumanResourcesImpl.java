@@ -214,12 +214,9 @@ public class HumanResourcesImpl implements HumanResources {
 	
 	@Override
 	public List<Account> getAllStaffAccounts() {
-		List<User> users= new ArrayList<User>();
 		Set<Account>accounts = new HashSet<Account>();
 		try{
-			//TODO: get staff via staff repository
-			users.addAll(teacherRepository.retrieveAll());
-			users.addAll(adminRepository.retrieveAll());
+			List<Staff> users = staffRepository.retrieveAll();
 			for(User user : users) {
 				accounts.add(user.getAccount());
 			}
