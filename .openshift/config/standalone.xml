@@ -481,8 +481,8 @@
 		    <authentication>
 		        <login-module code="Database" flag="required">
 		            <module-option name="dsJndiName" value="java:jboss/datasources/PostgreSQLDS"/>
-		            <module-option name="principalsQuery" value="SELECT password FROM abc.accountinfo WHERE email=? AND active=true"/>
-		            <module-option name="rolesQuery" value="SELECT r.role, 'Roles' FROM abc.user_role r INNER JOIN abc.accountinfo u ON r.accountinfo_accountid = u.accountid WHERE u.email=?"/>
+		            <module-option name="principalsQuery" value="SELECT password FROM abc.account WHERE email=? AND active=true"/>
+		            <module-option name="rolesQuery" value="SELECT r.role, 'Roles' FROM abc.user_role r INNER JOIN abc.account u ON r.accountinfo_accountid = u.account_id WHERE u.email=?"/>
 		            <module-option name="hashAlgorithm" value="MD5"/>
 		            <module-option name="hashEncoding" value="base64"/>
 		        </login-module>
