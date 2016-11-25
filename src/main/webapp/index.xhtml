@@ -10,7 +10,8 @@
 <h:body>
 	<ui:composition template="/include/layout.xhtml">
 		<ui:define name="content">
-			<h5>Welcome, <h:outputText value="#{userBean.currentUserName}" />, to abc english school</h5>
+			<h1>Welcome</h1>
+			<p>Welcome, <h:outputText value="#{sessionBean.currentUser.fullName}" />, to abc english school</p>
 		</ui:define>
 	</ui:composition>
 </h:body>

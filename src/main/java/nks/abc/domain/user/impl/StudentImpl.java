@@ -43,7 +43,7 @@ public class StudentImpl extends UserImpl implements Student {
 	private Set<Group> groups;
 	@Column(nullable=false)
 	private Integer discount = 0;
-	@Column(nullable=false)
+	@Column(nullable=false, name="money_balance")
 	private Integer moneyBalance = 0;
 	
 	

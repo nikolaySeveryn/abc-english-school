@@ -1,5 +1,7 @@
 package nks.abc.domain.user;
 
+import java.util.Set;
+
 import nks.abc.domain.validation.annotation.Email;
 
 public interface Account {
@@ -7,18 +9,6 @@ public interface Account {
 	User getUser();
 	void updatePassword(String password);
 	String updatePasswordToRandom();
-	@Deprecated
-	boolean getIsAdministrator();
-	@Deprecated
-	boolean getIsTeacher();
-	@Deprecated
-	boolean getIsStudent();
-	@Deprecated
-	void setIsAdministrator(boolean is);
-	@Deprecated
-	void setIsTeacher(boolean is);
-	@Deprecated
-	void setIsStudent(boolean is);
 	String getFullName();
 
 	/*
@@ -27,7 +17,6 @@ public interface Account {
 	Long getAccountId();
 	void setAccountId(Long id);
 	@Email
-//	@Unique(entity=AccountImpl.class, field="email")
 	String getEmail();
 	void setEmail(String email);
 	String getPasswordHash();
@@ -36,4 +25,6 @@ public interface Account {
 	void setIsActive(Boolean isFired);
 	PersonalInfo getPeronalInfo();
 	void setPeronalInfo(PersonalInfo peronalInfo);
+	public Set<Role> getRoles();
+	public void setRoles(Set<Role> roles);
 }

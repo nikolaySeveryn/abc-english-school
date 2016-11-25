@@ -25,8 +25,8 @@ public interface PersonalInfo {
 	void setBirthdayUtilDate(java.util.Date birthday);
 	
 	@Pattern(regexp="^\\+380\\([0-9]{2}\\)[0-9]{7}$", message="Supported only Ukrainian phone number")
-	String getPhoneNum();
-	void setPhoneNum(String phoneNum);
+	String getPhoneNumber();
+	void setPhoneNumber(String phoneNum);
 
 	String getPatronomic();
 	void setPatronomic(String patronomic);

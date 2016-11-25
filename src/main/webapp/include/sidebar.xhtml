@@ -14,25 +14,21 @@
 			<h:graphicImage value="/images/abc-logo-white.png" styleClass="logo" />
 			<h:form>
 				<p:menu>
-					<c:if test="#{userBean.currentUser.account.isTeacher}">
-						<p:menuitem value="Підручники"
-							styleClass="#{view.viewId eq '/teacher/book/booksList.xhtml' ? 'state-active' : ''}"
-							action="/teacher/book/booksList.xhtml?faces-redirect=true" />
-					</c:if>
-					<c:if test="#{userBean.currentUser.account.isAdministrator}">
-						<p:menuitem value="Групи"
-							styleClass="#{view.viewId eq '/administrator/group/main.xhtml' ? 'state-active' : ''}"
-							action="/administrator/group/main.xhtml?faces-redirect=true" />
-						<p:menuitem value="Персонал"
-							styleClass="#{view.viewId eq '/administrator/staff/staffList.xhtml' ? 'state-active' : ''}"
-							action="/administrator/staff/staffList.xhtml?faces-redirect=true" />
-					</c:if>
+					<p:menuitem value="Підручники"
+						styleClass="#{view.viewId eq '/teacher/book/booksList.xhtml' ? 'state-active' : ''}"
+						action="/teacher/book/booksList.xhtml?faces-redirect=true" />
+					<p:menuitem value="Групи"
+						styleClass="#{view.viewId eq '/administrator/group/main.xhtml' ? 'state-active' : ''}"
+						action="/administrator/group/main.xhtml?faces-redirect=true" />
+					<p:menuitem value="Персонал"
+						styleClass="#{view.viewId eq '/administrator/staff/staffList.xhtml' ? 'state-active' : ''}"
+						action="/administrator/staff/staffList.xhtml?faces-redirect=true" />
 				</p:menu>
 
 				<p:accordionPanel styleClass="userinfo"  widgetVar="userAccordion">
-					<p:tab title="#{userBean.currentUser.fullName}" >
+					<p:tab title="#{sessionBean.currentUser.fullName}" >
 						<p:menu>
-							<p:menuitem value="Вийти" actionListener="#{userBean.logout()}" oncomplete="window.location.reload()" />
+							<p:menuitem value="Вийти" actionListener="#{sessionBean.logout()}" oncomplete="window.location.reload()" />
 						</p:menu>
 					</p:tab>
 				</p:accordionPanel>

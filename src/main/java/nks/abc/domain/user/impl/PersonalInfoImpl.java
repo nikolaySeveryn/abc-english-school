@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import nks.abc.domain.user.PersonalInfo;
 
 @Entity
-@Table(name="personalinfo")
+@Table(name="personal_info")
 @ManagedBean
 public class PersonalInfoImpl implements PersonalInfo {
 	
@@ -22,17 +22,15 @@ public class PersonalInfoImpl implements PersonalInfo {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="personal_info_id_gen")
 	@SequenceGenerator(name="personal_info_id_gen", allocationSize=1, sequenceName="personal_info_id_seq")
 	private Long id;
+	@Column(name="firtst_name")
 	private String firstName;
+	@Column(name="sir_name")
 	private String sirName;
 	private String patronomic;
 	private java.sql.Date birthday;
-	@Column(unique=true)
-	private String phoneNum=null;
+	@Column(unique=true, name="phone_number")
+	private String phoneNumber=null;
 	
-	
-	public static PersonalInfo getNew() {
-		return new PersonalInfoImpl();
-	}
 	
 	@Override
 	public Long getId(){
@@ -95,16 +93,16 @@ public class PersonalInfoImpl implements PersonalInfo {
 		setBirthday(sqlDate);
 	}
 	@Override
-	public String getPhoneNum() {
-		return phoneNum;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 	@Override
-	public void setPhoneNum(String phoneNum) {
+	public void setPhoneNumber(String phoneNum) {
 		if(phoneNum != null && phoneNum.length()==0) {
-			setPhoneNum(null);
+			setPhoneNumber(null);
 		}
 		else{
-			this.phoneNum = phoneNum;
+			this.phoneNumber = phoneNum;
 		}
 	}
 
@@ -121,7 +119,7 @@ public class PersonalInfoImpl implements PersonalInfo {
 	public String toString() {
 		return "PersonalInfo [id=" + id + ", firstName=" + firstName
 				+ ", sirName=" + sirName + ", patronomic=" + patronomic
-				+ ", birthday=" + birthday + ", phoneNum=" + phoneNum + "]";
+				+ ", birthday=" + birthday + ", phoneNum=" + phoneNumber + "]";
 	}
 	
 	

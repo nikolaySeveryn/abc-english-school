@@ -42,7 +42,7 @@ import nks.abc.domain.user.Role;
 import nks.abc.domain.user.User;
 
 @Entity
-@Table(name="accountinfo")
+@Table(name="account")
 @Configurable
 public class AccountImpl implements Account {
 	
@@ -55,6 +55,7 @@ public class AccountImpl implements Account {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="account_id_seq")
 	@SequenceGenerator(name="account_id_seq", allocationSize=1, sequenceName="account_id_seq")
+	@Column(name="account_id")
 	private Long accountId;
 	
 	@Column(nullable=false, unique=true)
@@ -119,51 +120,6 @@ public class AccountImpl implements Account {
 	}
 	
 	@Override
-	public boolean getIsAdministrator() {
-		return getRoles().contains(Role.ADMINISTRATOR);
-	}
-	
-	@Override
-	public boolean getIsTeacher(){
-		return getRoles().contains(Role.TEACHER);
-	}
-	
-	@Override
-	public boolean getIsStudent(){
-		return getRoles().contains(Role.STUDENT);
-	}
-	
-	@Override
-	public void setIsAdministrator(boolean is){
-		if(is){
-			roles.add(Role.ADMINISTRATOR);
-		}
-		else {
-			roles.remove(Role.ADMINISTRATOR);
-		}
-	}
-	
-	@Override
-	public void setIsTeacher(boolean is){
-		if(is){
-			roles.add(Role.TEACHER);
-		}
-		else {
-			roles.remove(Role.TEACHER);
-		}
-	}
-	
-	@Override
-	public void setIsStudent(boolean is){
-		if(is){
-			roles.add(Role.STUDENT);
-		}
-		else {
-			roles.remove(Role.STUDENT);
-		}
-	}
-	
-	@Override
 	public String getFullName() {
 		return peronalInfo.getFullName();
 	}
@@ -187,11 +143,13 @@ public class AccountImpl implements Account {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	private Set<Role> getRoles() {
+	@Override
+	public Set<Role> getRoles() {
 		return roles;
 	}
-	private void setRoles(Set<Role> role) {
-		this.roles = role;
+	@Override
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 	@Override
 	public String getPasswordHash() {

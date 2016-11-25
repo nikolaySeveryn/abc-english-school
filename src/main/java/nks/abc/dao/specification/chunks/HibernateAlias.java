@@ -37,6 +37,39 @@ public class HibernateAlias {
 		}
 		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((assosiationPath == null) ? 0 : assosiationPath.hashCode());
+		result = prime * result + ((baseClass == null) ? 0 : baseClass.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HibernateAlias other = (HibernateAlias) obj;
+		if (assosiationPath == null) {
+			if (other.assosiationPath != null)
+				return false;
+		}
+		else if (!assosiationPath.equals(other.assosiationPath))
+			return false;
+		if (baseClass == null) {
+			if (other.baseClass != null)
+				return false;
+		}
+		else if (!baseClass.equals(other.baseClass))
+			return false;
+		return true;
+	}
 	
 	
 	

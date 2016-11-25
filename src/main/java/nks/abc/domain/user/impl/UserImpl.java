@@ -1,6 +1,7 @@
 package nks.abc.domain.user.impl;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,11 +29,12 @@ public abstract class UserImpl implements User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_id_gen")
 	@SequenceGenerator(name="user_id_gen", allocationSize=1, sequenceName="user_id_seq")
+	@Column(name="user_id")
 	private Long userId;
 	
 	
 	@ManyToOne(fetch=FetchType.EAGER, targetEntity=AccountImpl.class, cascade=CascadeType.ALL)
-	@JoinColumn(name="account_info", nullable=false)
+	@JoinColumn(name="account", nullable=false)
 	@OnDelete(action=OnDeleteAction.CASCADE)
 	private Account account;
 	

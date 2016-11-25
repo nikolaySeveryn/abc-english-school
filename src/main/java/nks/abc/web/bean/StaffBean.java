@@ -43,7 +43,7 @@ public class StaffBean implements Serializable {
 	@Autowired
 	private HumanResources hr;
 	@Autowired
-	private UserBean userBean;
+	private SessionBean userBean;
 	@Autowired
 	private UIMessage uiAlert;
 

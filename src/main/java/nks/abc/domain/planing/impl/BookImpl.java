@@ -12,7 +12,7 @@ import nks.abc.domain.planing.Book;
 
 
 @Entity
-@Table(name="BOOK")
+@Table(name="book")
 public class BookImpl implements Book {
 	
 	@Id

@@ -34,10 +34,10 @@
 							<p:message for="patronomic" />
 
 							<p:outputLabel value="Телефон" for="phone" />
-							<p:inputMask mask="+380(99)9999999" id="phone" value="#{studentBean.editedStudent.personalInfo.phoneNum}">
+							<p:inputMask mask="+380(99)9999999" id="phone" value="#{studentBean.editedStudent.personalInfo.phoneNumber}">
 								<f:validator validatorId="uniqueColumnValidator" />
 								<f:attribute name="entity" value="#{studentBean.editedStudent.personalInfo}" />
-								<f:attribute name="field" value="phoneNum" />
+								<f:attribute name="field" value="phoneNumber" />
 								<f:attribute name="idField" value="id" />
 							</p:inputMask> 
 							<p:message for="phone" />
@@ -82,8 +82,8 @@
 							<p:message for="parnet_patronomic" />
 
 							<p:outputLabel value="Телефон" for="parnet_phone" />
-							<p:inputText id="parnet_phone"
-								value="#{studentBean.editedStudent.parent.personalInfo.phoneNum}" />
+							<p:inputMask mask="+380(99)9999999"  id="parnet_phone"
+								value="#{studentBean.editedStudent.parent.personalInfo.phoneNumber}" />
 							<p:message for="parnet_phone" />
 
 							<p:outputLabel value="Email" for="parnet_email" />
@@ -93,7 +93,7 @@
 
 							<p:outputLabel for="parnet_birthday" value="День народження" />
 							<p:calendar id="parnet_birthday"
-								value="#{studentBean.editedStudent.parent.personalInfo.birthday}"
+								value="#{studentBean.editedStudent.parent.personalInfo.birthdayUtilDate}"
 								pattern="dd-MM-yyyy" mask="true" navigator="true"
 								yearRange="c-100:c" />
 							<p:message for="parnet_birthday" />

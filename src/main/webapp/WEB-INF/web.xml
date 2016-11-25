@@ -9,7 +9,7 @@
 
 	<display-name>abc-english-school</display-name>
 	<session-config>
-		<session-timeout>10</session-timeout>
+		<session-timeout>15</session-timeout>
 	</session-config>
 
 	<!-- JSF -->
@@ -25,19 +25,19 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
-	
+
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
 		<param-value>maintheme</param-value>
 	</context-param>
 	<context-param>
-	    <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
-	    <param-value>true</param-value>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
 	</context-param>
 	<!-- end JSF -->
 
 	<!-- secure -->
-	<!--   
+	<!-- -->
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>
@@ -48,24 +48,13 @@
 
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>teacher-secured</web-resource-name>
-			<url-pattern>/teacher/*</url-pattern>
+			<web-resource-name>secured</web-resource-name>
+			<url-pattern>/*</url-pattern>
 			<http-method>POST</http-method>
 			<http-method>GET</http-method>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>TEACHER</role-name>
-		</auth-constraint>
-	</security-constraint>
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>admin-secured</web-resource-name>
-			<url-pattern>/administrator/*</url-pattern>
-			<http-method>POST</http-method>
-			<http-method>GET</http-method>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>ADMINISTRATOR</role-name>
+			<role-name>SUPERUSER</role-name>
 		</auth-constraint>
 	</security-constraint>
 	<security-constraint>
@@ -76,22 +65,21 @@
 			<http-method>GET</http-method>
 		</web-resource-collection>
 		<auth-constraint>
-			<role-name>ADMINISTRATOR</role-name>
-			<role-name>TEACHER</role-name>
-			<role-name>STUDENT</role-name>
+			<role-name>SUPERUSER</role-name>
 		</auth-constraint>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Allowed resources</web-resource-name>
+			<url-pattern>/javax.faces.resource/*</url-pattern>
+		</web-resource-collection>
+		<!-- No Auth Contraint! -->
 	</security-constraint>
 
 	<security-role>
-		<role-name>TEACHER</role-name>
+		<role-name>SUPERUSER</role-name>
 	</security-role>
-	<security-role>
-		<role-name>STUDENT</role-name>
-	</security-role>
-	<security-role>
-		<role-name>ADMINISTRATOR</role-name>
-	</security-role>
-	 -->
+
 	<!-- end secure -->
 
 	<!-- spring context -->

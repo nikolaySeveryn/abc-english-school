@@ -5,6 +5,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +18,12 @@ import java.io.Serializable;
 @Component
 @ManagedBean
 @SessionScoped
-public class UserBean implements Serializable {
+public class SessionBean implements Serializable {
+	
+	private static final Logger log = Logger.getLogger(SessionBean.class);
 	
 	@Autowired
-	HumanResources userService;
+	private HumanResources hr;
 
 	private static final long serialVersionUID = 919819109293109878L;
 
@@ -29,23 +32,27 @@ public class UserBean implements Serializable {
 	}
 
 	public User getCurrentUser() {
-//		return userService.getActiveStaffByEmail(getCurrentUserName());
-		User user = UserFactory.createAdministrator();
-		user.getAccount().setEmail("nkstestemail1@gmail.com");
-		user.getPersonalInfo().setSirName("Test");
-		user.getPersonalInfo().setFirstName("User");
-		user.getAccount().setIsAdministrator(true);
-		user.getAccount().setIsTeacher(true);
-		return user;
+		try{
+			return hr.getActiveStaffByEmail(getCurrentUserName());
+		}
+		catch(Exception e){
+			log.error("error on getting current user, username:" + getCurrentUserName());
+			return null;
+		}
+//		User user = UserFactory.createAdministrator();
+//		user.getAccount().setEmail("nkstestemail1@gmail.com");
+//		user.getPersonalInfo().setSirName("Test");
+//		user.getPersonalInfo().setFirstName("User");
+//		return user;
 	}
 
 	private ExternalContext getExternalContext() {
 		return FacesContext.getCurrentInstance().getExternalContext();
 	}
 	
+	
 	public String getCurrentUserName() {
-//		return getExternalContext().getUserPrincipal().getName();
-		return "nkstestemail1@gmail.com";
+		return getExternalContext().getUserPrincipal().getName();
+//		return "nkstestemail1@gmail.com";
 	}
-
 }

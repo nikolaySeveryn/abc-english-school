@@ -34,10 +34,10 @@
 					<p:message for="patronomic" />
 					
 					<p:outputLabel value="Телефон" for="phone" />
-					<p:inputMask mask="+380(99)9999999" id="phone" value="#{staffBean.edited.peronalInfo.phoneNum}">
+					<p:inputMask mask="+380(99)9999999" id="phone" value="#{staffBean.edited.peronalInfo.phoneNumber}">
 						<f:validator validatorId="uniqueColumnValidator" />
 						<f:attribute name="entity" value="#{staffBean.edited.peronalInfo}" />
-						<f:attribute name="field" value="phoneNum" />
+						<f:attribute name="field" value="phoneNumber" />
 						<f:attribute name="idField" value="id" />
 					</p:inputMask> 
 					<p:message for="phone" />
@@ -53,11 +53,11 @@
 						<p:message for="email" />
 						
 						
-						<p:selectOneRadio value="#{staffBean.role}">
+						<p:outputLabel value="Посада" />
+						<p:selectOneButton value="#{staffBean.role}">
 							<f:selectItem itemValue="TEACHER" itemLabel="Викладач"/>
 							<f:selectItem itemValue="ADMINISTRATOR" itemLabel="Адміністратор"/>
-						</p:selectOneRadio>
-						<p:outputLabel value="&#160;" />
+						</p:selectOneButton>
 						<p:outputLabel value="&#160;" />
 					</c:if>
 					

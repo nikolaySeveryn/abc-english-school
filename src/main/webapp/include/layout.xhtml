@@ -16,6 +16,13 @@
 		</p:layoutUnit>
 		<p:layoutUnit position="center">
 			<div class="maincontent">
+				<p:idleMonitor timeout="#{10*60*1000}">
+					<p:ajax event="idle" listener="#{sessionBean.logout()}" oncomplete="PrimeFaces.widgets.sessionTimeout.show()" />
+				</p:idleMonitor>
+				<p:dialog header="Час сесії вичерпний" widgetVar="sessionTimeout" modal="true" appendTo="@(body)" closable="false" draggable="false">
+					<p:link onclick="widows.location.reload();"><h:outputText value="Перезавантажте" /></p:link>
+					<p:outputLabel value=" щоб знову ввійти до системи" />
+				</p:dialog>
 				<h:form>
 					<p:commandLink
 						onclick="PrimeFaces.widgets.layoutWdgt.toggle('west')">
